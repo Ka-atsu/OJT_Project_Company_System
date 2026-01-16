@@ -1,12 +1,15 @@
-import Container from "react-bootstrap/Container";
+import PageShell from "../components/layouts/PageShell";
 
 export default function Home() {
   return (
-    <Container className="mt-4">
-      <h2>Home</h2>
-      <p className="text-muted">
-        This is a placeholder page. Replace this content as needed.
-      </p>
-    </Container>
+    <PageShell
+      title="Home"
+      subtitle="This is a placeholder page. Replace this content as needed."
+    >
+      {/* Put real home sections here later */}
+      <div className="p-3 border rounded">
+        <p className="mb-0">Welcome to the company portfolio.</p>
+      </div>
+    </PageShell>
   );
 }
