@@ -5,6 +5,7 @@ import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
 import Badge from "react-bootstrap/Badge";
 import { Link } from "react-router-dom";
+import HeroScene from "../components/three/HeroScene";
 
 export default function Home() {
   const services = [
@@ -56,7 +57,11 @@ export default function Home() {
           </Col>
 
           <Col md={5}>
-            <div className="bg-white border rounded-3 p-3">
+            {/* 3D Scene */}
+            <HeroScene />
+
+            {/* Highlights */}
+            <div className="bg-white border rounded-3 p-3 mt-3">
               <div className="fw-semibold mb-2">Quick highlights</div>
               <div className="d-flex flex-wrap gap-2">
                 {highlights.map((t) => (

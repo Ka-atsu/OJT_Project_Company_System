@@ -44,15 +44,15 @@ OJT_Project_Company_System/
 ```
 
 Setup Guide
-    Step 1 — Clone the Repository
-        git clone <GITHUB LINK>
+Step 1 — Clone the Repository
+git clone <GITHUB LINK>
 
 Backend Documentation (Laravel API)
-    Step 2 — Install Dependencies
-        Navigate into the backend folder:
-            cd backend
-        Install PHP dependencies:
-            composer install
+Step 2 — Install Dependencies
+Navigate into the backend folder:
+cd backend
+Install PHP dependencies:
+composer install
 
     Step 3 — Configure Environment
         Create the Laravel .env file:
@@ -85,15 +85,19 @@ Backend Documentation (Laravel API)
             http://localhost/OJT_Project_Company_System/backend/public
 
 Frontend Documentation (React + Vite)
-    Step 6 — Install Dependencies
-        Navigate into the frontend folder:
-            cd ../frontend
+Step 6 — Install Dependencies
+Navigate into the frontend folder:
+cd ../frontend
 
     Install Node dependencies:
         npm install
 
     ✅ Important: You do not need to run npm install react-router-dom separately if it already exists in frontend/package.json.
     npm install installs all dependencies listed there.
+    - npm i three
+    - npm install react-router-dom
+    - npm install axios
+    - npm install react-bootstrap bootstrap
 
     Step 7 — Configure Frontend Environment (Vite)
     Create a .env file inside the frontend folder:
