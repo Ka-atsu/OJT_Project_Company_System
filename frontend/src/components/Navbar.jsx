@@ -14,8 +14,8 @@ export default function Navbar() {
         <NavbarBs.Toggle aria-controls="main-nav" />
         <NavbarBs.Collapse id="main-nav">
           <Nav className="ms-auto">
-            <Nav.Link as={NavLink} to="/company" end>
-              Company
+            <Nav.Link as={NavLink} to="/about" end>
+              About
             </Nav.Link>
 
             <Nav.Link as={NavLink} to="/services">
