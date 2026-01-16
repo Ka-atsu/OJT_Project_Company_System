@@ -5,7 +5,7 @@ import Container from "react-bootstrap/Container";
  */
 export default function PageShell({ title, subtitle, children }) {
   return (
-    <Container className="py-4">
+    <Container fluid className="py-3 page-pad">
       {(title || subtitle) && (
         <header className="mb-4">
           {title && <h2 className="mb-1">{title}</h2>}
