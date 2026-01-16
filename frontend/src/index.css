@@ -1,89 +1,125 @@
+/* =====================
+   BASE / TOKENS
+===================== */
+
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
+  --bg: #ffffff;
+  --text: #000000;
+  --muted: #b5b5b5;
+  --line: rgba(0, 0, 0, 0.25);
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  --pad-y: 18vh;
+  --pad-x: 6vw;
 
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  --font-sans: system-ui, Avenir, Helvetica, Arial, sans-serif;
 }
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
-}
+/* =====================
+   RESET
+===================== */
 
 html,
 body {
-  min-height: 100%;
-}
-
-body {
   margin: 0;
+  padding: 0;
+  min-height: 100%;
   overflow-x: hidden;
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+body {
+  font-family: var(--font-sans);
+  background: var(--bg);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
 }
 
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+/* =====================
+   TYPOGRAPHY
+===================== */
+
+h1,
+h2,
+p {
+  margin: 0;
 }
 
-.page-pad {
-  padding-left: 1rem;
-  padding-right: 1rem;
+p {
+  max-width: 65ch;
 }
 
-@media (min-width: 768px) {
-  .page-pad {
-    padding-left: 3rem;
-    padding-right: 3rem;
-  }
+.editorial {
+  max-width: 1100px;
+  font-size: 1.15rem;
+  line-height: 1.75;
 }
 
-@media (min-width: 1200px) {
-  .page-pad {
-    padding-left: 6rem;
-    padding-right: 6rem;
-  }
+.editorial p + p {
+  margin-top: 1.5rem;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+/* =====================
+   SECTIONS
+===================== */
+
+.section {
+  padding: var(--pad-y) var(--pad-x);
+}
+
+.section-line {
+  height: 2px;
+  background: var(--line);
+  margin-bottom: 4rem;
+  transform-origin: left;
+}
+
+/* =====================
+   KINETIC HEADLINES
+===================== */
+
+.kinetic-headline {
+  font-weight: 800;
+  line-height: 0.9;
+  letter-spacing: -0.04em;
+  white-space: nowrap;
+}
+
+.kinetic-headline.big {
+  font-size: clamp(4rem, 18vw, 20rem);
+}
+
+.kinetic-headline.small {
+  font-size: clamp(2.2rem, 6vw, 4.8rem);
+  letter-spacing: -0.02em;
+}
+
+.light {
+  color: var(--muted);
+}
+
+/* =====================
+   SPLIT HEADLINE
+===================== */
+
+.split-headline {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  overflow: hidden;
+}
+
+/* =====================
+   IMAGE + TEXT
+===================== */
+
+.image-text-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6vw;
+}
+
+.about-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: grayscale(100%);
 }

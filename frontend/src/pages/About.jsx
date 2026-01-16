@@ -1,121 +1,136 @@
-import { Link } from "react-router-dom";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-import Card from "react-bootstrap/Card";
-import Button from "react-bootstrap/Button";
-import Accordion from "react-bootstrap/Accordion";
-import Alert from "react-bootstrap/Alert";
-import PageShell from "../components/layouts/PageShell";
+import { motion } from "framer-motion";
+import KineticHeadline from "../components/Kinetics/KineticHeadline";
+import SplitKinetic from "../components/Kinetics/SplitKinetic";
+import city from "../assets/background/city.jpg";
 
 export default function About() {
   return (
-    <PageShell className="py-4">
-      {/* Header */}
-      <Card className="mb-4">
-        <Card.Body>
-          <h1 className="fw-bold mb-2">About</h1>
-          <p className="mb-3">
-            We are a company focused on finding profitable locations,
-            constructing buildings, and leasing them to generate long-term
-            returns. Our process combines site selection, construction planning,
-            and leasing strategy.
-          </p>
+    <main style={{ background: "#fff", color: "#000" }}>
+      {/* HERO */}
+      <section className="section">
+        <KineticHeadline text="ABOUT" size="big" />
+      </section>
 
-          <div className="d-flex gap-2 flex-wrap">
-            <Button as={Link} to="/projects" variant="success">
-              View Projects
-            </Button>
+      {/* MANIFESTO */}
+      <section className="section editorial">
+        <motion.p
+          initial={{ opacity: 0, y: 80 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{
+            duration: 0.9,
+            ease: [0.22, 1, 0.36, 1], // editorial easing
+          }}
+        >
+          CLIBERDUCHE CORPORATION provides the best quality backfill materials
+          as specified by clients like, sub-base, aggregates and boulders to
+          interested customers in CALABARZON area and beyond.
+        </motion.p>
 
-            <Button as={Link} to="/contact" variant="outline-secondary">
-              Contact Us
-            </Button>
+        <motion.p
+          initial={{ opacity: 0, x: 120 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true, margin: "-120px" }}
+          transition={{
+            duration: 1,
+            ease: [0.22, 1, 0.36, 1],
+          }}
+        >
+          Our land development sites which we own are located in the heart of
+          Laguna and Cavite Provinces, Philippines, with over 14 Million Cubic
+          Meter of Landfill / Backfilling Materials on both sites to meet the
+          growing needs of the industry. We're proud of our growing roster of
+          satisfied clients and look forward to servicing more.
+        </motion.p>
+      </section>
 
-            <Button as="a" href="/portfolio.pdf" download variant="primary">
-              Download PDF
-            </Button>
-          </div>
-        </Card.Body>
-      </Card>
+      {/* SUPPLY ↔ DEVELOPMENT */}
+      <section className="section">
+        <motion.div
+          initial={{ scaleX: 0 }}
+          whileInView={{ scaleX: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 1 }}
+          className="section-line"
+        />
 
-      {/* Content */}
-      <Row className="g-4">
-        <Col xs={12} lg={6}>
-          <Card className="h-100">
-            <Card.Body>
-              <Card.Title className="fw-bold">Who We Are</Card.Title>
-              <Card.Text>
-                We help develop income-generating properties by selecting strong
-                locations, building efficiently, and leasing to reliable
-                tenants.
-              </Card.Text>
-              <Card.Text>
-                Our goal is to maximize long-term value through smart planning,
-                strong execution, and sustainable leasing decisions.
-              </Card.Text>
-            </Card.Body>
-          </Card>
-        </Col>
+        <SplitKinetic />
+      </section>
 
-        <Col xs={12} lg={6}>
-          <Card className="h-100">
-            <Card.Body>
-              <Card.Title className="fw-bold">What We Do</Card.Title>
-              <ul className="mb-0">
-                <li>Identify and evaluate high-potential locations</li>
-                <li>Plan and manage building construction</li>
-                <li>Create leasing strategies and secure tenants</li>
-                <li>Maintain and improve property value over time</li>
-              </ul>
-            </Card.Body>
-          </Card>
-        </Col>
+      {/* IMAGE + OFFSET TEXT */}
+      <section className="section">
+        <div className="image-text-grid">
+          {/* IMAGE */}
+          <motion.img
+            src={city}
+            alt="Land development and materials supply"
+            className="about-image"
+            initial={{ opacity: 0, scale: 1.04 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true, margin: "-120px" }}
+            transition={{
+              duration: 1.1,
+              ease: [1, 1, 0.36, 1],
+            }}
+          />
 
-        <Col xs={12}>
-          <Card>
-            <Card.Body>
-              <Card.Title className="fw-bold">Our Process</Card.Title>
+          {/* TEXT */}
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-120px" }}
+            variants={{
+              hidden: {},
+              visible: {
+                transition: {
+                  staggerChildren: 0.2,
+                },
+              },
+            }}
+          >
+            <motion.p
+              variants={{
+                hidden: { opacity: 0, x: 100 },
+                visible: { opacity: 1, x: 0 },
+              }}
+              transition={{
+                duration: 0.9,
+                ease: [0.22, 1, 0.36, 1],
+              }}
+            >
+              Our company is equally keen to pursue potential business
+              relationships and long-term arrangements that mutually benefit
+              both parties. We also believe in a sustainable and eco-friendly
+              business venture, thus we follow strict protocol and guidelines of
+              concerned Government institutions like the Department of
+              Environment and Natural Resources (DENR).
+            </motion.p>
 
-              <Accordion defaultActiveKey="0" className="mt-3">
-                <Accordion.Item eventKey="0">
-                  <Accordion.Header>1) Site Selection</Accordion.Header>
-                  <Accordion.Body>
-                    We analyze demand, accessibility, zoning, and local market
-                    conditions to identify locations with strong profit
-                    potential.
-                  </Accordion.Body>
-                </Accordion.Item>
+            <motion.p
+              variants={{
+                hidden: { opacity: 0, x: 100 },
+                visible: { opacity: 1, x: 0 },
+              }}
+              transition={{
+                duration: 0.9,
+                ease: [0.22, 1, 0.36, 1],
+              }}
+            >
+              The company grew and from thereon, covering services like General
+              Engineering and Civil works as the clients are clamoring if we can
+              also provide other needs such as Construction and Development for
+              both horizontal and vertical, with the same situation and to
+              satisfy client’s needs, we endeavored and worked hard to achieve
+              the status of a One Stop Shop Company.
+            </motion.p>
+          </motion.div>
+        </div>
+      </section>
 
-                <Accordion.Item eventKey="1">
-                  <Accordion.Header>
-                    2) Construction Planning & Execution
-                  </Accordion.Header>
-                  <Accordion.Body>
-                    We plan the build scope, manage timelines and resources, and
-                    oversee construction quality to deliver a finished property
-                    efficiently.
-                  </Accordion.Body>
-                </Accordion.Item>
-
-                <Accordion.Item eventKey="2">
-                  <Accordion.Header>
-                    3) Leasing & Profit Strategy
-                  </Accordion.Header>
-                  <Accordion.Body>
-                    We position the building for the right tenants and apply a
-                    leasing strategy designed to generate consistent returns.
-                  </Accordion.Body>
-                </Accordion.Item>
-              </Accordion>
-
-              <Alert variant="info" className="mt-3 mb-0">
-                Tip: Put your PDF in <code>frontend/public</code> and name it{" "}
-                <code>portfolio.pdf</code> so this works:{" "}
-                <code>/portfolio.pdf</code>
-              </Alert>
-            </Card.Body>
-          </Card>
-        </Col>
-      </Row>
-    </PageShell>
+      {/* CTA */}
+      <section className="section">
+        <KineticHeadline text="LET’S TALK" />
+      </section>
+    </main>
   );
 }
