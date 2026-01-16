@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import KineticHeadline from "../components/Kinetics/KineticHeadline";
 import SplitKinetic from "../components/Kinetics/SplitKinetic";
-import city from "../assets/background/city.jpg";
+import ConstructionSite from "../assets/Images/ConstructionSite.jpg";
 
 export default function About() {
   return (
@@ -62,7 +62,7 @@ export default function About() {
         <div className="image-text-grid">
           {/* IMAGE */}
           <motion.img
-            src={city}
+            src={ConstructionSite}
             alt="Land development and materials supply"
             className="about-image"
             initial={{ opacity: 0, scale: 1.04 }}
