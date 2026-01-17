@@ -29,6 +29,7 @@ body {
 body {
   font-family: var(--font-sans);
   background: var(--bg);
+  /* background-color: #FCF8F8; */
   color: var(--text);
   -webkit-font-smoothing: antialiased;
 }
@@ -81,6 +82,7 @@ p {
   line-height: 0.9;
   letter-spacing: -0.04em;
   white-space: nowrap;
+  pointer-events: none;
 }
 
 .kinetic-headline.big {
@@ -123,3 +125,13 @@ p {
   object-fit: cover;
   filter: grayscale(100%);
 }
+
+/* =====================
+   Outlet Wrap
+===================== */
+
+.outlet-wrap {
+  padding-inline: var(--pad-x);
+  box-sizing: border-box;
+}
+

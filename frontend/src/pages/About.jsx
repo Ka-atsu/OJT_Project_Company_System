@@ -1,9 +1,11 @@
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 import KineticHeadline from "../components/Kinetics/KineticHeadline";
 import SplitKinetic from "../components/Kinetics/SplitKinetic";
 import ConstructionSite from "../assets/Images/ConstructionSite.jpg";
 
 export default function About() {
+  const navigate = useNavigate();
   return (
     <main style={{ background: "#fff", color: "#000" }}>
       {/* HERO */}
@@ -16,7 +18,7 @@ export default function About() {
         <motion.p
           initial={{ opacity: 0, y: 80 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
+          viewport={{ margin: "-100px" }}
           transition={{
             duration: 0.9,
             ease: [0.22, 1, 0.36, 1], // editorial easing
@@ -30,7 +32,7 @@ export default function About() {
         <motion.p
           initial={{ opacity: 0, x: 120 }}
           whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true, margin: "-120px" }}
+          viewport={{ margin: "-120px" }}
           transition={{
             duration: 1,
             ease: [0.22, 1, 0.36, 1],
@@ -49,7 +51,6 @@ export default function About() {
         <motion.div
           initial={{ scaleX: 0 }}
           whileInView={{ scaleX: 1 }}
-          viewport={{ once: true }}
           transition={{ duration: 1 }}
           className="section-line"
         />
@@ -67,7 +68,7 @@ export default function About() {
             className="about-image"
             initial={{ opacity: 0, scale: 1.04 }}
             whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true, margin: "-120px" }}
+            viewport={{ margin: "-120px" }}
             transition={{
               duration: 1.1,
               ease: [1, 1, 0.36, 1],
@@ -78,7 +79,7 @@ export default function About() {
           <motion.div
             initial="hidden"
             whileInView="visible"
-            viewport={{ once: true, margin: "-120px" }}
+            viewport={{ margin: "-120px" }}
             variants={{
               hidden: {},
               visible: {
@@ -128,8 +129,33 @@ export default function About() {
       </section>
 
       {/* CTA */}
-      <section className="section">
-        <KineticHeadline text="LET’S TALK" />
+      <section className="section cta">
+        <motion.div
+          initial={{ opacity: 0, y: 60 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ margin: "-120px" }}
+          transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
+          className="cta-inner"
+        >
+          <KineticHeadline text="LET’S TALK" />
+
+          <p className="cta-text">
+            Ready to discuss your next land development or materials supply
+            project?
+          </p>
+
+          <motion.div
+            className="cta-button"
+            role="button"
+            tabIndex={0}
+            onClick={() => navigate("/contact")}
+            onKeyDown={(e) => e.key === "Enter" && navigate("/contact")}
+            whileHover={{ y: -2 }}
+            whileTap={{ scale: 0.97 }}
+          >
+            Contact Us
+          </motion.div>
+        </motion.div>
       </section>
     </main>
   );

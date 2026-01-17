@@ -1,7 +1,6 @@
 import { Routes, Route } from "react-router-dom";
 
 import RootLayout from "./components/layouts/RootLayout";
-import ParallaxLayout from "./components/layouts/ParallaxLayout";
 
 import Home from "./pages/Home";
 import About from "./pages/About";
@@ -15,7 +14,6 @@ import NotFound from "./pages/NotFound";
 export default function App() {
   return (
     <Routes>
-      {/* NORMAL SITE */}
       <Route path="/" element={<RootLayout />}>
         <Route index element={<Home />} />
         <Route path="about" element={<About />} />

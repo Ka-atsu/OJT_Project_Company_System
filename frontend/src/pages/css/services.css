@@ -1,0 +1,152 @@
+/* FULL-BLEED HERO */
+.services-fullbleed {
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+}
+
+/* HERO LAYOUT */
+.services-editorial {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr 1.4fr;
+  align-items: center;
+  gap: 6vw;
+  padding: 6vh var(--pad-x);
+}
+
+/* INTRO */
+.services-intro {
+  max-width: 42ch;
+}
+
+.services-eyebrow {
+  font-size: 0.65rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #6c757d;
+  margin-bottom: 1.25rem;
+}
+
+.services-intro-text {
+  font-size: 1.15rem;
+  line-height: 1.9;
+}
+
+/* HERO VISUALS — LOCK HORIZONTAL */
+.services-visuals {
+  display: flex;
+  gap: 3rem;
+  align-items: flex-start;
+}
+
+.services-visual:nth-child(1) {
+  margin-top: 4rem;
+}
+
+.services-visual:nth-child(2) {
+  margin-top: 0;
+}
+
+.services-visual:nth-child(3) {
+  margin-top: -4rem;
+}
+
+.services-visual {
+  width: 200px;
+  flex-shrink: 0;
+}
+
+.services-visual-image {
+  width: 120%;
+  height: 360px;             
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  border-radius: 4px;        
+}
+
+.services-visual-label {
+  font-size: 0.65rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #6c757d;
+}
+
+/* SERVICES GRID */
+.services-grid {
+  margin-top: 6rem;
+}
+
+/* BREAK GRID RHYTHM */
+.services-col:nth-child(2),
+.services-col:nth-child(5) {
+  margin-top: 3rem;
+}
+
+/* CARDS */
+.services-card {
+  border: none !important;
+  background: transparent;
+}
+
+.services-card-body {
+  padding: 2.75rem 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+/* TITLES */
+.services-title {
+  display: flex;
+  gap: 1rem;
+  font-size: 1.35rem;
+  font-weight: 600;
+}
+
+.services-index {
+  font-size: 0.75rem;
+  color: #adb5bd;
+}
+
+/* TAGS — FIXED */
+.services-tags {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.services-tag {
+  font-size: 0.65rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #868e96;
+  display: inline-block;
+}
+
+/* BUTTON */
+.services-btn {
+  padding: 0;
+  border-radius: 0;
+  text-decoration: underline;
+}
+
+/* CTA */
+.services-cta {
+  margin-top: 10rem;
+}
+
+.services-cta-title {
+  font-size: 2rem;
+}
+
+/* MOBILE */
+@media (max-width: 900px) {
+  .services-editorial {
+    grid-template-columns: 1fr;
+    min-height: auto;
+    gap: 4rem;
+  }
+
+  .services-visuals {
+    overflow-x: auto;
+  }
+}

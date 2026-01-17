@@ -3,83 +3,153 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
-import Badge from "react-bootstrap/Badge";
+import "./css/services.css";
 import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
+
+import backfillImg from "../assets/Images/backfill.jpg";
+import aggregatesImg from "../assets/Images/aggregates.jpg";
+import landImg from "../assets/Images/land.jpg";
 
 export default function Services() {
   const services = [
     {
-      title: "Residential Construction",
-      desc: "Custom homes, extensions, renovations, and remodeling.",
-      tags: ["New build", "Renovations", "Extensions"],
+      title: "Backfilling Materials Supply",
+      desc: "Supply of quality backfilling materials suitable for land development, road works, and structural foundations.",
+      tags: ["Backfill", "Land development", "Foundations"],
     },
     {
-      title: "Commercial Projects",
-      desc: "Offices, retail fit-outs, small developments, and refurbishments.",
-      tags: ["Fit-out", "Refurbishment", "Compliance"],
+      title: "Aggregates Supply",
+      desc: "Provision of aggregates including sub-base, base course, and other graded materials for construction projects.",
+      tags: ["Sub-base", "Aggregates", "Construction"],
     },
     {
-      title: "Project Management",
-      desc: "Planning, scheduling, budgeting, and end-to-end site coordination.",
-      tags: ["Scheduling", "Cost control", "Delivery"],
+      title: "Land Resources Supply",
+      desc: "Supply of soil, earth materials, and other land resources based on project and site requirements.",
+      tags: ["Soil", "Earth materials", "Site needs"],
     },
     {
-      title: "Maintenance & Repairs",
-      desc: "Ongoing maintenance, defect fixes, and site improvements.",
-      tags: ["Repairs", "Upkeep", "Quick response"],
+      title: "Site Backfilling Support",
+      desc: "Support for site backfilling operations to ensure proper material placement and volume requirements.",
+      tags: ["Backfilling", "Volume supply", "Site works"],
     },
     {
-      title: "Site Preparation",
-      desc: "Demolition coordination, groundwork, and site readiness support.",
-      tags: ["Groundworks", "Prep", "Coordination"],
+      title: "Bulk Materials Delivery",
+      desc: "Efficient hauling and delivery of bulk materials to project sites within required timelines.",
+      tags: ["Hauling", "Logistics", "Bulk supply"],
     },
     {
-      title: "Finishing & Handover",
-      desc: "Quality checks, snagging, documentation, and handover support.",
-      tags: ["QA/QC", "Handover", "Warranty"],
+      title: "Project-Based Materials Sourcing",
+      desc: "Sourcing and supplying materials tailored to specific project specifications and client requirements.",
+      tags: ["Custom supply", "Project-based", "Specifications"],
     },
   ];
 
+  const featured = [
+    { title: "Backfilling Materials Supply", image: backfillImg },
+    { title: "Aggregates Supply", image: aggregatesImg },
+    { title: "Land Resources Supply", image: landImg },
+  ];
+
   return (
-    <PageShell
-      title="Services"
-      subtitle="Construction solutions for residential and commercial needs — delivered safely and on time."
-    >
-      <Row className="g-3">
-        {services.map((s) => (
-          <Col md={6} lg={4} key={s.title}>
-            <Card className="h-100 shadow-sm">
-              <Card.Body>
-                <Card.Title className="fw-semibold">{s.title}</Card.Title>
-                <Card.Text className="text-muted">{s.desc}</Card.Text>
+    <PageShell>
+      {/* FULL-BLEED HERO */}
+      <section className="services-editorial services-fullbleed">
+        <div className="services-intro">
+          <span className="services-eyebrow">Core Capabilities</span>
+          <p className="services-intro-text">
+            The company specializes in the supply of backfilling materials,
+            aggregates, and other land resources required by construction and
+            development projects.
+          </p>
+        </div>
 
-                <div className="d-flex flex-wrap gap-2 mb-3">
-                  {s.tags.map((t) => (
-                    <Badge bg="secondary" key={t}>
-                      {t}
-                    </Badge>
-                  ))}
-                </div>
+        {/* HERO VISUALS — subtle stagger */}
+        <motion.div
+          className="services-visuals"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ margin: "-100px" }}
+          variants={{
+            hidden: {},
+            visible: {
+              transition: {
+                staggerChildren: 0.15,
+              },
+            },
+          }}
+        >
+          {featured.map((s) => (
+            <motion.div
+              key={s.title}
+              className="services-visual"
+              variants={{
+                hidden: { opacity: 0, y: 14 },
+                visible: { opacity: 1, y: 0 },
+              }}
+              transition={{ duration: 0.6, ease: "easeOut" }}
+            >
+              <div
+                className="services-visual-image"
+                style={{ backgroundImage: `url(${s.image})` }}
+              />
+              <span className="services-visual-label">{s.title}</span>
+            </motion.div>
+          ))}
+        </motion.div>
+      </section>
 
-                <Button as={Link} to="/contact" variant="outline-primary">
-                  Request a Quote
-                </Button>
-              </Card.Body>
-            </Card>
+      {/* SERVICES LIST — fade only */}
+      <Row className="services-grid">
+        {services.map((s, i) => (
+          <Col md={6} lg={4} key={s.title} className="services-col">
+            <motion.div
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ margin: "-80px" }}
+              transition={{ duration: 0.5, delay: i * 0.05 }}
+            >
+              <Card className="services-card">
+                <Card.Body className="services-card-body">
+                  <h3 className="services-title">
+                    <span className="services-index">
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
+                    {s.title}
+                  </h3>
+
+                  <p className="services-desc">{s.desc}</p>
+
+                  <div className="services-tags">
+                    {s.tags.map((t) => (
+                      <span key={t} className="services-tag">
+                        {t}
+                      </span>
+                    ))}
+                  </div>
+                </Card.Body>
+              </Card>
+            </motion.div>
           </Col>
         ))}
       </Row>
 
-      <div className="mt-5 p-4 bg-light border rounded-3">
-        <h2 className="h5 fw-bold mb-2">Not sure what you need?</h2>
-        <p className="text-muted mb-3">
-          Tell us about your project and we’ll recommend the best approach and
+      {/* CTA — calm fade */}
+      <motion.div
+        className="services-cta"
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        transition={{ duration: 0.6 }}
+      >
+        <h2 className="services-cta-title">Let’s talk about your project</h2>
+        <p className="services-cta-text">
+          Share a few details and we’ll help you determine the best approach and
           timeline.
         </p>
-        <Button as={Link} to="/contact" variant="primary">
-          Contact Us
+        <Button as={Link} to="/contact" variant="dark">
+          Start a Conversation
         </Button>
-      </div>
+      </motion.div>
     </PageShell>
   );
 }
