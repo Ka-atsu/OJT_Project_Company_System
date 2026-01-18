@@ -98,6 +98,7 @@ cd ../frontend
     - npm install react-router-dom
     - npm install axios
     - npm install react-bootstrap bootstrap
+    - npm install gsap
 
     Step 7 — Configure Frontend Environment (Vite)
     Create a .env file inside the frontend folder:

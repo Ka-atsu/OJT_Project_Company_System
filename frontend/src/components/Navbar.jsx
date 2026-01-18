@@ -1,44 +1,52 @@
-import Container from "react-bootstrap/Container";
-import Nav from "react-bootstrap/Nav";
-import NavbarBs from "react-bootstrap/Navbar";
+import { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 
 export default function Navbar() {
+  const [scrolled, setScrolled] = useState(false);
+  const [hidden, setHidden] = useState(false);
+
+  useEffect(() => {
+    let lastY = window.scrollY;
+
+    const onScroll = () => {
+      const y = window.scrollY;
+
+      setScrolled(y > 60);
+      setHidden(y > lastY && y > 120);
+
+      lastY = y;
+    };
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   return (
-    <NavbarBs
-      expand="lg"
-      className="position-absolute top-0 w-100 navbar-overlay"
+    <nav
+      className={`site-nav ${scrolled ? "is-scrolled" : ""} ${
+        hidden ? "is-hidden" : ""
+      }`}
     >
-      <Container>
-        <NavbarBs.Brand as={NavLink} to="/" className="fw-bold">
+      <div className="site-nav-inner">
+        {/* LEFT */}
+        <NavLink to="/" className="site-brand">
           THE COMPANY
-        </NavbarBs.Brand>
+        </NavLink>
 
-        <NavbarBs.Toggle aria-controls="main-nav" />
-        <NavbarBs.Collapse id="main-nav">
-          <Nav className="ms-auto">
-            <Nav.Link as={NavLink} to="/about" end>
-              About
-            </Nav.Link>
+        {/* CENTER */}
+        <div className="site-links">
+          {["about", "services", "safety"].map((item) => (
+            <NavLink key={item} to={`/${item}`} className="site-link">
+              {item}
+            </NavLink>
+          ))}
+        </div>
 
-            <Nav.Link as={NavLink} to="/services">
-              Services
-            </Nav.Link>
-
-            <Nav.Link as={NavLink} to="/projects">
-              Projects
-            </Nav.Link>
-
-            <Nav.Link as={NavLink} to="/safety">
-              Safety
-            </Nav.Link>
-
-            <Nav.Link as={NavLink} to="/contact">
-              Contact
-            </Nav.Link>
-          </Nav>
-        </NavbarBs.Collapse>
-      </Container>
-    </NavbarBs>
+        {/* RIGHT */}
+        <NavLink to="/contact" className="site-btn">
+          Contact
+        </NavLink>
+      </div>
+    </nav>
   );
 }

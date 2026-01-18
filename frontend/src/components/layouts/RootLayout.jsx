@@ -6,7 +6,7 @@ export default function RootLayout() {
   return (
     <div className="d-flex flex-column min-vh-100">
       <Navbar />
-      <main className="flex-grow-1 outlet-wrap">
+      <main className="flex-grow-1">
         <Outlet />
       </main>
       <Footer />

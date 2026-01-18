@@ -20,15 +20,15 @@
      TYPE SCALE (GOLDEN RATIO)
   ===================== */
 
-  --fs-base: 1rem; /* 16px */
+  --fs-base: 1rem;
   --ratio: 1.618;
 
-  --fs-meta: calc(var(--fs-base) / var(--ratio));     /* ~0.62rem */
-  --fs-body: var(--fs-base);                          /* 1rem */
-  --fs-h3: calc(var(--fs-body) * var(--ratio));       /* ~1.62rem */
-  --fs-h2: calc(var(--fs-h3) * var(--ratio));         /* ~2.62rem */
-  --fs-h1: calc(var(--fs-h2) * var(--ratio));         /* ~4.24rem */
-  --fs-display: calc(var(--fs-h1) * var(--ratio));    /* ~6.85rem */
+  --fs-meta: calc(var(--fs-base) / var(--ratio));
+  --fs-body: var(--fs-base);
+  --fs-h3: calc(var(--fs-body) * var(--ratio));
+  --fs-h2: calc(var(--fs-h3) * var(--ratio));
+  --fs-h1: calc(var(--fs-h2) * var(--ratio));
+  --fs-display: calc(var(--fs-h1) * var(--ratio));
 
   /* KINETIC MODIFIERS */
   --kinetic-big: 1.6;
@@ -71,23 +71,26 @@ p {
   max-width: 65ch;
 }
 
-/* Eyebrow / meta */
 .eyebrow {
-  font-size: var(--fs-meta);
+  display: block;
+  font-size: 0.7rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: #6c757d;
 }
 
-/* Editorial blocks */
-.editorial {
-  max-width: 1100px;
-  font-size: var(--fs-body);
-  line-height: 1.75;
+.light {
+  color: var(--muted);
 }
 
-.editorial p + p {
-  margin-top: 1.5rem;
+/* =====================
+   LAYOUT PRIMITIVES
+===================== */
+
+.full-bleed {
+  width: 100vw;
+  margin-left: calc(-50vw + 50%);
+  margin-right: calc(-50vw + 50%);
 }
 
 /* =====================
@@ -98,24 +101,42 @@ p {
   padding: var(--pad-y) var(--pad-x);
 }
 
-.section--hero {
-  padding-top: 10vh;   /* was 18vh */
-  padding-bottom: 6vh;
+.section--tight {
+  padding: clamp(6rem, 10vh, 8rem) var(--pad-x);
 }
 
-.section-line {
-  height: 2px;
-  background: rgba(0, 0, 0, 0.12);
-  max-width: calc(100% - 2 * var(--pad-x));
-  margin: 0 auto 4rem;
-}
+/* =====================
+   TEXT UTILITIES
+===================== */
 
-.eyebrow {
-  display: block;
-  font-size: 0.7rem;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
+.text-muted {
   color: #6c757d;
+}
+
+.section-intro {
+  max-width: 38ch;
+  margin: 1.5rem 0 4rem;
+  font-size: 0.95rem;
+  line-height: 1.7;
+}
+
+/* =====================
+   DECORATIVE MARKER
+===================== */
+
+.column-marker {
+  position: relative;
+  padding-left: 1.75rem;
+}
+
+.column-marker::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.35rem;
+  width: 2px;
+  height: 2.2rem;
+  background: rgba(0, 0, 0, 0.3);
 }
 
 /* =====================
@@ -147,23 +168,8 @@ p {
   );
 }
 
-.light {
-  color: var(--muted);
-}
-
 /* =====================
-   SPLIT HEADLINE
-===================== */
-
-.split-headline {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  overflow: hidden;
-}
-
-/* =====================
-   IMAGE + TEXT
+   IMAGE + TEXT GRID
 ===================== */
 
 .image-text-grid {
@@ -172,28 +178,335 @@ p {
   gap: 6vw;
 }
 
-.about-image {
+/* =====================
+   IMAGE BAND (GENERIC)
+===================== */
+
+.image-band {
+  position: relative;
+  height: clamp(280px, 40vh, 420px);
+  overflow: hidden;
+}
+
+.image-band img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  filter: grayscale(100%);
 }
 
+
 /* =====================
-   Outlet Wrap
+   GENERIC HERO
 ===================== */
 
-.outlet-wrap {
+.hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  padding: 0;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.hero--editorial {
+  min-height: clamp(60vh, 75vh, 85vh);
+}
+
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--hero-bg, none) center / cover no-repeat;
+  animation: heroSlowZoom 36s ease-in-out infinite alternate;
+  z-index: -2;
+}
+
+.hero-content,
+.cta-content {
+  max-width: 1100px;
+  margin-left: 0;
+  margin-right: auto;
   padding-inline: var(--pad-x);
-  box-sizing: border-box;
+}
+
+
+@keyframes heroSlowZoom {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.08);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero::before {
+    animation: none;
+  }
 }
 
 /* =====================
-   navbar
+   SITE NAV
 ===================== */
 
-.navbar-overlay {
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(6px);
+.site-nav {
+  position: fixed;
+  inset: 0 0 auto 0;
+  height: 72px;
+  background: #fff;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.85);
   z-index: 1000;
+  transition:
+    transform 0.35s ease,
+    opacity 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.site-nav.is-scrolled {
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+}
+
+.site-nav.is-hidden {
+  transform: translateY(-100%);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.site-nav-inner {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  height: 100%;
+  padding: 0 var(--pad-x);
+}
+
+.site-brand {
+  font-weight: 800;
+  font-size: 0.95rem;
+  letter-spacing: -0.02em;
+  color: #000;
+  text-decoration: none;
+}
+
+.site-links {
+  display: flex;
+  justify-content: center;
+  gap: 2.5rem;
+}
+
+.site-link {
+  position: relative;
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #000;
+  text-decoration: none;
+  opacity: 0.85;
+}
+
+.site-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+  width: 100%;
+  height: 1px;
+  background: #000;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.25s ease;
+}
+
+.site-link:hover::after,
+.site-link.active::after {
+  transform: scaleX(1);
+}
+
+/* After-hero spacing (editorial pages) */
+.section--after-hero {
+  padding-top: clamp(4rem, 7vh, 6rem);
+}
+
+.split-headline {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+/* HERO overlay base (your Home renders .hero-overlay, but base wasn't defined) */
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: -1; /* above .hero::before (-2), behind content */
+  pointer-events: none;
+}
+
+/* CTA base so your --cta-bg + overlay pattern works everywhere */
+.cta {
+  position: relative;
+  color: #fff;
+  overflow: hidden;
+}
+
+.cta::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--cta-bg, none) center / cover no-repeat;
+  z-index: -2;
+}
+
+.cta::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--cta-overlay, rgba(0, 0, 0, 0.65));
+  z-index: -1;
+}
+
+.cta-content {
+  position: relative;
+  z-index: 0;
+}
+
+/* =====================
+   FOOTER
+===================== */
+
+.site-footer {
+  background: #fff;
+  border-top: 1px solid rgba(0, 0, 0, 0.85); /* matches nav border strength */
+}
+
+.site-footer-inner {
+  min-height: 88px;
+  display: flex;
+  align-items: center;
+  padding: 0 var(--pad-x); /* same as .site-nav-inner */
+}
+
+.site-footer-links {
+  width: 100%;
+  display: flex;
+  justify-content: center; /* centered like your nav links */
+}
+
+.site-footer-copy {
+  font-size: 0.72rem;
+  letter-spacing: 0.18em; /* matches .site-link vibe */
+  text-transform: uppercase;
+  color: #000;
+  opacity: 0.75;
+}
+
+/* =====================
+   HERO ACTIONS (BUTTON GROUP)
+===================== */
+
+.hero-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  margin-top: 2.25rem;
+}
+
+/* make both buttons feel like a designed system */
+.hero-actions .btn {
+  border-radius: 999px;
+  padding: 0.85rem 1.25rem;
+  font-size: 0.85rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-weight: 700;
+  transition:
+    transform 0.18s ease,
+    background-color 0.18s ease,
+    border-color 0.18s ease,
+    color 0.18s ease,
+    opacity 0.18s ease;
+}
+
+/* primary (variant="light") */
+.hero-actions .btn.btn-light {
+  background: #fff;
+  border-color: #fff;
+  color: #000;
+}
+
+.hero-actions .btn.btn-light:hover {
+  transform: translateY(-1px);
+  opacity: 0.95;
+}
+
+/* secondary (variant="outline-light") */
+.hero-actions .btn.btn-outline-light {
+  background: transparent;
+  border-color: rgba(255, 255, 255, 0.85);
+  color: #fff;
+}
+
+.hero-actions .btn.btn-outline-light:hover {
+  transform: translateY(-1px);
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 1);
+}
+
+/* focus ring that works on dark hero */
+.hero-actions .btn:focus,
+.hero-actions .btn:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.25);
+}
+
+/* =====================
+   NAV BUTTON (CONTACT)
+===================== */
+
+.site-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  height: 42px;
+  padding: 0 1.1rem;
+
+  border-radius: 999px;
+  border: 1px solid rgba(0, 0, 0, 0.85);
+  background: #000;
+  color: #fff;
+
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-weight: 800;
+  text-decoration: none;
+
+  transition:
+    transform 0.18s ease,
+    background-color 0.18s ease,
+    border-color 0.18s ease,
+    opacity 0.18s ease,
+    box-shadow 0.18s ease;
+}
+
+.site-btn:hover {
+  transform: translateY(-1px);
+  opacity: 0.95;
+}
+
+.site-btn:active {
+  transform: translateY(0);
+  opacity: 0.92;
+}
+
+.site-btn:focus,
+.site-btn:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.18);
+}
+
+/* Optional: active state */
+.site-btn.active {
+  background: #000;
 }
