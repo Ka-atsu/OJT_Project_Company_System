@@ -3,50 +3,51 @@ import { useNavigate } from "react-router-dom";
 import KineticHeadline from "../components/Kinetics/KineticHeadline";
 import SplitKinetic from "../components/Kinetics/SplitKinetic";
 import ConstructionSite from "../assets/Images/ConstructionSite.jpg";
+import "./css/about.css";
 
 export default function About() {
   const navigate = useNavigate();
+
   return (
-    <main style={{ background: "#fff", color: "#000" }}>
-      {/* HERO */}
-      <section className="section">
+    <main className="about-page">
+      {/* =====================
+         HERO
+      ===================== */}
+      <section className="section section--hero">
         <KineticHeadline text="ABOUT" size="big" />
       </section>
 
-      {/* MANIFESTO */}
+      {/* =====================
+         COMPANY OVERVIEW
+      ===================== */}
       <section className="section editorial">
         <motion.p
           initial={{ opacity: 0, y: 80 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ margin: "-100px" }}
-          transition={{
-            duration: 0.9,
-            ease: [0.22, 1, 0.36, 1], // editorial easing
-          }}
+          transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
         >
-          CLIBERDUCHE CORPORATION provides the best quality backfill materials
-          as specified by clients like, sub-base, aggregates and boulders to
-          interested customers in CALABARZON area and beyond.
+          CLIBERDUCHE CORPORATION supplies high-quality backfilling materials,
+          including sub-base, aggregates, and boulders, to support construction
+          and land development projects across CALABARZON and nearby regions.
         </motion.p>
 
         <motion.p
           initial={{ opacity: 0, x: 120 }}
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ margin: "-120px" }}
-          transition={{
-            duration: 1,
-            ease: [0.22, 1, 0.36, 1],
-          }}
+          transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
         >
-          Our land development sites which we own are located in the heart of
-          Laguna and Cavite Provinces, Philippines, with over 14 Million Cubic
-          Meter of Landfill / Backfilling Materials on both sites to meet the
-          growing needs of the industry. We're proud of our growing roster of
-          satisfied clients and look forward to servicing more.
+          Our company-owned land development sites in Laguna and Cavite provide
+          access to over 14 million cubic meters of backfilling and landfill
+          materials, enabling us to support infrastructure, commercial, and
+          private developments at scale.
         </motion.p>
       </section>
 
-      {/* SUPPLY ↔ DEVELOPMENT */}
+      {/* =====================
+         SUPPLY ↔ DEVELOPMENT
+      ===================== */}
       <section className="section">
         <motion.div
           initial={{ scaleX: 0 }}
@@ -54,11 +55,12 @@ export default function About() {
           transition={{ duration: 1 }}
           className="section-line"
         />
-
         <SplitKinetic />
       </section>
 
-      {/* IMAGE + OFFSET TEXT */}
+      {/* =====================
+         IMAGE + VALUES
+      ===================== */}
       <section className="section">
         <div className="image-text-grid">
           {/* IMAGE */}
@@ -69,10 +71,7 @@ export default function About() {
             initial={{ opacity: 0, scale: 1.04 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ margin: "-120px" }}
-            transition={{
-              duration: 1.1,
-              ease: [1, 1, 0.36, 1],
-            }}
+            transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1] }}
           />
 
           {/* TEXT */}
@@ -82,11 +81,7 @@ export default function About() {
             viewport={{ margin: "-120px" }}
             variants={{
               hidden: {},
-              visible: {
-                transition: {
-                  staggerChildren: 0.2,
-                },
-              },
+              visible: { transition: { staggerChildren: 0.2 } },
             }}
           >
             <motion.p
@@ -94,16 +89,12 @@ export default function About() {
                 hidden: { opacity: 0, x: 100 },
                 visible: { opacity: 1, x: 0 },
               }}
-              transition={{
-                duration: 0.9,
-                ease: [0.22, 1, 0.36, 1],
-              }}
+              transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
             >
-              Our company is equally keen to pursue potential business
-              relationships and long-term arrangements that mutually benefit
-              both parties. We also believe in a sustainable and eco-friendly
-              business venture, thus we follow strict protocol and guidelines of
-              concerned Government institutions like the Department of
+              We pursue long-term business relationships built on reliability,
+              transparency, and mutual benefit. Sustainability and responsible
+              land use guide our operations, with strict adherence to the
+              guidelines of government agencies such as the Department of
               Environment and Natural Resources (DENR).
             </motion.p>
 
@@ -112,23 +103,52 @@ export default function About() {
                 hidden: { opacity: 0, x: 100 },
                 visible: { opacity: 1, x: 0 },
               }}
-              transition={{
-                duration: 0.9,
-                ease: [0.22, 1, 0.36, 1],
-              }}
+              transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
             >
-              The company grew and from thereon, covering services like General
-              Engineering and Civil works as the clients are clamoring if we can
-              also provide other needs such as Construction and Development for
-              both horizontal and vertical, with the same situation and to
-              satisfy client’s needs, we endeavored and worked hard to achieve
-              the status of a One Stop Shop Company.
+              As client needs evolved, the company expanded into general
+              engineering and civil works, offering construction and development
+              services for both horizontal and vertical projects—allowing us to
+              operate as a dependable one-stop partner.
             </motion.p>
+
+            {/* SAFETY COMMITMENT */}
+            <motion.div
+              variants={{
+                hidden: { opacity: 0, x: 100 },
+                visible: { opacity: 1, x: 0 },
+              }}
+              transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+              className="about-safety"
+            >
+              <span className="eyebrow">Safety</span>
+              <h3 className="about-subtitle">Our Commitment to Safety</h3>
+
+              <p>
+                CLIBERDUCHE CORPORATION is committed to providing a safe and
+                healthy working environment for all employees, contractors, and
+                site visitors. Protecting personnel from injury and occupational
+                illness is a core objective of our operations.
+              </p>
+
+              <p>
+                Management, supervisors, and workers share responsibility for
+                maintaining safe work practices, complying with applicable laws,
+                and continuously reducing risk across all sites and activities.
+              </p>
+
+              <p>
+                Safety is integrated into planning and daily operations and
+                forms an essential part of how we work—from leadership to every
+                individual on site.
+              </p>
+            </motion.div>
           </motion.div>
         </div>
       </section>
 
-      {/* CTA */}
+      {/* =====================
+         CTA
+      ===================== */}
       <section className="section cta">
         <motion.div
           initial={{ opacity: 0, y: 60 }}

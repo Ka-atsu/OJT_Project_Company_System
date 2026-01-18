@@ -56,7 +56,7 @@ export default function Services() {
       {/* FULL-BLEED HERO */}
       <section className="services-editorial services-fullbleed">
         <div className="services-intro">
-          <span className="services-eyebrow">Core Capabilities</span>
+          <span className="eyebrow">Core Capabilities</span>
           <p className="services-intro-text">
             The company specializes in the supply of backfilling materials,
             aggregates, and other land resources required by construction and

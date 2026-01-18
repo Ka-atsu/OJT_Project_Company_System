@@ -1,0 +1,279 @@
+/* =====================
+   HERO
+===================== */
+
+.home-hero {
+  position: relative;
+  min-height: 100vh;
+
+  display: flex;
+  align-items: center;
+
+  width: 100vw;
+  margin-left: calc(-50vw + 50%);
+  margin-right: calc(-50vw + 50%);
+
+  padding: clamp(6rem, 14vh, 10rem) var(--pad-x);
+  overflow: hidden;
+}
+
+/* 🎬 BACKGROUND IMAGE (THIS ONE ZOOMS) */
+.home-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+
+  background: url("../../assets/Images/ConstructionSite.jpg") center / cover
+    no-repeat;
+
+  transform-origin: center;
+  animation: heroSlowZoom 36s ease-in-out infinite alternate;
+
+  will-change: transform;
+  z-index: -2;
+}
+
+/* DARK OVERLAY (TEXT CONTRAST) */
+.home-hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.65) 0%,
+    rgba(0, 0, 0, 0.45) 40%,
+    rgba(0, 0, 0, 0.35) 100%
+  );
+  z-index: -1;
+}
+
+/* CONTENT */
+.home-hero-content {
+  position: relative;
+  max-width: 760px;
+  color: #fff;
+  z-index: 1;
+}
+
+.home-headline {
+  font-size: clamp(2.4rem, 4.2vw, 3.75rem);
+  font-weight: 700;
+  line-height: 1.1;
+  margin: 1rem 0 2.25rem;
+}
+
+.home-hero-actions {
+  display: flex;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+}
+
+/* =====================
+   MOTION
+===================== */
+
+@keyframes heroSlowZoom {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.08); /* 👈 CLEARLY VISIBLE */
+  }
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .home-hero::before {
+    animation: none;
+  }
+}
+
+/* =====================
+   SECTION INTRO
+===================== */
+
+.home-section-intro {
+  max-width: 38ch;
+  margin: 1.5rem 0 4rem;
+  font-size: 0.95rem;
+  line-height: 1.7;
+  color: #6c757d;
+}
+
+/* =====================
+   HOME SECTIONS
+===================== */
+
+.home-section {
+  padding: clamp(6rem, 10vh, 8rem) var(--pad-x);
+  background: #ffffff;
+}
+
+.home-section > .eyebrow,
+.home-section > .home-section-title,
+.home-section > .home-section-intro,
+.home-section > .row {
+  max-width: 1100px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.home-section-title {
+  font-size: 1.85rem;
+  font-weight: 700;
+  margin-bottom: 2.75rem;
+}
+
+.home-section h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.home-section p {
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: #6c757d;
+}
+
+.home-section .col-md-4 {
+  position: relative;
+  padding-left: 1.75rem;
+}
+
+.home-section .col-md-4::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.35rem;
+  width: 2px;
+  height: 2.2rem;
+  background: rgba(0, 0, 0, 0.3);
+}
+
+/* =====================
+   IMAGE BAND
+===================== */
+
+.home-image-band {
+  position: relative;
+  width: 100vw;
+  margin-left: calc(-50vw + 50%);
+  margin-right: calc(-50vw + 50%);
+  height: clamp(380px, 55vh, 520px);
+  overflow: hidden;
+
+  margin-top: clamp(4rem, 8vh, 6rem);
+  margin-bottom: clamp(4rem, 8vh, 6rem);
+}
+
+.home-image-band img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: grayscale(100%) contrast(1.05);
+}
+
+.home-image-band::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.15);
+}
+
+/* =====================
+   PROCESS SECTION
+===================== */
+
+.home-process {
+  padding: clamp(7rem, 12vh, 9rem) var(--pad-x);
+}
+
+.home-process .row {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.home-process h2 {
+  margin-bottom: 1.25rem;
+  font-weight: 700;
+  font-size: 2rem;
+}
+
+.home-process ol,
+.home-process ul {
+  padding-left: 1.25rem;
+  color: #6c757d;
+  line-height: 1.75;
+}
+
+.home-process li + li {
+  margin-top: 0.5rem;
+}
+
+.home-process ul {
+  margin-top: 1.5rem;
+}
+
+/* =====================
+   CTA
+===================== */
+
+.home-cta {
+  position: relative;
+  width: 100vw;
+  margin-left: calc(-50vw + 50%);
+  margin-right: calc(-50vw + 50%);
+  padding: clamp(6rem, 12vh, 8rem) var(--pad-x);
+  text-align: center;
+  color: #fff;
+  overflow: hidden;
+}
+
+.home-cta::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: url("../../assets/Images/gravel.jpg") center / cover no-repeat;
+  transform: scale(1.05);
+  z-index: 0;
+}
+
+.home-cta::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.55) 0%,
+    rgba(0, 0, 0, 0.7) 50%,
+    rgba(0, 0, 0, 0.85) 100%
+  );
+  z-index: 1;
+}
+
+.home-cta > * {
+  position: relative;
+  z-index: 2;
+}
+
+.home-cta-content {
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.home-cta h2 {
+  font-size: clamp(2.1rem, 3vw, 2.6rem);
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.home-cta p {
+  max-width: 50ch;
+  margin: 0 auto 2.25rem;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.home-cta .btn {
+  padding: 0.85rem 2rem;
+  font-weight: 600;
+}

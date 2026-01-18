@@ -5,7 +5,10 @@ import { NavLink } from "react-router-dom";
 
 export default function Navbar() {
   return (
-    <NavbarBs bg="light" expand="lg" className="border-bottom">
+    <NavbarBs
+      expand="lg"
+      className="position-absolute top-0 w-100 navbar-overlay"
+    >
       <Container>
         <NavbarBs.Brand as={NavLink} to="/" className="fw-bold">
           THE COMPANY

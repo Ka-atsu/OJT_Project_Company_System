@@ -45,58 +45,14 @@ export default function Safety() {
 
   return (
     <PageShell>
-      {/* Header / Business CTA */}
       <Card className="border-0 shadow-sm mb-4">
         <Card.Body className="p-4 p-md-5">
-          <Row className="align-items-center g-4">
-            <Col md={12}>
-              <h2 className="h5 fw-bold mb-3">Safety Statement</h2>
-
-              <p className="text-muted">
-                CLIBERDUCHE CORPORATION is vitally interested in its employees’
-                health and safety. Protecting employee or occupational disease
-                is a major continuing objective. CLIBERDUCHE CORPORATION will
-                make every effort to provide a safe and a healthy work
-                environment. All supervisors and workers must be dedicated to
-                continuing to reduce the risk of injury.
-              </p>
-
-              <p className="text-muted">
-                CLIBERDUCHE CORPORATION, as employer, is ultimately responsible
-                for worker health and safety.
-              </p>
-
-              <p className="text-muted">
-                As a President of CLIBERDUCHE CORPORATION, I personally promise
-                that every reasonable precaution will be taken to protect our
-                workers and thus hiring a highly experienced Safety Officer is
-                the key to ensure safety of each personnel and making the work
-                space an safe environment.
-              </p>
-
-              <p className="text-muted">
-                Supervisors will be held accountable for the health and safety
-                of workers under their supervision. Supervisors are responsible
-                to ensure that machinery and equipment are safe and that workers
-                work in compliance with established safe work practices and
-                procedures. Workers must receive adequate training in their
-                specific work tasks to protect their health and safety.
-              </p>
-
-              <p className="text-muted">
-                Every worker must protect his or her own health and safety by
-                working in compliance with the law and with safe work practices
-                and procedures established by the company.
-              </p>
-
-              <p className="text-muted mb-0">
-                It is in the best interest of all parties to consider health and
-                safety in every activity. Commitment to health and safety must
-                form an integral part of this organization from the president to
-                the workers.
-              </p>
-            </Col>
-          </Row>
+          <h2 className="h5 fw-bold mb-3">Safety on Every Project</h2>
+          <p className="text-muted mb-0">
+            Safety is a core part of how we plan, supply, and operate on every
+            site. Our procedures are designed to protect workers, clients, and
+            the public while ensuring projects run efficiently and compliantly.
+          </p>
         </Card.Body>
       </Card>
 
