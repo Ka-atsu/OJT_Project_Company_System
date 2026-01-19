@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import Card from "react-bootstrap/Card";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
@@ -6,12 +6,22 @@ import Alert from "react-bootstrap/Alert";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import PageShell from "../components/layouts/PageShell";
+import ReCAPTCHA from "react-google-recaptcha";
 
 export default function Contact() {
-  const [form, setForm] = useState({ name: "", email: "", message: "" });
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    subject: "",
+    message: "",
+  });
+
+  const captchaRef = useRef(null);
+
   const [errors, setErrors] = useState({});
   const [status, setStatus] = useState({ type: "", msg: "" });
   const [loading, setLoading] = useState(false);
+  const [captcha, setCaptcha] = useState(null);
 
   const validate = () => {
     const e = {};
@@ -19,7 +29,9 @@ export default function Contact() {
     if (!form.email.trim()) e.email = "Email is required.";
     else if (!/^\S+@\S+\.\S+$/.test(form.email))
       e.email = "Enter a valid email.";
+    if (!form.subject.trim()) e.subject = "Subject is required.";
     if (!form.message.trim()) e.message = "Message is required.";
+    if (!captcha) e.captcha = "Please verify that you are not a robot.";
     return e;
   };
 
@@ -36,12 +48,16 @@ export default function Contact() {
     setErrors(e);
     if (Object.keys(e).length > 0) return;
 
-    // Fake submit for now (connect to API later)
     setLoading(true);
     try {
+      // Fake submit (replace with API later)
       await new Promise((r) => setTimeout(r, 800));
+
       setStatus({ type: "success", msg: "Message sent successfully!" });
-      setForm({ name: "", email: "", message: "" });
+      setForm({ name: "", email: "", subject: "", message: "" });
+      setCaptcha(null);
+      captchaRef.current.reset();
+
     } catch {
       setStatus({ type: "danger", msg: "Something went wrong. Try again." });
     } finally {
@@ -67,6 +83,7 @@ export default function Contact() {
               <h5 className="fw-bold mb-3">Contact Form</h5>
 
               <Form onSubmit={handleSubmit}>
+                {/* Name */}
                 <Form.Group className="mb-3">
                   <Form.Label>Name</Form.Label>
                   <Form.Control
@@ -81,6 +98,7 @@ export default function Contact() {
                   </Form.Control.Feedback>
                 </Form.Group>
 
+                {/* Email */}
                 <Form.Group className="mb-3">
                   <Form.Label>Email</Form.Label>
                   <Form.Control
@@ -95,6 +113,22 @@ export default function Contact() {
                   </Form.Control.Feedback>
                 </Form.Group>
 
+                {/* Subject */}
+                <Form.Group className="mb-3">
+                  <Form.Label>Subject</Form.Label>
+                  <Form.Control
+                    name="subject"
+                    value={form.subject}
+                    onChange={handleChange}
+                    placeholder="Enter your subject"
+                    isInvalid={!!errors.subject}
+                  />
+                  <Form.Control.Feedback type="invalid">
+                    {errors.subject}
+                  </Form.Control.Feedback>
+                </Form.Group>
+
+                {/* Message */}
                 <Form.Group className="mb-3">
                   <Form.Label>Message</Form.Label>
                   <Form.Control
@@ -111,6 +145,20 @@ export default function Contact() {
                   </Form.Control.Feedback>
                 </Form.Group>
 
+                {/* CAPTCHA */}
+                <Form.Group className="mb-3">
+                  <ReCAPTCHA
+                    ref={captchaRef}
+                    sitekey="6Lcw_04sAAAAAOz84QKlQUGSzIJZgasCu5wpy8e6"
+                    onChange={(value) => setCaptcha(value)}
+                  />
+                  {errors.captcha && (
+                    <div className="text-danger mt-1">
+                      {errors.captcha}
+                    </div>
+                  )}
+                </Form.Group>
+
                 <Button type="submit" variant="primary" disabled={loading}>
                   {loading ? "Sending..." : "Send Message"}
                 </Button>
@@ -119,6 +167,7 @@ export default function Contact() {
           </Card>
         </Col>
 
+        {/* Company Info */}
         <Col xs={12} lg={5}>
           <Card>
             <Card.Body>
