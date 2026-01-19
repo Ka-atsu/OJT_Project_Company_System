@@ -9,6 +9,9 @@ import Services from "./pages/Services";
 import Contact from "./pages/Contact";
 import NotFound from "./pages/NotFound";
 
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+
 export default function App() {
   return (
     <Routes>
@@ -19,6 +22,9 @@ export default function App() {
         <Route path="safety" element={<Safety />} />
         <Route path="contact" element={<Contact />} />
       </Route>
+
+      <Route path="/login" element={<Login />} />
+      <Route path="/register" element={<Register />} />
 
       {/* FALLBACK */}
       <Route path="*" element={<NotFound />} />
