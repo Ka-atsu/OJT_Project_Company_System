@@ -1,6 +1,7 @@
 import { Routes, Route } from "react-router-dom";
 
 import RootLayout from "./components/layouts/RootLayout";
+import DashboardLayout from "./components/layouts/DashboardLayout";
 
 import Home from "./pages/Home";
 import About from "./pages/About";
@@ -12,6 +13,10 @@ import NotFound from "./pages/NotFound";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 
+import ClientDashboard from "./pages/Client/ClientDashboard";
+
+import warlyTestingRoutes from "./testingRoutes/warlyTestingRoutes";
+
 export default function App() {
   return (
     <Routes>
@@ -22,6 +27,14 @@ export default function App() {
         <Route path="safety" element={<Safety />} />
         <Route path="contact" element={<Contact />} />
       </Route>
+
+      <Route path="/dashboard" element={<DashboardLayout />}>
+        <Route index element={<Safety />} />
+        {/* <Route path="projects" element={<Projects />} />
+        <Route path="documents" element={<Documents />} /> */}
+      </Route>
+
+      {warlyTestingRoutes()}
 
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />

@@ -1,0 +1,419 @@
+/* =========================================================
+   MODERN DASHBOARD SIDEBAR — REFINED
+========================================================= */
+
+.dash-sidebar {
+  width: 260px;
+  background: #f9fafb;
+  border-right: 1px solid rgba(0, 0, 0, 0.06);
+  min-height: calc(100vh - 64px);
+}
+
+.dash-sidebar-inner {
+  padding: 1.5rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+}
+
+/* -------------------------
+   NAV
+------------------------- */
+
+.dash-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.dash-group {
+  margin-top: 0.25rem;
+  padding-left: 0.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.dash-link {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.55rem 0.75rem;
+  border-radius: 10px;
+
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: #1f2937;
+  text-decoration: none;
+
+  transition:
+    background 0.18s ease,
+    color 0.18s ease,
+    transform 0.12s ease;
+}
+
+.dash-link:hover {
+  background: rgba(0, 0, 0, 0.035);
+}
+
+.dash-link.active {
+  background: rgba(0, 0, 0, 0.08);
+  font-weight: 600;
+}
+
+.dash-link.active::before {
+  content: "";
+  width: 4px;
+  height: 18px;
+  border-radius: 999px;
+  background: #111827;
+  margin-right: 0.5rem;
+}
+
+.dash-icon {
+  font-size: 1rem;
+  opacity: 0.85;
+}
+
+/* -------------------------
+   CARDS
+------------------------- */
+
+.dash-card {
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 1rem;
+
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.03),
+    0 8px 24px rgba(0, 0, 0, 0.04);
+}
+
+.dash-card.subtle {
+  background: transparent;
+  box-shadow: none;
+  padding: 0.25rem 0.25rem;
+}
+
+/* -------------------------
+   CARD TITLES
+------------------------- */
+
+.dash-card-title {
+  font-size: 0.65rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #6b7280;
+  margin-bottom: 0.25rem;
+}
+
+/* -------------------------
+   BUTTONS
+------------------------- */
+
+.dash-btn {
+  border-radius: 10px;
+  font-size: 0.78rem;
+  padding: 0.55rem 0.75rem;
+
+  border: none;
+  cursor: pointer;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  transition:
+    background 0.15s ease,
+    transform 0.12s ease,
+    box-shadow 0.12s ease;
+}
+
+.dash-btn.primary {
+  background: #111827;
+  color: #fff;
+}
+
+.dash-btn.primary:hover {
+  background: #000;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.18);
+}
+
+.dash-btn.ghost {
+  background: rgba(0, 0, 0, 0.03);
+  color: #111827;
+}
+
+.dash-btn.ghost:hover {
+  background: rgba(0, 0, 0, 0.06);
+}
+
+/* -------------------------
+   SUPPORT
+------------------------- */
+
+.dash-support {
+  font-size: 0.74rem;
+  color: #374151;
+  line-height: 1.55;
+}
+/* =========================================================
+   DASHBOARD TOP NAV
+========================================================= */
+
+.dash-topnav {
+  height: 64px;
+  background: #ffffff;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.dash-topnav-inner {
+  height: 100%;
+  padding: 0 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* -------------------------
+   BRAND
+------------------------- */
+
+.dash-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.dash-brand-text {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #111827;
+}
+
+.dash-brand-text span {
+  font-weight: 400;
+  color: #6b7280;
+}
+
+/* -------------------------
+   ACTIONS
+------------------------- */
+
+.dash-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.dash-topnav-link {
+  font-size: 0.8rem;
+  color: #374151;
+  text-decoration: none;
+}
+
+.dash-topnav-link:hover {
+  text-decoration: underline;
+}
+
+.dash-logout {
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  background: transparent;
+  border-radius: 8px;
+  padding: 0.4rem 0.75rem;
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.dash-logout:hover {
+  background: rgba(0, 0, 0, 0.04);
+}
+
+/* =========================================================
+   DASHBOARD PAGE
+========================================================= */
+
+.dash-page {
+  padding: 2rem;
+}
+
+/* -------------------------
+   HEADER
+------------------------- */
+
+.dash-page-header {
+  margin-bottom: 2rem;
+}
+
+.dash-title {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #111827;
+}
+
+.dash-subtitle {
+  font-size: 0.9rem;
+  color: #6b7280;
+  margin-top: 0.25rem;
+}
+
+/* -------------------------
+   GRID
+------------------------- */
+
+.dash-grid {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 1.5rem;
+}
+
+.dash-col {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* -------------------------
+   SURFACES
+------------------------- */
+
+.dash-surface {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 1.25rem;
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.03),
+    0 12px 32px rgba(0, 0, 0, 0.04);
+}
+
+.dash-surface.full {
+  height: 100%;
+}
+
+.dash-surface-header {
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #6b7280;
+  margin-bottom: 1rem;
+}
+
+/* -------------------------
+   LISTS
+------------------------- */
+
+.dash-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.dash-list-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* -------------------------
+   ITEMS
+------------------------- */
+
+.dash-item-title {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #111827;
+}
+
+.dash-item-meta {
+  font-size: 0.75rem;
+  color: #6b7280;
+}
+
+.dash-project {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.dash-project-icon {
+  font-size: 1.6rem;
+}
+
+/* -------------------------
+   STATUS
+------------------------- */
+
+.dash-status {
+  font-size: 0.7rem;
+  padding: 0.25rem 0.6rem;
+  border-radius: 999px;
+  font-weight: 600;
+}
+
+.dash-status.success {
+  background: rgba(16, 185, 129, 0.12);
+  color: #065f46;
+}
+
+.dash-status.active {
+  background: rgba(59, 130, 246, 0.12);
+  color: #1e3a8a;
+}
+
+.dash-status.muted {
+  background: rgba(0, 0, 0, 0.06);
+  color: #374151;
+}
+
+/* -------------------------
+   DOCUMENTS
+------------------------- */
+
+.dash-doc {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  font-size: 0.85rem;
+}
+
+.dash-doc:last-child {
+  border-bottom: none;
+}
+
+.dash-doc-action {
+  background: transparent;
+  border: none;
+  font-size: 0.75rem;
+  cursor: pointer;
+  color: #2563eb;
+}
+
+.dash-doc-action:hover {
+  text-decoration: underline;
+}
+
+/* -------------------------
+   MISC
+------------------------- */
+
+.dash-divider {
+  height: 1px;
+  background: rgba(0, 0, 0, 0.06);
+}
+
+.dash-pagination {
+  margin-top: 0.75rem;
+  font-size: 0.7rem;
+  color: #6b7280;
+}
