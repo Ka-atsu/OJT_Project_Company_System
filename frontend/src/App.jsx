@@ -16,6 +16,7 @@ import Register from "./pages/Register";
 import ClientDashboard from "./pages/Client/ClientDashboard";
 
 import warlyTestingRoutes from "./testingRoutes/warlyTestingRoutes";
+import kentTestingRoutes from "./testingRoutes/kentTestingRoutes";
 
 export default function App() {
   return (
@@ -35,6 +36,7 @@ export default function App() {
       </Route>
 
       {warlyTestingRoutes()}
+      {kentTestingRoutes()}
 
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
