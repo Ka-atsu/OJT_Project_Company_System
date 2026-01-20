@@ -1,33 +1,48 @@
 /* =====================
-   ABOUT PAGE (ONLY)
+   ABOUT (PAGE-SCOPED)
+===================== */
+
+/* =====================
+   HERO
 ===================== */
 
 .about-hero.hero--editorial {
   min-height: clamp(50vh, 60vh, 70vh);
 }
 
+/* Disable global hero zoom only on About */
+.about-hero::before {
+  animation: none;
+  transform: none;
+}
+
 .about-hero-overlay {
   background:
-    radial-gradient(900px 520px at 20% 20%, rgba(255,255,255,0.10), transparent 60%),
-    linear-gradient(to top, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0.30) 55%, rgba(0,0,0,0.14) 100%);
+    radial-gradient(
+      900px 520px at 20% 20%,
+      rgba(255, 255, 255, 0.1),
+      transparent 60%
+    ),
+    linear-gradient(
+      to top,
+      rgba(0, 0, 0, 0.72) 0%,
+      rgba(0, 0, 0, 0.3) 55%,
+      rgba(0, 0, 0, 0.14) 100%
+    );
 }
 
 .about-hero-content {
   padding-top: calc(72px + 1.75rem);
+  color: #fff;
 }
 
-.about-hero-eyebrow {
-  color: rgba(255, 255, 255, 0.72);
-}
-
-/* ---------- shared “Powerhouse-like” labeled sections ---------- */
-
-.about-eyebrow {
-  color: rgba(0, 0, 0, 0.55);
-}
+/* =====================
+   GRID WRAPPERS + STICKY META
+===================== */
 
 .about-intro-inner,
-.about-slice-inner {
+.about-slice-inner,
+.about-quote-inner {
   max-width: 1100px;
   margin: 0 auto;
   display: grid;
@@ -37,10 +52,15 @@
 }
 
 .about-intro-meta,
-.about-slice-meta {
+.about-slice-meta,
+.about-quote-meta {
   position: sticky;
   top: calc(72px + 2.25rem);
 }
+
+/* =====================
+   INTRO
+===================== */
 
 .about-intro-title {
   font-size: clamp(1.9rem, 3.2vw, 2.8rem);
@@ -54,7 +74,10 @@
   max-width: 70ch;
 }
 
-/* stats row */
+/* =====================
+   STATS
+===================== */
+
 .about-stats {
   margin-top: 1.75rem;
   display: grid;
@@ -63,7 +86,7 @@
 }
 
 .about-stat {
-  border-top: 1px solid rgba(0,0,0,0.18);
+  border-top: 1px solid rgba(0, 0, 0, 0.18);
   padding-top: 0.9rem;
 }
 
@@ -75,20 +98,39 @@
 .about-stat-v {
   margin-top: 0.35rem;
   font-size: 0.9rem;
-  color: rgba(0,0,0,0.65);
+  color: rgba(0, 0, 0, 0.65);
 }
 
-/* image */
+/* =====================
+   QUOTE / STATEMENT
+===================== */
+
+.about-quote-text {
+  margin: 0;
+  font-size: clamp(1.2rem, 2.2vw, 1.65rem);
+  line-height: 1.35;
+  letter-spacing: -0.02em;
+  color: rgba(0, 0, 0, 0.86);
+  max-width: 60ch;
+}
+
+/* =====================
+   IMAGE BAND
+===================== */
+
+.about-image-band {
+  border-radius: 22px;
+  overflow: hidden;
+}
+
 .about-image {
   filter: grayscale(100%) contrast(1.05);
 }
 
-.about-image-band {
-  border-radius: 22px;
-  overflow: hidden; /* ensures rounded corners clip the image */
-}
+/* =====================
+   SLICES
+===================== */
 
-/* editorial slices */
 .about-slice {
   padding-top: clamp(5rem, 8vw, 7rem);
   padding-bottom: clamp(5rem, 8vw, 7rem);
@@ -104,109 +146,13 @@
 .about-slice-text {
   margin-top: 1.15rem;
   max-width: 72ch;
-  color: rgba(0,0,0,0.75);
-}
-
-/* safety callout inside safety section */
-.about-safety-callout {
-  margin-top: 1.75rem;
-  padding: 1.5rem 1.6rem;
-  border-left: 2px solid var(--line);
-  background: rgba(0, 0, 0, 0.02);
-}
-
-.about-subtitle {
-  font-weight: 800;
-  margin: 0.45rem 0 0.75rem;
-}
-
-/* CTA page-scoped button */
-.about-cta {
-  --cta-overlay: linear-gradient(
-    to top,
-    rgba(0, 0, 0, 0.78) 0%,
-    rgba(0, 0, 0, 0.34) 55%,
-    rgba(0, 0, 0, 0.18) 100%
-  );
-}
-
-.about-cta-title {
-  margin-top: 0.6rem;
-  font-size: clamp(2rem, 3.6vw, 3.1rem);
-  letter-spacing: -0.03em;
-  line-height: 1.05;
-}
-
-.about-cta-text {
-  margin-top: 1rem;
-  color: rgba(255, 255, 255, 0.82);
-  max-width: 62ch;
-}
-
-.about-cta-button {
-  margin-top: 1.35rem;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 999px;
-  padding: 0.9rem 1.25rem;
-  background: #fff;
-  color: #000;
-  font-size: 0.85rem;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  font-weight: 800;
-  cursor: pointer;
-  user-select: none;
-}
-
-.auth-three{
-  width: min(380px, 100%);
-  height: 190px;          /* was 130px */
-  margin: 0 auto 6px;
-  background: transparent;
-  box-shadow: none;
-  overflow: visible;      /* keep this */
-  pointer-events: none;
-}
-
-.auth-three canvas {
-  width: 100% !important;
-  height: 100% !important;
-  display: block;
+  color: rgba(0, 0, 0, 0.75);
 }
 
 /* =====================
-   ADDITIONS FOR YOUR NEW JSX
-   - Quote / Statement
-   - Values bullets
+   VALUES BULLETS
 ===================== */
 
-/* Quote / statement block */
-.about-quote-inner {
-  max-width: 1100px;
-  margin: 0 auto;
-  display: grid;
-  grid-template-columns: minmax(180px, 240px) 1fr;
-  gap: clamp(2rem, 6vw, 5rem);
-  align-items: start;
-}
-
-.about-quote-meta {
-  position: sticky;
-  top: calc(72px + 2.25rem);
-}
-
-.about-quote-text {
-  margin: 0;
-  font-size: clamp(1.2rem, 2.2vw, 1.65rem);
-  line-height: 1.35;
-  letter-spacing: -0.02em;
-  color: rgba(0, 0, 0, 0.86);
-  max-width: 60ch;
-}
-
-/* Values bullets (Quality / Safety / Integrity) */
 .about-bullets {
   margin-top: 1.6rem;
   display: grid;
@@ -228,4 +174,20 @@
   color: rgba(0, 0, 0, 0.75);
   font-size: 0.95rem;
   line-height: 1.7;
+}
+
+/* =====================
+   SAFETY / SUBTITLE
+===================== */
+
+.about-safety-callout {
+  margin-top: 1.75rem;
+  padding: 1.5rem 1.6rem;
+  border-left: 2px solid var(--line);
+  background: rgba(0, 0, 0, 0.02);
+}
+
+.about-subtitle {
+  font-weight: 800;
+  margin: 0.45rem 0 0.75rem;
 }

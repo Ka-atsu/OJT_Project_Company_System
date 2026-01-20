@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import ConstructionSite from "../assets/Images/ConstructionSite.jpg";
 import PageShell from "../components/layouts/PageShell";
@@ -88,15 +88,6 @@ const ABOUT = {
       ],
     },
   ],
-
-  cta: {
-    eyebrow: "Next steps",
-    title: "Let’s talk about your requirements.",
-    body: "Tell us about your site location, volumes, and timeline—and we’ll align on the right materials and delivery plan.",
-    button: "Contact Us",
-    to: "/contact",
-    bg: ConstructionSite,
-  },
 };
 
 function AboutSection({ label, title, body, bullets }) {
@@ -114,10 +105,10 @@ function AboutSection({ label, title, body, bullets }) {
           variants={fadeUp}
           transition={{ duration: 0.7, ease: EASE }}
         >
-          <span className="eyebrow about-eyebrow">{label}</span>
+          <span className="eyebrow">{label}</span>
         </motion.aside>
 
-        <div className="about-slice-body">
+        <div>
           <motion.h2
             className="about-slice-title"
             variants={fadeUp}
@@ -155,22 +146,58 @@ function AboutSection({ label, title, body, bullets }) {
 }
 
 export default function About() {
-  const navigate = useNavigate();
-  const { hero, intro, quote, sections, cta } = ABOUT;
+  const navigate = useNavigate(); // (unused for now, you can remove this import too)
+  const { hero, intro, quote, sections } = ABOUT;
+
+  const { scrollY } = useScroll();
+  const heroTextY = useTransform(scrollY, [0, 500], [0, -40]);
+  const headlineY = useTransform(scrollY, [0, 500], [0, -70]);
+  const overlayOpacity = useTransform(scrollY, [0, 500], [1, 0.6]);
 
   return (
     <>
       {/* HERO */}
-      <section
+      <motion.section
         className="hero hero--editorial full-bleed about-hero"
         style={{ "--hero-bg": `url(${hero.bg})` }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.8, ease: EASE }}
       >
-        <div className="hero-overlay about-hero-overlay" />
-      </section>
+        <motion.div
+          className="hero-overlay about-hero-overlay"
+          style={{ opacity: overlayOpacity }}
+        />
+
+        <motion.div
+          className="hero-content about-hero-content"
+          style={{ y: heroTextY }}
+          variants={stagger}
+          initial="hidden"
+          animate="visible"
+        >
+          <motion.span
+            className="eyebrow"
+            variants={fadeUp}
+            transition={{ duration: 0.7, ease: EASE }}
+          >
+            {hero.eyebrow}
+          </motion.span>
+
+          <motion.h1
+            className="kinetic-headline big"
+            variants={fadeUp}
+            style={{ y: headlineY }}
+            transition={{ duration: 0.85, ease: EASE }}
+          >
+            {hero.headline}
+          </motion.h1>
+        </motion.div>
+      </motion.section>
 
       <PageShell>
         {/* INTRO */}
-        <section className="section section--after-hero about-intro">
+        <section className="section section--after-hero">
           <motion.div
             className="about-intro-inner"
             variants={stagger}
@@ -183,10 +210,10 @@ export default function About() {
               variants={fadeUp}
               transition={{ duration: 0.7, ease: EASE }}
             >
-              <span className="eyebrow about-eyebrow">{intro.label}</span>
+              <span className="eyebrow">{intro.label}</span>
             </motion.aside>
 
-            <div className="about-intro-body">
+            <div>
               <motion.h2
                 className="about-intro-title"
                 variants={fadeUp}
@@ -223,7 +250,7 @@ export default function About() {
         </section>
 
         {/* QUOTE */}
-        <section className="section about-quote">
+        <section className="section">
           <motion.div
             className="about-quote-inner"
             variants={stagger}
@@ -236,7 +263,7 @@ export default function About() {
               variants={fadeUp}
               transition={{ duration: 0.7, ease: EASE }}
             >
-              <span className="eyebrow about-eyebrow">{quote.label}</span>
+              <span className="eyebrow">{quote.label}</span>
             </motion.aside>
 
             <motion.blockquote
@@ -250,7 +277,7 @@ export default function About() {
         </section>
 
         {/* IMAGE */}
-        <section className="section about-image-section">
+        <section className="section">
           <div className="image-band about-image-band">
             <motion.img
               src={ConstructionSite}
@@ -269,57 +296,6 @@ export default function About() {
           <AboutSection key={s.label} {...s} />
         ))}
       </PageShell>
-
-      {/* CTA */}
-      <section
-        className="section cta full-bleed about-cta"
-        style={{ "--cta-bg": `url(${cta.bg})` }}
-      >
-        <motion.div
-          className="cta-content"
-          variants={stagger}
-          initial="hidden"
-          whileInView="visible"
-          viewport={VIEWPORT}
-        >
-          <motion.span
-            className="eyebrow"
-            variants={fadeUp}
-            transition={{ duration: 0.7, ease: EASE }}
-          >
-            {cta.eyebrow}
-          </motion.span>
-
-          <motion.h2
-            className="about-cta-title"
-            variants={fadeUp}
-            transition={{ duration: 0.8, ease: EASE }}
-          >
-            {cta.title}
-          </motion.h2>
-
-          <motion.p
-            className="about-cta-text"
-            variants={fadeUp}
-            transition={{ duration: 0.8, ease: EASE }}
-          >
-            {cta.body}
-          </motion.p>
-
-          <motion.div
-            className="about-cta-button"
-            role="button"
-            tabIndex={0}
-            onClick={() => navigate(cta.to)}
-            whileHover={{ y: -2 }}
-            whileTap={{ scale: 0.97 }}
-            variants={fadeUp}
-            transition={{ duration: 0.6, ease: EASE }}
-          >
-            {cta.button}
-          </motion.div>
-        </motion.div>
-      </section>
     </>
   );
 }

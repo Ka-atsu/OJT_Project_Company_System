@@ -1,18 +1,47 @@
 import PageShell from "../components/layouts/PageShell";
 import { Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
-import { motion } from "framer-motion";
+import { useLayoutEffect, useRef, useState } from "react";
+import {
+  motion,
+  AnimatePresence,
+  useScroll,
+  useTransform,
+} from "framer-motion";
 
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-import ConstructionSite from "../assets/Images/constructionSite.jpg";
-import EarthMovingEquipment from "../assets/Images/earthmoving_equipment.jpg";
+import ConstructionSite from "../assets/images/constructionSite.jpg";
+import EarthMovingEquipment from "../assets/images/earthmovingEquipment.jpg";
 
 import "../css/home.css";
 
 gsap.registerPlugin(ScrollTrigger);
+
+const VIEWPORT = { amount: 0.35 };
+const VIEWPORT_CARDS = { amount: 0.25 };
+
+const EASE = [0.22, 1, 0.36, 1];
+
+const revealStagger = {
+  hidden: {},
+  visible: {
+    transition: {
+      staggerChildren: 0.14,
+      delayChildren: 0.08,
+    },
+  },
+};
+
+const fadeUpItem = {
+  hidden: { opacity: 0, y: 22 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.6, ease: EASE },
+  },
+};
 
 const HOME = {
   heroScroll: {
@@ -66,21 +95,13 @@ const HOME = {
       },
     ],
   },
-
-  cta: {
-    eyebrow: "Next steps",
-    title: "Let’s plan your materials supply",
-    body: "Share your site details and required volumes, and we’ll help you determine the right materials and approach.",
-    button: { label: "Start a Conversation", to: "/contact" },
-  },
 };
 
 export default function Home() {
-  const { heroScroll, modules, cta } = HOME;
+  const { heroScroll, modules } = HOME;
 
-  const wrapRef = useRef(null); // trigger region
-  const pinRef = useRef(null); // element that gets pinned
-  const contentRef = useRef(null);
+  const wrapRef = useRef(null);
+  const pinRef = useRef(null);
 
   const [active, setActive] = useState(0);
   const total = heroScroll.slides.length;
@@ -89,11 +110,12 @@ export default function Home() {
   const counterLeft = String(active + 1).padStart(2, "0");
   const counterRight = String(total).padStart(2, "0");
 
-  // IMPORTANT: useLayoutEffect so cleanup runs BEFORE React removes DOM
+  const { scrollY } = useScroll();
+  const heroTextY = useTransform(scrollY, [0, 700], [0, -24]);
+
   useLayoutEffect(() => {
     if (!wrapRef.current || !pinRef.current) return;
 
-    // kill only our trigger (don’t nuke all ScrollTriggers)
     ScrollTrigger.getById("home-hero-pin")?.kill(true);
 
     const ctx = gsap.context(() => {
@@ -108,7 +130,7 @@ export default function Home() {
         invalidateOnRefresh: true,
         onUpdate: (self) => {
           const idx = Math.min(total - 1, Math.floor(self.progress * total));
-          setActive(idx);
+          setActive((prev) => (prev === idx ? prev : idx));
         },
       });
 
@@ -116,26 +138,13 @@ export default function Home() {
     }, wrapRef);
 
     return () => {
-      // ensure the pinned element is restored before unmount
       ScrollTrigger.getById("home-hero-pin")?.kill(true);
       ctx.revert();
     };
   }, [total]);
 
-  // Fade text when slide changes
-  useEffect(() => {
-    if (!contentRef.current) return;
-
-    gsap.fromTo(
-      contentRef.current,
-      { autoAlpha: 0, y: 18 },
-      { autoAlpha: 1, y: 0, duration: 0.35, ease: "power2.out" },
-    );
-  }, [active]);
-
   return (
     <>
-      {/* PINNED HERO */}
       <section ref={wrapRef} className="hero-scroll">
         <section
           ref={pinRef}
@@ -153,84 +162,131 @@ export default function Home() {
           </div>
 
           <div className="home-hero-stage">
-            <div ref={contentRef} className="hero-content home-hero-content">
-              <span className="eyebrow">{heroScroll.eyebrow}</span>
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={active}
+                className="hero-content home-hero-content"
+                style={{ y: heroTextY }}
+                initial={{ opacity: 0, y: 18, filter: "blur(6px)" }}
+                animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                exit={{ opacity: 0, y: -10, filter: "blur(6px)" }}
+                transition={{ duration: 0.35, ease: "easeOut" }}
+              >
+                <motion.span
+                  className="eyebrow"
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.25, delay: 0.05 }}
+                >
+                  {heroScroll.eyebrow}
+                </motion.span>
 
-              <h1 className="hero-title">
-                {slide.titleLines[0]}
-                <br />
-                <span className="light">{slide.titleLines[1]}</span>
-              </h1>
+                <motion.h1
+                  className="hero-title"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.35, delay: 0.08 }}
+                >
+                  {slide.titleLines[0]}
+                  <br />
+                  <span className="light">{slide.titleLines[1]}</span>
+                </motion.h1>
 
-              {slide.lede && <p className="home-hero-lede">{slide.lede}</p>}
-
-              {slide.showActions && (
-                <div className="hero-actions">
-                  <Button
-                    as={Link}
-                    to={heroScroll.primaryCta.to}
-                    variant="light"
-                    size="lg"
+                {slide.lede && (
+                  <motion.p
+                    className="home-hero-lede"
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.35, delay: 0.12 }}
                   >
-                    {heroScroll.primaryCta.label}
-                  </Button>
+                    {slide.lede}
+                  </motion.p>
+                )}
 
-                  <Button
-                    as={Link}
-                    to={heroScroll.secondaryCta.to}
-                    variant="outline-light"
+                {slide.showActions && (
+                  <motion.div
+                    className="hero-actions"
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.35, delay: 0.16 }}
                   >
-                    {heroScroll.secondaryCta.label}
-                  </Button>
-                </div>
-              )}
-            </div>
+                    <Button
+                      as={Link}
+                      to={heroScroll.primaryCta.to}
+                      variant="light"
+                      size="lg"
+                    >
+                      {heroScroll.primaryCta.label}
+                    </Button>
+
+                    <Button
+                      as={Link}
+                      to={heroScroll.secondaryCta.to}
+                      variant="outline-light"
+                    >
+                      {heroScroll.secondaryCta.label}
+                    </Button>
+                  </motion.div>
+                )}
+              </motion.div>
+            </AnimatePresence>
           </div>
         </section>
       </section>
 
-      {/* CONTENT BELOW */}
       <PageShell pad={false}>
         <section className="section section--tight home-modules">
           <div className="home-modules-inner">
-            <span className="eyebrow">{modules.eyebrow}</span>
-            <h2 className="home-section-title">{modules.title}</h2>
+            <motion.div
+              initial="hidden"
+              whileInView="visible"
+              viewport={VIEWPORT}
+              variants={revealStagger}
+            >
+              <motion.span className="eyebrow" variants={fadeUpItem}>
+                {modules.eyebrow}
+              </motion.span>
 
-            <div className="home-modules-grid">
-              {modules.items.map((item) => (
-                <motion.article
-                  key={item.num}
-                  className="home-module"
-                  whileHover={{ y: -4 }}
-                  transition={{ duration: 0.25, ease: "easeOut" }}
-                >
-                  <div className="home-module-num">{item.num}</div>
-                  <div className="home-module-media">
-                    <img src={item.img} alt={item.alt} />
-                  </div>
-                  <h3>{item.title}</h3>
-                  <p>{item.desc}</p>
-                </motion.article>
-              ))}
-            </div>
+              <motion.h2 className="home-section-title" variants={fadeUpItem}>
+                {modules.title}
+              </motion.h2>
+
+              <motion.div
+                className="home-modules-grid"
+                variants={revealStagger}
+                initial="hidden"
+                whileInView="visible"
+                viewport={VIEWPORT_CARDS}
+              >
+                {modules.items.map((item) => (
+                  <motion.article
+                    key={item.num}
+                    className="home-module"
+                    variants={fadeUpItem}
+                    whileHover={{ y: -4 }}
+                    transition={{ duration: 0.25, ease: "easeOut" }}
+                  >
+                    <div className="home-module-num">{item.num}</div>
+
+                    <motion.div
+                      className="home-module-media"
+                      initial={{ scale: 1.02 }}
+                      whileInView={{ scale: 1 }}
+                      viewport={VIEWPORT_CARDS}
+                      transition={{ duration: 0.8, ease: EASE }}
+                    >
+                      <img src={item.img} alt={item.alt} />
+                    </motion.div>
+
+                    <h3>{item.title}</h3>
+                    <p>{item.desc}</p>
+                  </motion.article>
+                ))}
+              </motion.div>
+            </motion.div>
           </div>
         </section>
       </PageShell>
-
-      {/* CTA */}
-      <section
-        className="section cta full-bleed home-cta"
-        style={{ "--cta-bg": `url(${EarthMovingEquipment})` }}
-      >
-        <div className="cta-content">
-          <span className="eyebrow">{cta.eyebrow}</span>
-          <h2>{cta.title}</h2>
-          <p>{cta.body}</p>
-          <Button as={Link} to={cta.button.to} variant="light">
-            {cta.button.label}
-          </Button>
-        </div>
-      </section>
     </>
   );
 }

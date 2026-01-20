@@ -1,0 +1,184 @@
+/* =====================
+   CONTACT PAGE ONLY
+===================== */
+
+/* =====================
+   HERO
+===================== */
+
+.contact-hero {
+  background: #d9d9d9;
+  min-height: clamp(280px, 34vh, 420px);
+  display: flex;
+  align-items: center;
+  padding: clamp(4.5rem, 10vh, 6.5rem) var(--pad-x);
+}
+
+.contact-hero-inner {
+  max-width: 1100px; /* match index hero/cta width */
+  margin: 0 auto;
+  width: 100%;
+  text-align: center;
+}
+
+.contact-hero-inner h1 {
+  font-size: clamp(2.2rem, 4vw, 3.2rem);
+  letter-spacing: -0.03em;
+  line-height: 1.02;
+  margin: 0;
+}
+
+.contact-hero-inner .btn {
+  margin-top: 1.25rem;
+  border-radius: 999px; /* match system */
+  padding: 0.75rem 1.1rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-weight: 800;
+}
+
+/* =====================
+   SECTION RHYTHM
+===================== */
+
+.contact-ways,
+.contact-form-section {
+  background: #fff;
+}
+
+/* tighter than global 18vh sections */
+.contact-ways {
+  padding: clamp(3.5rem, 6vw, 5rem) var(--pad-x);
+  text-align: center;
+}
+
+.contact-form-section {
+  padding: clamp(3.5rem, 6vw, 5.5rem) var(--pad-x);
+}
+
+/* shared width constraint */
+.contact-ways-inner,
+.contact-form-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+/* heading styling matches your editorial pages */
+.contact-ways h2 {
+  font-size: clamp(1.6rem, 2.6vw, 2.2rem);
+  letter-spacing: -0.02em;
+  margin-bottom: 1.25rem;
+}
+
+/* small helper text tone consistent */
+.contact-ways .contact-ways-note {
+  margin: 1.75rem auto 0;
+  color: rgba(0, 0, 0, 0.6);
+  max-width: 62ch;
+  font-size: 0.95rem;
+}
+
+/* =====================
+   WAYS CARDS
+===================== */
+
+.contact-way {
+  border-radius: 16px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.06);
+  overflow: hidden;
+}
+
+.contact-way .card-body {
+  padding: 1.35rem;
+}
+
+.contact-way-icon {
+  width: 72px;
+  height: 72px;
+  margin: 0 auto 0.65rem;
+  display: grid;
+  place-items: center;
+  background: rgba(0, 0, 0, 0.06);
+  border-radius: 16px;
+  font-size: 30px;
+}
+
+.contact-way .fw-semibold {
+  letter-spacing: -0.01em;
+}
+
+.contact-way .text-muted {
+  color: rgba(0, 0, 0, 0.6) !important;
+}
+
+/* =====================
+   FORM BOX
+===================== */
+
+.contact-form-box {
+  width: 100%;
+  max-width: 760px;
+  margin: 0 auto;
+
+  background: rgba(0, 0, 0, 0.03);
+  border-radius: 18px;
+  padding: 1.6rem;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.06);
+}
+
+.contact-form-head {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.contact-form-head .title {
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+
+.contact-form-head .sub {
+  margin-top: 0.35rem;
+  color: rgba(0, 0, 0, 0.62);
+  font-size: 0.95rem;
+}
+
+/* bootstrap form polish */
+.contact-form-box .form-label {
+  font-size: 0.78rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-weight: 800;
+  color: rgba(0, 0, 0, 0.65);
+}
+
+.contact-form-box .form-control {
+  border-radius: 14px;
+  border: 1px solid rgba(0, 0, 0, 0.14);
+  padding: 0.85rem 0.95rem;
+}
+
+.contact-form-box .form-control:focus {
+  border-color: rgba(0, 0, 0, 0.55);
+  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
+}
+
+.contact-form-actions {
+  text-align: center;
+  margin-top: 0.25rem;
+}
+
+.contact-form-actions .btn {
+  border-radius: 999px;
+  padding: 0.85rem 1.25rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-weight: 800;
+}
+
+.contact-form-actions .hint {
+  margin-top: 0.85rem;
+  color: rgba(0, 0, 0, 0.55);
+  font-size: 0.9rem;
+}

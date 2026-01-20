@@ -2,32 +2,39 @@
    HOME — HERO
 ===================== */
 
-/* Optional: keep these wrappers neutral unless you're doing pinning with JS */
 .hero-scroll {
-  position: relative;
-}
-.hero-pin {
   position: relative;
 }
 
 .home-hero {
   color: #fff;
+  min-height: 100vh;
 }
 
-/* Darken + shape the hero image */
 .home-hero-overlay {
   background:
-    radial-gradient(900px 520px at 18% 18%, rgba(255, 255, 255, 0.10), transparent 60%),
-    radial-gradient(900px 520px at 82% 42%, rgba(255, 255, 255, 0.08), transparent 55%),
-    linear-gradient(to top, rgba(0, 0, 0, 0.78) 0%, rgba(0, 0, 0, 0.28) 55%, rgba(0, 0, 0, 0.12) 100%);
+    radial-gradient(
+      900px 520px at 18% 18%,
+      rgba(255, 255, 255, 0.1),
+      transparent 60%
+    ),
+    radial-gradient(
+      900px 520px at 82% 42%,
+      rgba(255, 255, 255, 0.08),
+      transparent 55%
+    ),
+    linear-gradient(
+      to top,
+      rgba(0, 0, 0, 0.78) 0%,
+      rgba(0, 0, 0, 0.28) 55%,
+      rgba(0, 0, 0, 0.12) 100%
+    );
 }
 
-/* Hero eyebrow should be readable on dark */
 .home-hero .eyebrow {
   color: rgba(255, 255, 255, 0.72);
 }
 
-/* You didn't define .hero-title in index.css, so Home provides it */
 .home-hero .hero-title {
   margin-top: 0.35rem;
   font-size: clamp(2.5rem, 5.2vw, 5.2rem);
@@ -37,17 +44,30 @@
   max-width: 18ch;
 }
 
-/* If your fixed nav overlaps the hero content, this offsets it */
 .home-hero .hero-content {
   padding-top: calc(72px + 1.5rem);
+}
+
+.home-hero-stage {
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.home-hero-meta {
+  position: absolute;
+  top: calc(72px + 18px);
+  left: var(--pad-x);
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
 /* =====================
    HOME — SECTION WIDTH + RHYTHM
 ===================== */
 
-/* Your global .section uses --pad-y: 18vh (big).
-   Home needs a tighter editorial rhythm. */
 .section.home-what {
   padding: clamp(5rem, 8vw, 7rem) var(--pad-x);
 }
@@ -57,10 +77,8 @@
   padding-bottom: clamp(4.5rem, 7vw, 6.5rem);
 }
 
-/* Constrain key blocks to the same width as your hero/cta system */
 .home-editorial,
-.home-modules-inner,
-.home-cta .cta-content {
+.home-modules-inner {
   max-width: 1100px;
   margin: 0 auto;
 }
@@ -87,7 +105,7 @@
 
 .home-editorial-meta {
   position: sticky;
-  top: calc(72px + 2.25rem); /* aligns with your fixed nav height */
+  top: calc(72px + 2.25rem);
 }
 
 .home-counter {
@@ -117,7 +135,6 @@
   max-width: 60ch;
 }
 
-/* Make the editorial button feel intentional on dark */
 .home-what .btn.btn-light {
   border-radius: 999px;
   padding: 0.75rem 1.15rem;
@@ -147,6 +164,7 @@
 .home-module {
   border-top: 1px solid rgba(0, 0, 0, 0.18);
   padding-top: 1.25rem;
+  will-change: transform, opacity;
 }
 
 .home-module-num {
@@ -169,7 +187,6 @@
   object-fit: cover;
 }
 
-/* Title + text tone for modules */
 .home-module h3 {
   margin: 0 0 0.55rem;
   font-size: 1.05rem;
@@ -178,61 +195,10 @@
 
 .home-module p {
   margin: 0;
-  color: rgba(0, 0, 0, 0.70);
+  color: rgba(0, 0, 0, 0.7);
   max-width: none;
 }
 
-/* If you ever reuse modules on dark sections, this prevents invisible borders */
 .home-what .home-module {
   border-top-color: rgba(255, 255, 255, 0.14);
-}
-
-/* =====================
-   HOME — CTA
-===================== */
-
-.home-cta {
-  /* override the default overlay to feel more "designed" */
-  --cta-overlay: linear-gradient(
-    to top,
-    rgba(0, 0, 0, 0.80) 0%,
-    rgba(0, 0, 0, 0.38) 55%,
-    rgba(0, 0, 0, 0.20) 100%
-  );
-}
-
-.home-cta .cta-content h2 {
-  font-size: clamp(2rem, 3.6vw, 3.1rem);
-  letter-spacing: -0.03em;
-  line-height: 1.05;
-  margin-top: 0.6rem;
-}
-
-.home-cta .cta-content p {
-  margin-top: 1rem;
-  color: rgba(255, 255, 255, 0.80);
-  max-width: 62ch;
-}
-
-.home-cta .btn.btn-light {
-  border-radius: 999px;
-  padding: 0.85rem 1.2rem;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  font-weight: 800;
-}
-
-.hero-scroll { position: relative; }
-.home-hero { min-height: 100vh; color: #fff; }
-.home-hero-stage { height: 100%; display: flex; align-items: center; }
-
-/* top-left tag/counter */
-.home-hero-meta{
-  position: absolute;
-  top: calc(72px + 18px);
-  left: var(--pad-x);
-  z-index: 2;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
 }

@@ -7,6 +7,7 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import PageShell from "../components/layouts/PageShell";
 import ReCAPTCHA from "react-google-recaptcha";
+import "../css/contact.css";
 
 export default function Contact() {
   const [form, setForm] = useState({
@@ -50,14 +51,11 @@ export default function Contact() {
 
     setLoading(true);
     try {
-      // Fake submit (replace with API later)
       await new Promise((r) => setTimeout(r, 800));
-
       setStatus({ type: "success", msg: "Message sent successfully!" });
       setForm({ name: "", email: "", subject: "", message: "" });
       setCaptcha(null);
-      captchaRef.current.reset();
-
+      captchaRef.current?.reset?.();
     } catch {
       setStatus({ type: "danger", msg: "Something went wrong. Try again." });
     } finally {
@@ -65,132 +63,173 @@ export default function Contact() {
     }
   };
 
+  const scrollToForm = () => {
+    document
+      .getElementById("contact-form")
+      ?.scrollIntoView({ behavior: "smooth" });
+  };
+
   return (
-    <PageShell className="py-4">
-      <div className="mb-3">
-        <h1 className="fw-bold mb-1">Contact</h1>
-        <p className="text-muted mb-0">
-          Send us a message and we’ll get back to you.
-        </p>
-      </div>
+    <PageShell className="contact-page p-0">
+      {/* HERO */}
+      <section className="contact-hero">
+        <div className="contact-hero-inner">
+          <h1>Contact Us</h1>
+          <Button variant="dark" size="sm" onClick={scrollToForm}>
+            Send a Message
+          </Button>
+        </div>
+      </section>
 
-      {status.msg && <Alert variant={status.type}>{status.msg}</Alert>}
+      {/* WAYS */}
+      <section className="contact-ways">
+        <div className="contact-ways-inner">
+          <h2>Ways to Contact us</h2>
 
-      <Row className="g-4">
-        <Col xs={12} lg={7}>
-          <Card>
-            <Card.Body>
-              <h5 className="fw-bold mb-3">Contact Form</h5>
+          <Row className="g-4 justify-content-center">
+            <Col xs={12} md={4} lg={3}>
+              <Card className="contact-way h-100 text-center">
+                <Card.Body>
+                  <div className="contact-way-icon" aria-hidden="true">
+                    📍
+                  </div>
+                  <div className="fw-semibold mt-2">Location</div>
+                  <div className="text-muted small mt-2">
+                    Insert address here <br />
+                    Mon–Fri 8:00 AM – 6:00 PM
+                  </div>
+                </Card.Body>
+              </Card>
+            </Col>
 
-              <Form onSubmit={handleSubmit}>
-                {/* Name */}
-                <Form.Group className="mb-3">
-                  <Form.Label>Name</Form.Label>
-                  <Form.Control
-                    name="name"
-                    value={form.name}
-                    onChange={handleChange}
-                    placeholder="Enter your name"
-                    isInvalid={!!errors.name}
-                  />
-                  <Form.Control.Feedback type="invalid">
-                    {errors.name}
-                  </Form.Control.Feedback>
-                </Form.Group>
+            <Col xs={12} md={4} lg={3}>
+              <Card className="contact-way h-100 text-center">
+                <Card.Body>
+                  <div className="contact-way-icon" aria-hidden="true">
+                    📞
+                  </div>
+                  <div className="fw-semibold mt-2">Phone Number</div>
+                  <div className="text-muted small mt-2">0900000000</div>
+                </Card.Body>
+              </Card>
+            </Col>
 
-                {/* Email */}
-                <Form.Group className="mb-3">
-                  <Form.Label>Email</Form.Label>
-                  <Form.Control
-                    name="email"
-                    value={form.email}
-                    onChange={handleChange}
-                    placeholder="Enter your email"
-                    isInvalid={!!errors.email}
-                  />
-                  <Form.Control.Feedback type="invalid">
-                    {errors.email}
-                  </Form.Control.Feedback>
-                </Form.Group>
+            <Col xs={12} md={4} lg={3}>
+              <Card className="contact-way h-100 text-center">
+                <Card.Body>
+                  <div className="contact-way-icon" aria-hidden="true">
+                    ✉️
+                  </div>
+                  <div className="fw-semibold mt-2">Email</div>
+                  <div className="text-muted small mt-2">
+                    something@gmail.com
+                  </div>
+                </Card.Body>
+              </Card>
+            </Col>
+          </Row>
 
-                {/* Subject */}
-                <Form.Group className="mb-3">
-                  <Form.Label>Subject</Form.Label>
-                  <Form.Control
-                    name="subject"
-                    value={form.subject}
-                    onChange={handleChange}
-                    placeholder="Enter your subject"
-                    isInvalid={!!errors.subject}
-                  />
-                  <Form.Control.Feedback type="invalid">
-                    {errors.subject}
-                  </Form.Control.Feedback>
-                </Form.Group>
+          <p className="contact-ways-note">
+            Our company services staff is waiting to assist you! <br />
+            Reach us through any of the channels above.
+          </p>
+        </div>
+      </section>
 
-                {/* Message */}
-                <Form.Group className="mb-3">
-                  <Form.Label>Message</Form.Label>
-                  <Form.Control
-                    as="textarea"
-                    rows={5}
-                    name="message"
-                    value={form.message}
-                    onChange={handleChange}
-                    placeholder="Write your message..."
-                    isInvalid={!!errors.message}
-                  />
-                  <Form.Control.Feedback type="invalid">
-                    {errors.message}
-                  </Form.Control.Feedback>
-                </Form.Group>
+      {/* FORM */}
+      <section id="contact-form" className="contact-form-section">
+        <div className="contact-form-inner">
+          <div className="contact-form-box">
+            <div className="contact-form-head">
+              <div className="title">Contact us!</div>
+              <div className="sub">You can send general enquiries here!</div>
+            </div>
 
-                {/* CAPTCHA */}
-                <Form.Group className="mb-3">
-                  <ReCAPTCHA
-                    ref={captchaRef}
-                    sitekey="6Lcw_04sAAAAAOz84QKlQUGSzIJZgasCu5wpy8e6"
-                    onChange={(value) => setCaptcha(value)}
-                  />
-                  {errors.captcha && (
-                    <div className="text-danger mt-1">
-                      {errors.captcha}
-                    </div>
-                  )}
-                </Form.Group>
+            {status.msg && <Alert variant={status.type}>{status.msg}</Alert>}
 
-                <Button type="submit" variant="primary" disabled={loading}>
-                  {loading ? "Sending..." : "Send Message"}
+            <Form onSubmit={handleSubmit}>
+              <Form.Group className="mb-3">
+                <Form.Label>Name</Form.Label>
+                <Form.Control
+                  name="name"
+                  value={form.name}
+                  onChange={handleChange}
+                  placeholder="e.g. Jimmy Sales"
+                  isInvalid={!!errors.name}
+                />
+                <Form.Control.Feedback type="invalid">
+                  {errors.name}
+                </Form.Control.Feedback>
+              </Form.Group>
+
+              <Form.Group className="mb-3">
+                <Form.Label>Email</Form.Label>
+                <Form.Control
+                  name="email"
+                  value={form.email}
+                  onChange={handleChange}
+                  placeholder="e.g. jimmy.sales@gmail.com"
+                  isInvalid={!!errors.email}
+                />
+                <Form.Control.Feedback type="invalid">
+                  {errors.email}
+                </Form.Control.Feedback>
+              </Form.Group>
+
+              <Form.Group className="mb-3">
+                <Form.Label>Subject</Form.Label>
+                <Form.Control
+                  name="subject"
+                  value={form.subject}
+                  onChange={handleChange}
+                  placeholder="Subject"
+                  isInvalid={!!errors.subject}
+                />
+                <Form.Control.Feedback type="invalid">
+                  {errors.subject}
+                </Form.Control.Feedback>
+              </Form.Group>
+
+              <Form.Group className="mb-3">
+                <Form.Label>Message</Form.Label>
+                <Form.Control
+                  as="textarea"
+                  rows={5}
+                  name="message"
+                  value={form.message}
+                  onChange={handleChange}
+                  placeholder="Message"
+                  isInvalid={!!errors.message}
+                />
+                <Form.Control.Feedback type="invalid">
+                  {errors.message}
+                </Form.Control.Feedback>
+              </Form.Group>
+
+              <Form.Group className="mb-3">
+                <ReCAPTCHA
+                  ref={captchaRef}
+                  sitekey="6Lcw_04sAAAAAOz84QKlQUGSzIJZgasCu5wpy8e6"
+                  onChange={(value) => setCaptcha(value)}
+                />
+                {errors.captcha && (
+                  <div className="text-danger mt-1 small">{errors.captcha}</div>
+                )}
+              </Form.Group>
+
+              <div className="contact-form-actions">
+                <Button type="submit" variant="dark" disabled={loading}>
+                  {loading ? "Sending..." : "Submit"}
                 </Button>
-              </Form>
-            </Card.Body>
-          </Card>
-        </Col>
 
-        {/* Company Info */}
-        <Col xs={12} lg={5}>
-          <Card>
-            <Card.Body>
-              <h5 className="fw-bold mb-3">Company Info</h5>
-              <p className="mb-2">
-                <strong>Email:</strong> yourcompany@email.com
-              </p>
-              <p className="mb-2">
-                <strong>Phone:</strong> +63 9XX XXX XXXX
-              </p>
-              <p className="mb-0">
-                <strong>Location:</strong> Your City, Philippines
-              </p>
-
-              <hr />
-
-              <p className="mb-0 text-muted">
-                (You can update these details later from the admin dashboard.)
-              </p>
-            </Card.Body>
-          </Card>
-        </Col>
-      </Row>
+                <div className="hint">
+                  We typically respond within 24–48 hours.
+                </div>
+              </div>
+            </Form>
+          </div>
+        </div>
+      </section>
     </PageShell>
   );
 }

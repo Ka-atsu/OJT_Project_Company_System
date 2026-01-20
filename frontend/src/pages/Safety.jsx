@@ -6,9 +6,11 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import "../css/safety.css";
 
+const EASE = [0.22, 1, 0.36, 1];
+
 const fadeUp = {
   hidden: { opacity: 0, y: 18 },
-  visible: { opacity: 1, y: 0 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: EASE } },
 };
 
 const stagger = {
@@ -16,11 +18,9 @@ const stagger = {
   visible: { transition: { staggerChildren: 0.12, delayChildren: 0.04 } },
 };
 
-const VIEWPORT = {
-  hero: { margin: "-120px" },
-  section: { amount: 0.35 },
-  cards: { margin: "-90px" },
-};
+const VIEWPORT = { amount: 0.35 };
+const VIEWPORT_HERO = { ...VIEWPORT, margin: "-120px" };
+const VIEWPORT_CARDS = { ...VIEWPORT, margin: "-90px" };
 
 const SAFETY = {
   hero: {
@@ -73,10 +73,7 @@ const SAFETY = {
       desc: "Health and safety form an integral part of this organization—from the president to the workers.",
     },
   ],
-  link: {
-    label: "Request Safety Information",
-    to: "/contact",
-  },
+  link: { label: "Request Safety Information", to: "/contact" },
 };
 
 function Slice({ eyebrow, title, children }) {
@@ -87,7 +84,7 @@ function Slice({ eyebrow, title, children }) {
         variants={stagger}
         initial="hidden"
         whileInView="visible"
-        viewport={VIEWPORT.section}
+        viewport={VIEWPORT}
       >
         <motion.aside className="safety-slice-meta" variants={fadeUp}>
           <span className="eyebrow">{eyebrow}</span>
@@ -106,18 +103,38 @@ function Slice({ eyebrow, title, children }) {
   );
 }
 
+function CardsGrid({ items }) {
+  return (
+    <Row className="g-3">
+      {items.map((r) => (
+        <Col md={6} lg={4} key={r.title}>
+          <motion.div variants={fadeUp} viewport={VIEWPORT_CARDS}>
+            <Card className="h-100">
+              <Card.Body>
+                <Card.Title className="fw-semibold">{r.title}</Card.Title>
+                <Card.Text className="text-muted mb-0">{r.desc}</Card.Text>
+              </Card.Body>
+            </Card>
+          </motion.div>
+        </Col>
+      ))}
+    </Row>
+  );
+}
+
 export default function Safety() {
   const { hero, policy, roles, principles, link } = SAFETY;
 
   return (
     <>
-      {/* HERO (matches your editorial trend even without CSS) */}
+      {/* HERO */}
       <section className="hero hero--editorial full-bleed safety-hero">
         <motion.div
           className="hero-content safety-hero-content"
           variants={stagger}
           initial="hidden"
           animate="visible"
+          viewport={VIEWPORT_HERO}
         >
           <motion.span className="eyebrow" variants={fadeUp}>
             {hero.eyebrow}
@@ -141,7 +158,6 @@ export default function Safety() {
 
       {/* CONTENT */}
       <PageShell>
-        {/* Policy statement */}
         <Slice eyebrow="Policy" title="Our Safety Policy">
           {policy.map((p) => (
             <motion.p key={p} variants={fadeUp}>
@@ -150,62 +166,32 @@ export default function Safety() {
           ))}
         </Slice>
 
-        {/* Roles */}
         <Slice
           eyebrow="Responsibilities"
           title="Shared responsibility at every level"
         >
-          <Row className="g-3">
-            {roles.map((r) => (
-              <Col md={6} lg={4} key={r.title}>
-                <motion.div
-                  variants={fadeUp}
-                  initial="hidden"
-                  whileInView="visible"
-                  viewport={VIEWPORT.cards}
-                  transition={{ duration: 0.55, ease: "easeOut" }}
-                >
-                  <Card className="h-100">
-                    <Card.Body>
-                      <Card.Title className="fw-semibold">{r.title}</Card.Title>
-                      <Card.Text className="text-muted mb-0">
-                        {r.desc}
-                      </Card.Text>
-                    </Card.Body>
-                  </Card>
-                </motion.div>
-              </Col>
-            ))}
-          </Row>
+          <motion.div
+            variants={stagger}
+            initial="hidden"
+            whileInView="visible"
+            viewport={VIEWPORT}
+          >
+            <CardsGrid items={roles} />
+          </motion.div>
         </Slice>
 
-        {/* Principles */}
         <Slice
           eyebrow="How we work"
           title="Practical commitments on every site"
         >
-          <Row className="g-3">
-            {principles.map((c) => (
-              <Col md={6} lg={4} key={c.title}>
-                <motion.div
-                  variants={fadeUp}
-                  initial="hidden"
-                  whileInView="visible"
-                  viewport={VIEWPORT.cards}
-                  transition={{ duration: 0.55, ease: "easeOut" }}
-                >
-                  <Card className="h-100">
-                    <Card.Body>
-                      <Card.Title className="fw-semibold">{c.title}</Card.Title>
-                      <Card.Text className="text-muted mb-0">
-                        {c.desc}
-                      </Card.Text>
-                    </Card.Body>
-                  </Card>
-                </motion.div>
-              </Col>
-            ))}
-          </Row>
+          <motion.div
+            variants={stagger}
+            initial="hidden"
+            whileInView="visible"
+            viewport={VIEWPORT}
+          >
+            <CardsGrid items={principles} />
+          </motion.div>
         </Slice>
       </PageShell>
     </>

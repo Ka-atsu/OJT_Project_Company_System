@@ -1,6 +1,6 @@
-/* =====================
+/* =========================================================
    BASE / TOKENS
-===================== */
+========================================================= */
 
 :root {
   /* COLORS */
@@ -16,10 +16,7 @@
   /* FONT */
   --font-sans: system-ui, Avenir, Helvetica, Arial, sans-serif;
 
-  /* =====================
-     TYPE SCALE (GOLDEN RATIO)
-  ===================== */
-
+  /* TYPE SCALE (GOLDEN RATIO) */
   --fs-base: 1rem;
   --ratio: 1.618;
 
@@ -35,9 +32,9 @@
   --kinetic-small: 1.2;
 }
 
-/* =====================
+/* =========================================================
    RESET
-===================== */
+========================================================= */
 
 html,
 body {
@@ -55,9 +52,9 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* =====================
+/* =========================================================
    TYPOGRAPHY
-===================== */
+========================================================= */
 
 h1,
 h2,
@@ -83,9 +80,9 @@ p {
   color: var(--muted);
 }
 
-/* =====================
+/* =========================================================
    LAYOUT PRIMITIVES
-===================== */
+========================================================= */
 
 .full-bleed {
   width: 100vw;
@@ -93,9 +90,9 @@ p {
   margin-right: calc(-50vw + 50%);
 }
 
-/* =====================
+/* =========================================================
    SECTIONS
-===================== */
+========================================================= */
 
 .section {
   padding: var(--pad-y) var(--pad-x);
@@ -105,9 +102,9 @@ p {
   padding: clamp(6rem, 10vh, 8rem) var(--pad-x);
 }
 
-/* =====================
+/* =========================================================
    TEXT UTILITIES
-===================== */
+========================================================= */
 
 .text-muted {
   color: #6c757d;
@@ -120,9 +117,9 @@ p {
   line-height: 1.7;
 }
 
-/* =====================
+/* =========================================================
    DECORATIVE MARKER
-===================== */
+========================================================= */
 
 .column-marker {
   position: relative;
@@ -139,9 +136,9 @@ p {
   background: rgba(0, 0, 0, 0.3);
 }
 
-/* =====================
+/* =========================================================
    KINETIC HEADLINES
-===================== */
+========================================================= */
 
 .kinetic-headline {
   font-weight: 800;
@@ -168,19 +165,15 @@ p {
   );
 }
 
-/* =====================
-   IMAGE + TEXT GRID
-===================== */
+/* =========================================================
+   IMAGE UTILITIES
+========================================================= */
 
 .image-text-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 6vw;
 }
-
-/* =====================
-   IMAGE BAND (GENERIC)
-===================== */
 
 .image-band {
   position: relative;
@@ -194,10 +187,9 @@ p {
   object-fit: cover;
 }
 
-
-/* =====================
-   GENERIC HERO
-===================== */
+/* =========================================================
+   HERO
+========================================================= */
 
 .hero {
   position: relative;
@@ -222,15 +214,6 @@ p {
   z-index: -2;
 }
 
-.hero-content,
-.cta-content {
-  max-width: 1100px;
-  margin-left: 0;
-  margin-right: auto;
-  padding-inline: var(--pad-x);
-}
-
-
 @keyframes heroSlowZoom {
   from {
     transform: scale(1);
@@ -246,9 +229,104 @@ p {
   }
 }
 
-/* =====================
+.hero-content,
+.cta-content {
+  max-width: 1100px;
+  margin-left: 0;
+  margin-right: auto;
+  padding-inline: var(--pad-x);
+}
+
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* After-hero spacing (editorial pages) */
+.section--after-hero {
+  padding-top: clamp(4rem, 7vh, 6rem);
+}
+
+.split-headline {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+/* =========================================================
+   CTA (GLOBAL)
+========================================================= */
+
+.cta {
+  position: relative;
+  overflow: hidden;
+  color: #fff;
+  isolation: isolate;
+
+  --cta-overlay: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.8) 0%,
+    rgba(0, 0, 0, 0.38) 55%,
+    rgba(0, 0, 0, 0.2) 100%
+  );
+}
+
+.cta::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: var(--cta-bg);
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  z-index: 0;
+}
+
+.cta::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--cta-overlay, rgba(0, 0, 0, 0.65));
+  z-index: 1;
+}
+
+.cta-content {
+  position: relative;
+  z-index: 2;
+}
+
+.cta-content h2 {
+  font-size: clamp(2rem, 3.6vw, 3.1rem);
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+  margin-top: 0.6rem;
+}
+
+.cta-content p {
+  margin-top: 1rem;
+  color: rgba(255, 255, 255, 0.82);
+  max-width: 62ch;
+}
+
+.cta .btn.btn-light {
+  border-radius: 999px;
+  padding: 0.85rem 1.2rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-weight: 800;
+}
+
+/* Footer CTA spacing override (so it doesn’t inherit 18vh padding) */
+.site-footer .cta.section {
+  padding-top: clamp(4rem, 7vh, 6rem);
+  padding-bottom: clamp(4rem, 7vh, 6rem);
+}
+
+/* =========================================================
    SITE NAV
-===================== */
+========================================================= */
 
 .site-nav {
   position: fixed;
@@ -323,86 +401,9 @@ p {
   transform: scaleX(1);
 }
 
-/* After-hero spacing (editorial pages) */
-.section--after-hero {
-  padding-top: clamp(4rem, 7vh, 6rem);
-}
-
-.split-headline {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-}
-
-/* HERO overlay base (your Home renders .hero-overlay, but base wasn't defined) */
-.hero-overlay {
-  position: absolute;
-  inset: 0;
-  z-index: -1; /* above .hero::before (-2), behind content */
-  pointer-events: none;
-}
-
-/* CTA base so your --cta-bg + overlay pattern works everywhere */
-.cta {
-  position: relative;
-  color: #fff;
-  overflow: hidden;
-}
-
-.cta::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: var(--cta-bg, none) center / cover no-repeat;
-  z-index: -2;
-}
-
-.cta::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: var(--cta-overlay, rgba(0, 0, 0, 0.65));
-  z-index: -1;
-}
-
-.cta-content {
-  position: relative;
-  z-index: 0;
-}
-
-/* =====================
-   FOOTER
-===================== */
-
-.site-footer {
-  background: #fff;
-  border-top: 1px solid rgba(0, 0, 0, 0.85); /* matches nav border strength */
-}
-
-.site-footer-inner {
-  min-height: 88px;
-  display: flex;
-  align-items: center;
-  padding: 0 var(--pad-x); /* same as .site-nav-inner */
-}
-
-.site-footer-links {
-  width: 100%;
-  display: flex;
-  justify-content: center; /* centered like your nav links */
-}
-
-.site-footer-copy {
-  font-size: 0.72rem;
-  letter-spacing: 0.18em; /* matches .site-link vibe */
-  text-transform: uppercase;
-  color: #000;
-  opacity: 0.75;
-}
-
-/* =====================
-   HERO ACTIONS (BUTTON GROUP)
-===================== */
+/* =========================================================
+   HERO ACTIONS
+========================================================= */
 
 .hero-actions {
   display: flex;
@@ -411,7 +412,6 @@ p {
   margin-top: 2.25rem;
 }
 
-/* make both buttons feel like a designed system */
 .hero-actions .btn {
   border-radius: 999px;
   padding: 0.85rem 1.25rem;
@@ -427,7 +427,6 @@ p {
     opacity 0.18s ease;
 }
 
-/* primary (variant="light") */
 .hero-actions .btn.btn-light {
   background: #fff;
   border-color: #fff;
@@ -439,7 +438,6 @@ p {
   opacity: 0.95;
 }
 
-/* secondary (variant="outline-light") */
 .hero-actions .btn.btn-outline-light {
   background: transparent;
   border-color: rgba(255, 255, 255, 0.85);
@@ -452,16 +450,15 @@ p {
   border-color: rgba(255, 255, 255, 1);
 }
 
-/* focus ring that works on dark hero */
 .hero-actions .btn:focus,
 .hero-actions .btn:focus-visible {
   outline: none;
   box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.25);
 }
 
-/* =====================
+/* =========================================================
    NAV BUTTON (CONTACT)
-===================== */
+========================================================= */
 
 .site-btn {
   display: inline-flex;
@@ -506,7 +503,36 @@ p {
   box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.18);
 }
 
-/* Optional: active state */
 .site-btn.active {
   background: #000;
+}
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+.site-footer {
+  background: #fff;
+  border-top: 1px solid rgba(0, 0, 0, 0.85);
+}
+
+.site-footer-inner {
+  min-height: 88px;
+  display: flex;
+  align-items: center;
+  padding: 0 var(--pad-x);
+}
+
+.site-footer-links {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.site-footer-copy {
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #000;
+  opacity: 0.75;
 }

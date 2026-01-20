@@ -2,7 +2,10 @@
    SERVICES PAGE ONLY
 ===================== */
 
-/* ---------- HERO LAYOUT ---------- */
+/* =====================
+   HERO LAYOUT
+===================== */
+
 .services-editorial {
   min-height: 92vh;
   display: grid;
@@ -34,7 +37,10 @@
   max-width: 50ch;
 }
 
-/* ---------- HERO VISUALS ---------- */
+/* =====================
+   HERO VISUALS
+===================== */
+
 .services-visuals {
   display: flex;
   gap: 2.75rem;
@@ -46,9 +52,15 @@
   flex-shrink: 0;
 }
 
-.services-visual:nth-child(1) { margin-top: 3.25rem; }
-.services-visual:nth-child(2) { margin-top: 0; }
-.services-visual:nth-child(3) { margin-top: -3.25rem; }
+.services-visual:nth-child(1) {
+  margin-top: 3.25rem;
+}
+.services-visual:nth-child(2) {
+  margin-top: 0;
+}
+.services-visual:nth-child(3) {
+  margin-top: -3.25rem;
+}
 
 .services-visual-image {
   width: 115%;
@@ -58,7 +70,7 @@
   background-repeat: no-repeat;
   border-radius: 14px;
   overflow: hidden;
-  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.10);
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.1);
   position: relative;
 }
 
@@ -70,7 +82,7 @@
     to top,
     rgba(0, 0, 0, 0.22) 0%,
     rgba(0, 0, 0, 0.06) 45%,
-    rgba(0, 0, 0, 0.00) 100%
+    rgba(0, 0, 0, 0) 100%
   );
   pointer-events: none;
 }
@@ -84,8 +96,10 @@
   color: rgba(0, 0, 0, 0.55);
 }
 
-/* ---------- PAGE WIDTH RHYTHM ---------- */
-/* Since you removed CTA, this controls the “ending” feel too. */
+/* =====================
+   PAGE WIDTH / RHYTHM
+===================== */
+
 .services-block {
   max-width: 1100px;
   margin-left: auto;
@@ -93,12 +107,11 @@
   margin-top: 6.5rem;
 }
 
-/* Head feels like a section marker */
 .services-block-head {
   margin-bottom: 2.25rem;
   max-width: 72ch;
   padding-bottom: 1.25rem;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.10);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 .services-block-head .eyebrow {
@@ -118,48 +131,53 @@
   line-height: 1.02;
 }
 
-/* Secondary section spacing */
+/* Secondary section spacing + proper ending */
 .services-block--secondary {
   margin-top: 7.5rem;
-}
-
-/* IMPORTANT: without CTA, give the last block a “proper ending” */
-.services-block--secondary {
   padding-bottom: clamp(5rem, 10vh, 8rem);
 }
 
-/* ---------- GRID ---------- */
+/* =====================
+   GRID
+===================== */
+
 .services-grid {
   margin-top: 2.25rem;
 }
 
-/* keep your “break rhythm” only for PRIMARY */
+/* stagger rhythm only for PRIMARY */
 .services-block:not(.services-block--secondary) .services-col:nth-child(2),
 .services-block:not(.services-block--secondary) .services-col:nth-child(5) {
   margin-top: 2.75rem;
 }
 
-/* ---------- CARDS (EDITORIAL, NO BOXES) ---------- */
+/* =====================
+   CARDS (EDITORIAL)
+===================== */
+
 .services-card {
-  border: none !important;
+  border: 0;
   background: transparent;
+  box-shadow: none;
 }
 
 .services-card-body {
   padding: 2.15rem 0 2.35rem;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.10);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  transition:
+    transform 220ms ease,
+    border-color 220ms ease;
 }
 
-/* Make hover feel intentional (works even with Card) */
-.services-card-body {
-  transition: transform 220ms ease, border-color 220ms ease;
-}
 .services-col:hover .services-card-body {
   transform: translateY(-2px);
   border-bottom-color: rgba(0, 0, 0, 0.18);
 }
 
-/* Title with aligned index */
+/* =====================
+   TYPE (TITLE / DESC / TAGS)
+===================== */
+
 .services-title {
   margin: 0;
   display: grid;
@@ -180,15 +198,13 @@
   padding-top: 0.35rem;
 }
 
-/* Description readability */
 .services-desc {
   margin: 0.9rem 0 1.15rem;
-  color: rgba(0, 0, 0, 0.70);
+  color: rgba(0, 0, 0, 0.7);
   line-height: 1.8;
   max-width: 58ch;
 }
 
-/* Tags -> “quiet separators” (clean) */
 .services-tags {
   display: flex;
   flex-wrap: wrap;

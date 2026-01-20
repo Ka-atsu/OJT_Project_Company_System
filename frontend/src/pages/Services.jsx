@@ -14,16 +14,14 @@ const fadeUp = {
   visible: { opacity: 1, y: 0 },
 };
 
-const VIEWPORT = {
-  hero: { margin: "-100px" },
-  cards: { margin: "-80px" },
-  sections: { amount: 0.35 },
-};
-
 const stagger = {
   hidden: {},
   visible: { transition: { staggerChildren: 0.12, delayChildren: 0.04 } },
 };
+
+const VIEWPORT = { amount: 0.35 };
+const VIEWPORT_HERO = { ...VIEWPORT, margin: "-100px" };
+const VIEWPORT_CARDS = { ...VIEWPORT, margin: "-80px" };
 
 const SERVICES = {
   hero: {
@@ -36,6 +34,31 @@ const SERVICES = {
     secondary: { eyebrow: "Secondary Function", title: "Support services" },
   },
 };
+
+function ServiceCardItem({ i, title, desc, tags }) {
+  return (
+    <Card className="services-card">
+      <Card.Body className="services-card-body">
+        <h3 className="services-title">
+          <span className="services-index">
+            {String(i + 1).padStart(2, "0")}
+          </span>
+          {title}
+        </h3>
+
+        <p className="services-desc">{desc}</p>
+
+        <div className="services-tags">
+          {tags.map((t) => (
+            <span key={t} className="services-tag">
+              {t}
+            </span>
+          ))}
+        </div>
+      </Card.Body>
+    </Card>
+  );
+}
 
 export default function Services() {
   const { hero, blocks } = SERVICES;
@@ -71,7 +94,7 @@ export default function Services() {
 
   const secondary = [
     {
-      title: "Land Development",
+      title: "Additional Land Development Support",
       desc: "Additional land development support for projects requiring extended scope or supplemental services.",
       tags: ["Support", "Extended scope", "Coordination"],
     },
@@ -84,9 +107,7 @@ export default function Services() {
 
   return (
     <>
-      {/* =====================
-         SERVICES HERO
-      ===================== */}
+      {/* SERVICES HERO */}
       <section className="services-editorial full-bleed">
         <div className="services-intro">
           <span className="eyebrow">{hero.eyebrow}</span>
@@ -97,7 +118,7 @@ export default function Services() {
           className="services-visuals"
           initial="hidden"
           whileInView="visible"
-          viewport={VIEWPORT.hero}
+          viewport={VIEWPORT_HERO}
           variants={stagger}
         >
           {featured.map((s) => (
@@ -117,9 +138,7 @@ export default function Services() {
         </motion.div>
       </section>
 
-      {/* =====================
-         PRIMARY + SECONDARY
-      ===================== */}
+      {/* PRIMARY + SECONDARY */}
       <PageShell fluid={false}>
         {/* PRIMARY */}
         <section className="services-block">
@@ -134,36 +153,17 @@ export default function Services() {
                 <motion.div
                   initial={{ opacity: 0 }}
                   whileInView={{ opacity: 1 }}
-                  viewport={VIEWPORT.cards}
+                  viewport={VIEWPORT_CARDS}
                   transition={{ duration: 0.5, delay: i * 0.05 }}
                 >
-                  <Card className="services-card">
-                    <Card.Body className="services-card-body">
-                      <h3 className="services-title">
-                        <span className="services-index">
-                          {String(i + 1).padStart(2, "0")}
-                        </span>
-                        {s.title}
-                      </h3>
-
-                      <p className="services-desc">{s.desc}</p>
-
-                      <div className="services-tags">
-                        {s.tags.map((t) => (
-                          <span key={t} className="services-tag">
-                            {t}
-                          </span>
-                        ))}
-                      </div>
-                    </Card.Body>
-                  </Card>
+                  <ServiceCardItem i={i} {...s} />
                 </motion.div>
               </Col>
             ))}
           </Row>
         </section>
 
-        {/* SECONDARY (2 columns on desktop to avoid dead space) */}
+        {/* SECONDARY */}
         <section className="services-block services-block--secondary">
           <div className="services-block-head">
             <span className="eyebrow">{blocks.secondary.eyebrow}</span>
@@ -176,29 +176,10 @@ export default function Services() {
                 <motion.div
                   initial={{ opacity: 0 }}
                   whileInView={{ opacity: 1 }}
-                  viewport={VIEWPORT.cards}
+                  viewport={VIEWPORT_CARDS}
                   transition={{ duration: 0.5, delay: i * 0.05 }}
                 >
-                  <Card className="services-card">
-                    <Card.Body className="services-card-body">
-                      <h3 className="services-title">
-                        <span className="services-index">
-                          {String(i + 1).padStart(2, "0")}
-                        </span>
-                        {s.title}
-                      </h3>
-
-                      <p className="services-desc">{s.desc}</p>
-
-                      <div className="services-tags">
-                        {s.tags.map((t) => (
-                          <span key={t} className="services-tag">
-                            {t}
-                          </span>
-                        ))}
-                      </div>
-                    </Card.Body>
-                  </Card>
+                  <ServiceCardItem i={i} {...s} />
                 </motion.div>
               </Col>
             ))}
