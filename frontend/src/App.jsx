@@ -29,7 +29,7 @@ export default function App() {
       </Route>
 
       <Route path="/dashboard" element={<DashboardLayout />}>
-        <Route index element={<Safety />} />
+        <Route index element={<ClientDashboard />} />
         {/* <Route path="projects" element={<Projects />} />
         <Route path="documents" element={<Documents />} /> */}
       </Route>
