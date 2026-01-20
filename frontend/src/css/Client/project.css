@@ -1,0 +1,72 @@
+.project-container {
+  background: #fff;
+  border-radius: 8px;
+  padding: 20px;
+}
+
+.project-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.project-filters .filter {
+  background: none;
+  border: none;
+  margin-left: 10px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.project-filters .active {
+  border-bottom: 2px solid #000;
+}
+
+.project-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.project-left {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.project-icon {
+  font-size: 28px;
+}
+
+.project-status {
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.project-status.in-progress {
+  background: #333;
+  color: #fff;
+}
+
+.project-pagination {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 15px;
+}
+
+.project-pagination .page {
+  border: none;
+  padding: 6px 10px;
+  background: #f2f2f2;
+}
+
+.project-pagination .active {
+  background: #000;
+  color: #fff;
+}

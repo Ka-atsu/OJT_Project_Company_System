@@ -2,6 +2,7 @@ import { Route } from "react-router-dom";
 import DashboardLayout from "../components/layouts/DashboardLayout";
 import ClientDashboard from "../pages/Client/ClientDashboard";
 import Contact from "../pages/Contact";
+import ClientProject from "../pages/Client/ClientProject";
 
 export default function warlyTestingRoutes() {
   return (
@@ -9,6 +10,7 @@ export default function warlyTestingRoutes() {
       <Route index element={<ClientDashboard />} />
       <Route path="contacts" element={<Contact />} />
       <Route path="contact2" element={<Contact />} />
+      <Route path = "project" element = {<ClientProject/>} />
     </Route>
   );
 }
