@@ -1,10 +1,10 @@
-import PageShell from "../components/layouts/PageShell";
+import PageShell from "../../../components/layouts/PageShell";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Card from "react-bootstrap/Card";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import "../css/safety.css";
+import "./safety.css";
 
 const EASE = [0.22, 1, 0.36, 1];
 

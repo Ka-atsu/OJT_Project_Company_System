@@ -1,5 +1,3 @@
-import "../../css/Client/clientAccountSettings.css";
-
 export default function AccountNav({ active, onChange }) {
   const tabs = ["My Profile", "Security", "Notifications"];
 

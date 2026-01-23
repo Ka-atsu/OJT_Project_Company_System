@@ -1,6 +1,6 @@
 import { Button } from "react-bootstrap";
 import { Link, useLocation } from "react-router-dom";
-import EarthMovingEquipment from "../assets/Images/earthmovingEquipment.jpg";
+import { ImgEarthmoving } from "../../assets/images";
 
 export default function Footer() {
   const location = useLocation();
@@ -11,7 +11,7 @@ export default function Footer() {
     title: "Let’s plan your materials supply",
     body: "Share your site details and required volumes, and we’ll help you determine the right materials and approach.",
     button: { label: "Start a Conversation", to: "/contact" },
-    bg: EarthMovingEquipment,
+    bg: ImgEarthmoving,
   };
 
   return (

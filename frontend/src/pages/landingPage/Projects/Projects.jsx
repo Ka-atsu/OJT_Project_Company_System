@@ -1,6 +1,6 @@
-import PageShell from "../components/layouts/PageShell";
+import PageShell from "../../../components/layouts/PageShell";
 import { motion } from "framer-motion";
-import "../css/projects.css";
+import "./projects.css";
 
 const EASE = [0.22, 1, 0.36, 1];
 

@@ -1,8 +1,9 @@
 import { useState } from "react";
-import "../css/auth.css";
+import "./auth.css";
+import MouseLook3D from "../../components/three/MouseLook3D";
 import { useNavigate } from "react-router-dom";
 
-export default function Register() {
+export default function Login() {
   const [showPw, setShowPw] = useState(false);
   const navigate = useNavigate();
   return (
@@ -15,30 +16,54 @@ export default function Register() {
         </div>
       </div>
 
-      {/* Main card (reversed layout) */}
-      <div className="auth-card auth-card--reverse">
-        {/* Left = form (light) */}
+      {/* Main card */}
+      <div className="auth-card">
+        {/* Left panel */}
         <div className="auth-left">
-          <h2 className="auth-formTitle">Signup</h2>
+          <h2>Welcome back</h2>
+          <p className="auth-muted">
+            Access your account to manage requests and projects.
+          </p>
 
+          <p className="auth-muted">Don’t have an account?</p>
+
+          <button
+            className="auth-btn auth-btnOutline"
+            type="button"
+            onClick={() => navigate("/register")}
+          >
+            Create an account
+          </button>
+
+          <div className="auth-why">
+            <p className="auth-whyTitle">Why log in?</p>
+            <ul>
+              <li>Request project quotations</li>
+              <li>Schedule site inspections</li>
+              <li>Track project inquiries</li>
+              <li>Manage account details securely</li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Right panel */}
+        <div className="auth-right">
+          <MouseLook3D url={`${import.meta.env.BASE_URL}models/Backhoe.glb`} />
+
+          <h2 className="auth-formTitle">SignIn</h2>
           <form
             onSubmit={(e) => {
               e.preventDefault();
-              // TODO: handle register
             }}
           >
-            <label className="auth-field">
-              <span className="auth-label">Name</span>
-              <input className="auth-input" type="text" required />
-            </label>
-
             <label className="auth-field">
               <span className="auth-label">E-mail address</span>
               <input className="auth-input" type="email" required />
             </label>
 
             <label className="auth-field">
-              <span className="auth-label">Enter password</span>
+              <span className="auth-label">Password</span>
+
               <div className="auth-pwWrap">
                 <input
                   className="auth-input"
@@ -64,15 +89,12 @@ export default function Register() {
                   </svg>
                 </button>
               </div>
-            </label>
 
-            <label className="auth-field">
-              <span className="auth-label">Confirm password</span>
-              <input
-                className="auth-input"
-                type={showPw ? "text" : "password"}
-                required
-              />
+              <div className="auth-rowRight">
+                <a className="auth-link" href="#">
+                  Forgot your password?
+                </a>
+              </div>
             </label>
 
             <label className="auth-check">
@@ -81,31 +103,13 @@ export default function Register() {
             </label>
 
             <button className="auth-btn auth-btnSolid" type="submit">
-              Create account
+              Sign in
             </button>
+
+            <p className="auth-credit">
+              Your information is kept secure and confidential.
+            </p>
           </form>
-        </div>
-
-        {/* Right = dark panel */}
-        <div className="auth-right">
-          <h2 className="auth-welcomeTitle">Welcome Back!</h2>
-          <p className="auth-welcomeSub">Already have an account?</p>
-
-          <button
-            className="auth-btn auth-btnOutline"
-            type="button"
-            onClick={() => navigate("/login")}
-          >
-            Login
-          </button>
-
-          <div className="auth-why">
-            <p className="auth-whyTitle">Why log in?</p>
-            <ul>
-              <li>Schedule on visit site</li>
-              <li>I dunno what other benefits is there???</li>
-            </ul>
-          </div>
         </div>
       </div>
     </div>

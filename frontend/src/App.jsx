@@ -3,18 +3,18 @@ import { Routes, Route } from "react-router-dom";
 import RootLayout from "./components/layouts/RootLayout";
 import DashboardLayout from "./components/layouts/DashboardLayout";
 
-import Home from "./pages/Home";
-import About from "./pages/About";
-import Safety from "./pages/Safety";
-import Services from "./pages/Services";
-import Contact from "./pages/Contact";
-import Projects from "./pages/Projects";
+import Home from "./pages/landingPage/Home/Home";
+import About from "./pages/landingPage/About/About";
+import Safety from "./pages/landingPage/Safety/Safety";
+import Services from "./pages/landingPage/Services/Services";
+import Contact from "./pages/landingPage/Contact/Contact";
+import Projects from "./pages/landingPage/Projects/Projects";
 import NotFound from "./pages/NotFound";
 
-import Login from "./pages/Login";
-import Register from "./pages/Register";
+import Login from "./pages/authentication/Login";
+import Register from "./pages/authentication/Register";
 
-import ClientDashboard from "./pages/Client/ClientDashboard";
+import ClientDashboard from "./pages/clientSide/Dashboard/ClientDashboard";
 
 import warlyTestingRoutes from "./testingRoutes/warlyTestingRoutes";
 import kentTestingRoutes from "./testingRoutes/kentTestingRoutes";

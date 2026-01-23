@@ -1,6 +1,7 @@
 import { Outlet } from "react-router-dom";
-import DashboardTopNav from "../DashboardTopNav";
-import LeftSidebar from "../LeftSidebar";
+import DashboardTopNav from "../navigation/DashboardTopNav";
+import LeftSidebar from "../navigation/LeftSidebar";
+import "../../pages/clientSide/AccountSettings/clientAccountSettings.css";
 import "../../css/indexClient.css";
 
 export default function DashboardLayout() {

@@ -3,10 +3,9 @@ import { motion } from "framer-motion";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-import ConstructionSite from "../assets/Images/ConstructionSite.jpg";
-import BackHoe from "../assets/Images/backHoe.jpg";
-import PageShell from "../components/layouts/PageShell";
-import "../css/about.css";
+import { ImgConstructionSite, ImgBackhoe } from "../../../assets/images";
+import PageShell from "../../../components/layouts/PageShell";
+import "./about.css";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -24,10 +23,7 @@ const fadeUp = {
 
 const heroFade = {
   hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: { duration: 0.8, ease: EASE },
-  },
+  visible: { opacity: 1, transition: { duration: 0.8, ease: EASE } },
 };
 
 const stagger = {
@@ -37,7 +33,7 @@ const stagger = {
 
 const ABOUT = {
   hero: {
-    bg: ConstructionSite,
+    bg: ImgConstructionSite,
     headline: "ABOUT",
     eyebrow: "About us",
   },
@@ -108,30 +104,6 @@ const ABOUT = {
   ],
 };
 
-const TEAM = {
-  label: "Our people",
-  title: "The humans behind the company",
-  subtitle:
-    "A team of professionals committed to responsible land development, safety, and long-term value creation.",
-  members: [
-    {
-      name: "Juan Dela Cruz",
-      role: "President & CEO",
-      image: BackHoe,
-    },
-    {
-      name: "Maria Santos",
-      role: "Operations Manager",
-      image: ConstructionSite,
-    },
-    {
-      name: "Carlos Reyes",
-      role: "Project Engineer",
-      image: ConstructionSite,
-    },
-  ],
-};
-
 function AboutSection({ label, title, body, bullets }) {
   return (
     <section className="section about-slice">
@@ -171,50 +143,10 @@ function AboutSection({ label, title, body, bullets }) {
   );
 }
 
-function TeamSection({ label, title, subtitle, members }) {
-  return (
-    <section className="section about-team">
-      <motion.div
-        className="about-team-inner"
-        variants={stagger}
-        initial="hidden"
-        whileInView="visible"
-        viewport={VIEWPORT}
-      >
-        <motion.aside className="about-team-meta" variants={fadeUp}>
-          <span className="eyebrow">{label}</span>
-        </motion.aside>
-
-        <div>
-          <motion.h2 className="about-team-title" variants={fadeUp}>
-            {title}
-          </motion.h2>
-
-          <motion.p className="about-team-subtitle" variants={fadeUp}>
-            {subtitle}
-          </motion.p>
-
-          <motion.div className="about-team-grid" variants={fadeUp}>
-            {members.map((m) => (
-              <div key={m.name} className="about-team-card">
-                <div className="about-team-image">
-                  <img src={m.image} alt={m.name} />
-                </div>
-                <div className="about-team-name">{m.name}</div>
-                <div className="about-team-role">{m.role}</div>
-              </div>
-            ))}
-          </motion.div>
-        </div>
-      </motion.div>
-    </section>
-  );
-}
-
 export default function About() {
   const { hero, intro, quote, sections } = ABOUT;
-  const rootRef = useRef(null);
 
+  const rootRef = useRef(null);
   const heroRef = useRef(null);
   const stageRef = useRef(null);
   const headlineWrapRef = useRef(null);
@@ -223,17 +155,10 @@ export default function About() {
   const imageBandRef = useRef(null);
   const imageParallaxRef = useRef(null);
 
-  const handleImgLoad = () => {
-    ScrollTrigger.refresh();
-  };
+  const handleImgLoad = () => ScrollTrigger.refresh();
 
   useLayoutEffect(() => {
     if (!rootRef.current || !heroRef.current) return;
-
-    ScrollTrigger.getById("about-hero-stage")?.kill(true);
-    ScrollTrigger.getById("about-hero-headline")?.kill(true);
-    ScrollTrigger.getById("about-hero-overlay")?.kill(true);
-    ScrollTrigger.getById("about-image-parallax")?.kill(true);
 
     const ctx = gsap.context(() => {
       // Parallax lift on hero content
@@ -309,13 +234,7 @@ export default function About() {
       ScrollTrigger.refresh();
     }, rootRef);
 
-    return () => {
-      ScrollTrigger.getById("about-hero-stage")?.kill(true);
-      ScrollTrigger.getById("about-hero-headline")?.kill(true);
-      ScrollTrigger.getById("about-hero-overlay")?.kill(true);
-      ScrollTrigger.getById("about-image-parallax")?.kill(true);
-      ctx.revert();
-    };
+    return () => ctx.revert();
   }, []);
 
   return (
@@ -328,7 +247,6 @@ export default function About() {
         initial="hidden"
         animate="visible"
       >
-        {/* Background layer */}
         <div className="about-hero-bg" aria-hidden="true">
           <img className="about-hero-bg-img" src={hero.bg} alt="" />
         </div>
@@ -427,7 +345,7 @@ export default function About() {
             >
               <div ref={imageParallaxRef} className="about-image-parallax">
                 <img
-                  src={BackHoe}
+                  src={ImgBackhoe}
                   alt="Land development and materials supply"
                   className="about-image"
                   onLoad={handleImgLoad}
@@ -436,9 +354,6 @@ export default function About() {
             </motion.div>
           </div>
         </section>
-
-        {/* TEAM / HUMANS no pics to put
-        <TeamSection {...TEAM} /> */}
 
         {/* SLICES */}
         {sections.map((s) => (

@@ -1,4 +1,4 @@
-import { Button } from "react-bootstrap";
+import Button from "react-bootstrap/Button";
 import { Link } from "react-router-dom";
 import { useLayoutEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -6,25 +6,25 @@ import { motion, AnimatePresence } from "framer-motion";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-import ConstructionSite from "../assets/images/constructionSite.jpg";
-import EarthMovingEquipment from "../assets/images/earthmovingEquipment.jpg";
+import {
+  ImgConstructionSite,
+  ImgBackfill,
+  ImgAggregates,
+  ImgLand,
+} from "../../../assets/images";
 
-import "../css/home.css";
+import "./home.css";
 
 gsap.registerPlugin(ScrollTrigger);
 
 const VIEWPORT = { amount: 0.35, once: true };
 const VIEWPORT_CARDS = { amount: 0.25, once: true };
-
 const EASE = [0.22, 1, 0.36, 1];
 
 const revealStagger = {
   hidden: {},
   visible: {
-    transition: {
-      staggerChildren: 0.14,
-      delayChildren: 0.08,
-    },
+    transition: { staggerChildren: 0.14, delayChildren: 0.08 },
   },
 };
 
@@ -53,7 +53,7 @@ const heroSwap = {
   },
 };
 
-const HOME = {
+const HOME_COPY = {
   heroScroll: {
     tag: "What we do",
     eyebrow: "Land Development & Materials Supply",
@@ -86,21 +86,21 @@ const HOME = {
         num: "01.",
         title: "Backfilling Materials",
         desc: "Engineered materials for site preparation, grading, and foundations.",
-        img: EarthMovingEquipment,
+        img: ImgBackfill,
         alt: "Backfilling materials",
       },
       {
         num: "02.",
         title: "Aggregates",
         desc: "Sub-base, base course, and graded aggregates supplied to spec.",
-        img: EarthMovingEquipment,
+        img: ImgAggregates,
         alt: "Aggregates",
       },
       {
         num: "03.",
         title: "Land Resources",
         desc: "Soil and earth materials sourced and delivered to site requirements.",
-        img: EarthMovingEquipment,
+        img: ImgLand,
         alt: "Land resources",
       },
     ],
@@ -108,7 +108,7 @@ const HOME = {
 };
 
 export default function Home() {
-  const { heroScroll, modules } = HOME;
+  const { heroScroll, modules } = HOME_COPY;
 
   const wrapRef = useRef(null);
   const pinRef = useRef(null);
@@ -116,19 +116,16 @@ export default function Home() {
 
   const [active, setActive] = useState(0);
   const total = heroScroll.slides.length;
-
   const slide = heroScroll.slides[active];
+
   const counterLeft = String(active + 1).padStart(2, "0");
   const counterRight = String(total).padStart(2, "0");
 
   useLayoutEffect(() => {
     if (!wrapRef.current || !pinRef.current) return;
 
-    ScrollTrigger.getById("home-hero-pin")?.kill(true);
-    ScrollTrigger.getById("home-hero-parallax")?.kill(true);
-
     const ctx = gsap.context(() => {
-      ScrollTrigger.create({
+      const pin = ScrollTrigger.create({
         id: "home-hero-pin",
         trigger: wrapRef.current,
         start: "top top",
@@ -143,29 +140,30 @@ export default function Home() {
         },
       });
 
+      let parallax;
       if (stageRef.current) {
-        gsap.to(stageRef.current, {
+        parallax = gsap.to(stageRef.current, {
           y: -24,
           ease: "none",
           scrollTrigger: {
             id: "home-hero-parallax",
             trigger: wrapRef.current,
             start: "top top",
-            end: "+=700",
+            end: () => `+=${window.innerHeight}`,
             scrub: true,
             invalidateOnRefresh: true,
           },
         });
       }
 
-      ScrollTrigger.refresh();
+      return () => {
+        pin?.kill(true);
+        parallax?.scrollTrigger?.kill(true);
+        parallax?.kill();
+      };
     }, wrapRef);
 
-    return () => {
-      ScrollTrigger.getById("home-hero-pin")?.kill(true);
-      ScrollTrigger.getById("home-hero-parallax")?.kill(true);
-      ctx.revert();
-    };
+    return () => ctx.revert();
   }, [total]);
 
   return (
@@ -173,7 +171,11 @@ export default function Home() {
       <section ref={wrapRef} className="hero-scroll">
         <section ref={pinRef} className="hero full-bleed home-hero">
           <div className="home-hero-bg" aria-hidden="true">
-            <img className="home-hero-bg-img" src={ConstructionSite} alt="" />
+            <img
+              className="home-hero-bg-img"
+              src={ImgConstructionSite}
+              alt=""
+            />
           </div>
 
           <div className="hero-overlay home-hero-overlay" />

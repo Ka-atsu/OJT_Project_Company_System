@@ -6,8 +6,8 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Accordion from "react-bootstrap/Accordion";
 import ReCAPTCHA from "react-google-recaptcha";
-import "../css/contact.css";
-import { RECAPTCHA_SITE_KEY } from "../api/publicApiKey";
+import "./contact.css";
+import { RECAPTCHA_SITE_KEY } from "../../../api/publicApiKey";
 
 export default function Contact() {
   const formSectionRef = useRef(null);

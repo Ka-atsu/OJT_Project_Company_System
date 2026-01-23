@@ -1,17 +1,19 @@
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import "../css/services.css";
+import "./services.css";
 import { useRef, useLayoutEffect } from "react";
 import { motion } from "framer-motion";
 
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-import projectManagementConsultation from "../assets/Images/projectManagementConsultation.jpg";
-import backfillImg from "../assets/Images/backfill.jpg";
-import landImg from "../assets/Images/land.jpg";
-import aggregatesImg from "../assets/Images/aggregates.jpg";
-import siteManagement from "../assets/Images/siteManagement.jpg";
+import {
+  ImgConsultation,
+  ImgBackfill,
+  ImgLand,
+  ImgAggregates,
+  ImgSiteManagement,
+} from "../../../assets/images";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -79,25 +81,25 @@ export default function Services() {
       title: "Backfill Sourcing / Land Sourcing",
       desc: "Sourcing backfill and land resources based on client specifications, volumes, and site requirements.",
       tags: ["Sourcing", "Backfill", "Land resources"],
-      image: backfillImg,
+      image: ImgBackfill,
     },
     {
       title: "Land Development",
       desc: "Site preparation and land development support including clearing, grading, and coordinated project execution.",
       tags: ["Land dev", "Site prep", "Civil works"],
-      image: landImg,
+      image: ImgLand,
     },
     {
       title: "Site Management",
       desc: "On-site coordination focused on safety, workflow, and execution to keep operations efficient and compliant.",
       tags: ["Coordination", "Safety", "Operations"],
-      image: siteManagement,
+      image: ImgSiteManagement,
     },
     {
       title: "Equipment Leasing",
       desc: "Equipment support and leasing options to help projects scale efficiently based on schedule and scope.",
       tags: ["Equipment", "Leasing", "Support"],
-      image: aggregatesImg,
+      image: ImgAggregates,
     },
   ];
 
@@ -106,13 +108,13 @@ export default function Services() {
       title: "Additional Land Development Support",
       desc: "Additional land development support for projects requiring extended scope or supplemental services.",
       tags: ["Support", "Extended scope", "Coordination"],
-      image: landImg,
+      image: ImgLand,
     },
     {
       title: "Project Management Consultation",
       desc: "Consultation on planning, sequencing, sourcing, and delivery strategy for smoother project execution.",
       tags: ["Consultation", "Planning", "Strategy"],
-      image: projectManagementConsultation,
+      image: ImgConsultation,
     },
   ];
 
@@ -224,7 +226,7 @@ export default function Services() {
             <div className="services-hero-visual">
               <div
                 className="services-hero-media"
-                style={{ "--hero-img": `url(${landImg})` }}
+                style={{ "--hero-img": `url(${ImgLand})` }}
                 aria-hidden="true"
               >
                 <div className="services-hero-card">

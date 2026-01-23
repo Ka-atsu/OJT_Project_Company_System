@@ -1,5 +1,5 @@
 import { useState } from "react";
-import "../../css/Client/project.css";
+import "./project.css";
 
 function ProjectCard({ project }) {
   // Map status to class

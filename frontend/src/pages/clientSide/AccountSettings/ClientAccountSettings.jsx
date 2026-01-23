@@ -1,11 +1,11 @@
 import { useState } from "react";
-import AccountNav from "../../components/navigation/AccountNav";
+import AccountNav from "../../../components/navigation/AccountNav";
 import {
   SettingRow,
   Divider,
   Toggle,
-} from "../../components/client/AccountSettingsComponent";
-import "../../css/Client/clientAccountSettings.css";
+} from "../../../components/client/AccountSettingsComponent";
+import "./clientAccountSettings.css";
 
 export default function ClientAccountSettings() {
   const [activeTab, setActiveTab] = useState("Security");
