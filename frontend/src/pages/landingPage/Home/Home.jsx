@@ -1,114 +1,19 @@
 import Button from "react-bootstrap/Button";
 import { Link } from "react-router-dom";
-import { useLayoutEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { ImgConstructionSite } from "../../../assets/images";
+import { HOME } from "./home.content";
+import { useHomeHeroScroll } from "./useHomeHeroScroll";
 
-import {
-  ImgConstructionSite,
-  ImgBackfill,
-  ImgAggregates,
-  ImgLand,
-} from "../../../assets/images";
+import { revealStagger, fadeUpItem, heroSwap } from "./home.motion";
+import { EASE, VIEWPORT, VIEWPORT_CARDS } from "../../../motion/constants";
 
 import "./home.css";
 
-gsap.registerPlugin(ScrollTrigger);
-
-const VIEWPORT = { amount: 0.35, once: true };
-const VIEWPORT_CARDS = { amount: 0.25, once: true };
-const EASE = [0.22, 1, 0.36, 1];
-
-const revealStagger = {
-  hidden: {},
-  visible: {
-    transition: { staggerChildren: 0.14, delayChildren: 0.08 },
-  },
-};
-
-const fadeUpItem = {
-  hidden: { opacity: 0, y: 22 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.6, ease: EASE },
-  },
-};
-
-const heroSwap = {
-  hidden: { opacity: 0, y: 18, filter: "blur(6px)" },
-  visible: {
-    opacity: 1,
-    y: 0,
-    filter: "blur(0px)",
-    transition: { duration: 0.35, ease: "easeOut" },
-  },
-  exit: {
-    opacity: 0,
-    y: -10,
-    filter: "blur(6px)",
-    transition: { duration: 0.25, ease: "easeIn" },
-  },
-};
-
-const HOME_COPY = {
-  heroScroll: {
-    tag: "What we do",
-    eyebrow: "Land Development & Materials Supply",
-    primaryCta: { label: "Our Capabilities", to: "/services" },
-    getStarted: { label: "Get Started", to: "/dashboard" },
-    slides: [
-      {
-        titleLines: ["Reliable materials", "for land development."],
-        lede: "Backfill, aggregates, and soil resources—sourced and supplied for projects of all scales.",
-        showActions: true,
-      },
-      {
-        titleLines: ["Owned sites.", "Consistent quality."],
-        lede: "We source from owned land development sites to maintain material consistency and reliable availability.",
-        showActions: false,
-      },
-      {
-        titleLines: ["Coordinated hauling", "and on-time delivery."],
-        lede: "We plan volumes, logistics, and delivery schedules so your project keeps moving—without surprises.",
-        showActions: false,
-      },
-    ],
-  },
-
-  modules: {
-    eyebrow: "Core capabilities",
-    title: "Built like a system",
-    items: [
-      {
-        num: "01.",
-        title: "Backfilling Materials",
-        desc: "Engineered materials for site preparation, grading, and foundations.",
-        img: ImgBackfill,
-        alt: "Backfilling materials",
-      },
-      {
-        num: "02.",
-        title: "Aggregates",
-        desc: "Sub-base, base course, and graded aggregates supplied to spec.",
-        img: ImgAggregates,
-        alt: "Aggregates",
-      },
-      {
-        num: "03.",
-        title: "Land Resources",
-        desc: "Soil and earth materials sourced and delivered to site requirements.",
-        img: ImgLand,
-        alt: "Land resources",
-      },
-    ],
-  },
-};
-
 export default function Home() {
-  const { heroScroll, modules } = HOME_COPY;
+  const { heroScroll, modules } = HOME;
 
   const wrapRef = useRef(null);
   const pinRef = useRef(null);
@@ -121,53 +26,17 @@ export default function Home() {
   const counterLeft = String(active + 1).padStart(2, "0");
   const counterRight = String(total).padStart(2, "0");
 
-  useLayoutEffect(() => {
-    if (!wrapRef.current || !pinRef.current) return;
-
-    const ctx = gsap.context(() => {
-      const pin = ScrollTrigger.create({
-        id: "home-hero-pin",
-        trigger: wrapRef.current,
-        start: "top top",
-        end: () => `+=${window.innerHeight * total}`,
-        pin: pinRef.current,
-        pinSpacing: true,
-        scrub: true,
-        invalidateOnRefresh: true,
-        onUpdate: (self) => {
-          const idx = Math.min(total - 1, Math.floor(self.progress * total));
-          setActive((prev) => (prev === idx ? prev : idx));
-        },
-      });
-
-      let parallax;
-      if (stageRef.current) {
-        parallax = gsap.to(stageRef.current, {
-          y: -24,
-          ease: "none",
-          scrollTrigger: {
-            id: "home-hero-parallax",
-            trigger: wrapRef.current,
-            start: "top top",
-            end: () => `+=${window.innerHeight}`,
-            scrub: true,
-            invalidateOnRefresh: true,
-          },
-        });
-      }
-
-      return () => {
-        pin?.kill(true);
-        parallax?.scrollTrigger?.kill(true);
-        parallax?.kill();
-      };
-    }, wrapRef);
-
-    return () => ctx.revert();
-  }, [total]);
+  useHomeHeroScroll({
+    wrapRef,
+    pinRef,
+    stageRef,
+    total,
+    setActive,
+  });
 
   return (
     <>
+      {/* HERO */}
       <section ref={wrapRef} className="hero-scroll">
         <section ref={pinRef} className="hero full-bleed home-hero">
           <div className="home-hero-bg" aria-hidden="true">
@@ -183,7 +52,8 @@ export default function Home() {
           <div className="home-hero-meta">
             <div className="home-hero-tag">{heroScroll.tag}</div>
             <div className="home-hero-counter">
-              {counterLeft} <span className="home-hero-counter-divider">/</span>{" "}
+              {counterLeft}
+              <span className="home-hero-counter-divider">/</span>
               {counterRight}
             </div>
           </div>
@@ -223,7 +93,11 @@ export default function Home() {
                     className="home-hero-lede"
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.35, delay: 0.12, ease: EASE }}
+                    transition={{
+                      duration: 0.35,
+                      delay: 0.12,
+                      ease: EASE,
+                    }}
                   >
                     {slide.lede}
                   </motion.p>
@@ -234,7 +108,11 @@ export default function Home() {
                     className="hero-actions"
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.35, delay: 0.16, ease: EASE }}
+                    transition={{
+                      duration: 0.35,
+                      delay: 0.16,
+                      ease: EASE,
+                    }}
                   >
                     <Button
                       as={Link}
@@ -260,6 +138,7 @@ export default function Home() {
         </section>
       </section>
 
+      {/* MODULES */}
       <section className="section section--tight home-modules">
         <div className="home-modules-inner">
           <motion.div
