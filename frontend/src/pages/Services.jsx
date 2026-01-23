@@ -116,34 +116,69 @@ export default function Services() {
     },
   ];
 
-  const stageRef = useRef(null);
-  const pinRef = useRef(null);
+  const heroStageRef = useRef(null);
+  const heroPinRef = useRef(null);
+
+  const primaryRef = useRef(null);
+  const secondaryRef = useRef(null);
 
   useLayoutEffect(() => {
     const ctx = gsap.context(() => {
-      // pin + cover
+      // ===== HERO: pin + cover (your current technique) =====
       ScrollTrigger.create({
-        trigger: stageRef.current,
+        trigger: heroStageRef.current,
         start: "top top",
-        end: "+=100%", // one screen scroll
-        pin: pinRef.current,
+        end: "+=100%",
+        pin: heroPinRef.current,
         pinSpacing: false,
         anticipatePin: 1,
         invalidateOnRefresh: true,
       });
 
-      // subtle fade as the sheet covers (no transform vibes)
-      gsap.to("[data-hero]", {
+      gsap.to(heroPinRef.current, {
         opacity: 0.18,
         ease: "none",
         scrollTrigger: {
-          trigger: stageRef.current,
+          trigger: heroStageRef.current,
           start: "top top",
           end: "+=100%",
           scrub: true,
         },
       });
-    }, stageRef);
+
+      // ===== PRIMARY -> SECONDARY: end-lock pin so Secondary covers Primary =====
+      const getCoverPx = () => {
+        const v = getComputedStyle(document.documentElement)
+          .getPropertyValue("--sheet-cover")
+          .trim();
+        const n = parseFloat(v);
+        return Number.isFinite(n) ? n : 160;
+      };
+
+      ScrollTrigger.create({
+        trigger: primaryRef.current,
+        // start pin near the end so the last card stops climbing
+        start: () => `bottom bottom-=${getCoverPx()}`,
+        endTrigger: secondaryRef.current,
+        end: "top top",
+        pin: primaryRef.current,
+        pinSpacing: false,
+        anticipatePin: 1,
+        invalidateOnRefresh: true,
+      });
+
+      // optional: tiny “dimming” as Secondary approaches (no rotate/scale vibes)
+      gsap.to(primaryRef.current, {
+        opacity: 0.55,
+        ease: "none",
+        scrollTrigger: {
+          trigger: secondaryRef.current,
+          start: "top bottom",
+          end: "top top",
+          scrub: true,
+        },
+      });
+    });
 
     return () => ctx.revert();
   }, []);
@@ -151,9 +186,8 @@ export default function Services() {
   return (
     <>
       {/* PINNED HERO STAGE */}
-      <section ref={stageRef} className="services-hero-stage">
-        <div ref={pinRef} className="services-hero-pin" data-hero>
-          {/* underlay behind hero */}
+      <section ref={heroStageRef} className="services-hero-stage">
+        <div ref={heroPinRef} className="services-hero-pin" data-hero>
           <div className="services-hero-underlay" aria-hidden="true">
             <div className="services-hero-underlay-inner">
               <span className="eyebrow">{blocks.primary.eyebrow}</span>
@@ -166,15 +200,12 @@ export default function Services() {
             </div>
           </div>
 
-          {/* hero */}
           <section className="services-editorial full-bleed">
             <div className="services-intro">
               <span className="eyebrow">{hero.eyebrow}</span>
-
               <h1 className="services-hero-title">
                 Built for land development at scale.
               </h1>
-
               <p className="services-intro-text">{hero.intro}</p>
 
               <div className="services-hero-actions">
@@ -219,8 +250,12 @@ export default function Services() {
         </div>
       </section>
 
-      {/* PRIMARY */}
-      <section id="primary" className="services-block">
+      {/* PRIMARY (normal scroll, only pins at the end) */}
+      <section
+        id="primary"
+        ref={primaryRef}
+        className="services-block services-block--primary"
+      >
         <div className="services-block-head">
           <span className="eyebrow">{blocks.primary.eyebrow}</span>
           <h2 className="services-block-title">{blocks.primary.title}</h2>
@@ -243,8 +278,12 @@ export default function Services() {
         </Row>
       </section>
 
-      {/* SECONDARY */}
-      <section id="secondary" className="services-block">
+      {/* SECONDARY (covers Primary) */}
+      <section
+        id="secondary"
+        ref={secondaryRef}
+        className="services-block services-block--secondary"
+      >
         <div className="services-block-head">
           <span className="eyebrow">{blocks.secondary.eyebrow}</span>
           <h2 className="services-block-title">{blocks.secondary.title}</h2>
