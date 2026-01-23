@@ -1,5 +1,5 @@
 import { useState } from "react";
-import "../../css/appointment.css"
+import "./appointment.css"
 export default function Appointment() {
   const [activeTab, setActiveTab] = useState("upcoming");
 

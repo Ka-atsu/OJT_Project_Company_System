@@ -4,7 +4,7 @@ import {
   SettingRow,
   Divider,
   Toggle,
-} from "../../../components/client/AccountSettingsComponent";
+} from "./AccountSettingsComponent";
 import "./clientAccountSettings.css";
 
 export default function ClientAccountSettings() {
