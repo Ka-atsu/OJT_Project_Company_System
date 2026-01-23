@@ -1,15 +1,32 @@
-import { motion, useScroll, useTransform } from "framer-motion";
-import { useNavigate } from "react-router-dom";
+import { useLayoutEffect, useRef } from "react";
+import { motion } from "framer-motion";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
 import ConstructionSite from "../assets/Images/ConstructionSite.jpg";
 import PageShell from "../components/layouts/PageShell";
 import "../css/about.css";
 
-const VIEWPORT = { amount: 0.35 };
+gsap.registerPlugin(ScrollTrigger);
+
+const VIEWPORT = { amount: 0.35, once: true };
 const EASE = [0.22, 1, 0.36, 1];
 
 const fadeUp = {
   hidden: { opacity: 0, y: 22 },
-  visible: { opacity: 1, y: 0 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.7, ease: EASE },
+  },
+};
+
+const heroFade = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { duration: 0.8, ease: EASE },
+  },
 };
 
 const stagger = {
@@ -100,37 +117,21 @@ function AboutSection({ label, title, body, bullets }) {
         whileInView="visible"
         viewport={VIEWPORT}
       >
-        <motion.aside
-          className="about-slice-meta"
-          variants={fadeUp}
-          transition={{ duration: 0.7, ease: EASE }}
-        >
+        <motion.aside className="about-slice-meta" variants={fadeUp}>
           <span className="eyebrow">{label}</span>
         </motion.aside>
 
         <div>
-          <motion.h2
-            className="about-slice-title"
-            variants={fadeUp}
-            transition={{ duration: 0.7, ease: EASE }}
-          >
+          <motion.h2 className="about-slice-title" variants={fadeUp}>
             {title}
           </motion.h2>
 
-          <motion.p
-            className="about-slice-text"
-            variants={fadeUp}
-            transition={{ duration: 0.7, ease: EASE }}
-          >
+          <motion.p className="about-slice-text" variants={fadeUp}>
             {body}
           </motion.p>
 
           {Array.isArray(bullets) && bullets.length > 0 && (
-            <motion.div
-              className="about-bullets"
-              variants={fadeUp}
-              transition={{ duration: 0.7, ease: EASE }}
-            >
+            <motion.div className="about-bullets" variants={fadeUp}>
               {bullets.map((b) => (
                 <div key={b.k} className="about-bullet">
                   <div className="about-bullet-k">{b.k}</div>
@@ -146,53 +147,147 @@ function AboutSection({ label, title, body, bullets }) {
 }
 
 export default function About() {
-  const navigate = useNavigate(); // (unused for now, you can remove this import too)
   const { hero, intro, quote, sections } = ABOUT;
+  const rootRef = useRef(null);
 
-  const { scrollY } = useScroll();
-  const heroTextY = useTransform(scrollY, [0, 500], [0, -40]);
-  const headlineY = useTransform(scrollY, [0, 500], [0, -70]);
-  const overlayOpacity = useTransform(scrollY, [0, 500], [1, 0.6]);
+  const heroRef = useRef(null);
+  const stageRef = useRef(null);
+  const headlineWrapRef = useRef(null);
+  const overlayRef = useRef(null);
+
+  const imageBandRef = useRef(null);
+  const imageParallaxRef = useRef(null);
+
+  const handleImgLoad = () => {
+    ScrollTrigger.refresh();
+  };
+
+  useLayoutEffect(() => {
+    if (!rootRef.current || !heroRef.current) return;
+
+    ScrollTrigger.getById("about-hero-stage")?.kill(true);
+    ScrollTrigger.getById("about-hero-headline")?.kill(true);
+    ScrollTrigger.getById("about-hero-overlay")?.kill(true);
+    ScrollTrigger.getById("about-image-parallax")?.kill(true);
+
+    const ctx = gsap.context(() => {
+      // Parallax lift on hero content
+      if (stageRef.current) {
+        gsap.to(stageRef.current, {
+          y: -40,
+          ease: "none",
+          scrollTrigger: {
+            id: "about-hero-stage",
+            trigger: heroRef.current,
+            start: "top top",
+            end: "+=500",
+            scrub: true,
+            invalidateOnRefresh: true,
+          },
+        });
+      }
+
+      // Extra lift on headline wrapper
+      if (headlineWrapRef.current) {
+        gsap.to(headlineWrapRef.current, {
+          y: -70,
+          ease: "none",
+          scrollTrigger: {
+            id: "about-hero-headline",
+            trigger: heroRef.current,
+            start: "top top",
+            end: "+=500",
+            scrub: true,
+            invalidateOnRefresh: true,
+          },
+        });
+      }
+
+      // Overlay fade
+      if (overlayRef.current) {
+        gsap.to(overlayRef.current, {
+          opacity: 0.6,
+          ease: "none",
+          scrollTrigger: {
+            id: "about-hero-overlay",
+            trigger: heroRef.current,
+            start: "top top",
+            end: "+=500",
+            scrub: true,
+            invalidateOnRefresh: true,
+          },
+        });
+      }
+
+      const shift = window.innerWidth < 768 ? 16 : 28;
+
+      // Image parallax
+      if (imageParallaxRef.current && imageBandRef.current) {
+        gsap.fromTo(
+          imageParallaxRef.current,
+          { y: shift },
+          {
+            y: -shift,
+            ease: "none",
+            scrollTrigger: {
+              id: "about-image-parallax",
+              trigger: imageBandRef.current,
+              start: "top bottom",
+              end: "bottom top",
+              scrub: true,
+              invalidateOnRefresh: true,
+            },
+          },
+        );
+      }
+
+      ScrollTrigger.refresh();
+    }, rootRef);
+
+    return () => {
+      ScrollTrigger.getById("about-hero-stage")?.kill(true);
+      ScrollTrigger.getById("about-hero-headline")?.kill(true);
+      ScrollTrigger.getById("about-hero-overlay")?.kill(true);
+      ScrollTrigger.getById("about-image-parallax")?.kill(true);
+      ctx.revert();
+    };
+  }, []);
 
   return (
-    <>
+    <div ref={rootRef}>
       {/* HERO */}
       <motion.section
+        ref={heroRef}
         className="hero hero--editorial full-bleed about-hero"
-        style={{ "--hero-bg": `url(${hero.bg})` }}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.8, ease: EASE }}
+        variants={heroFade}
+        initial="hidden"
+        animate="visible"
       >
-        <motion.div
-          className="hero-overlay about-hero-overlay"
-          style={{ opacity: overlayOpacity }}
-        />
+        {/* Background layer (no inline style) */}
+        <div className="about-hero-bg" aria-hidden="true">
+          <img className="about-hero-bg-img" src={hero.bg} alt="" />
+        </div>
 
-        <motion.div
-          className="hero-content about-hero-content"
-          style={{ y: heroTextY }}
-          variants={stagger}
-          initial="hidden"
-          animate="visible"
-        >
-          <motion.span
-            className="eyebrow"
-            variants={fadeUp}
-            transition={{ duration: 0.7, ease: EASE }}
-          >
-            {hero.eyebrow}
-          </motion.span>
+        <div ref={overlayRef} className="hero-overlay about-hero-overlay" />
 
-          <motion.h1
-            className="kinetic-headline big"
-            variants={fadeUp}
-            style={{ y: headlineY }}
-            transition={{ duration: 0.85, ease: EASE }}
+        <div ref={stageRef} className="about-hero-stage">
+          <motion.div
+            className="hero-content about-hero-content"
+            variants={stagger}
+            initial="hidden"
+            animate="visible"
           >
-            {hero.headline}
-          </motion.h1>
-        </motion.div>
+            <motion.span className="eyebrow" variants={fadeUp}>
+              {hero.eyebrow}
+            </motion.span>
+
+            <div ref={headlineWrapRef} className="about-hero-headline-wrap">
+              <motion.h1 className="kinetic-headline big" variants={fadeUp}>
+                {hero.headline}
+              </motion.h1>
+            </div>
+          </motion.div>
+        </div>
       </motion.section>
 
       <PageShell>
@@ -205,20 +300,12 @@ export default function About() {
             whileInView="visible"
             viewport={VIEWPORT}
           >
-            <motion.aside
-              className="about-intro-meta"
-              variants={fadeUp}
-              transition={{ duration: 0.7, ease: EASE }}
-            >
+            <motion.aside className="about-intro-meta" variants={fadeUp}>
               <span className="eyebrow">{intro.label}</span>
             </motion.aside>
 
             <div>
-              <motion.h2
-                className="about-intro-title"
-                variants={fadeUp}
-                transition={{ duration: 0.7, ease: EASE }}
-              >
+              <motion.h2 className="about-intro-title" variants={fadeUp}>
                 {intro.title}
               </motion.h2>
 
@@ -227,17 +314,12 @@ export default function About() {
                   key={i}
                   className="about-intro-text"
                   variants={fadeUp}
-                  transition={{ duration: 0.7, ease: EASE }}
                 >
                   {p}
                 </motion.p>
               ))}
 
-              <motion.div
-                className="about-stats"
-                variants={fadeUp}
-                transition={{ duration: 0.7, ease: EASE }}
-              >
+              <motion.div className="about-stats" variants={fadeUp}>
                 {intro.stats.map((s) => (
                   <div key={s.k} className="about-stat">
                     <div className="about-stat-k">{s.k}</div>
@@ -258,19 +340,11 @@ export default function About() {
             whileInView="visible"
             viewport={VIEWPORT}
           >
-            <motion.aside
-              className="about-quote-meta"
-              variants={fadeUp}
-              transition={{ duration: 0.7, ease: EASE }}
-            >
+            <motion.aside className="about-quote-meta" variants={fadeUp}>
               <span className="eyebrow">{quote.label}</span>
             </motion.aside>
 
-            <motion.blockquote
-              className="about-quote-text"
-              variants={fadeUp}
-              transition={{ duration: 0.8, ease: EASE }}
-            >
+            <motion.blockquote className="about-quote-text" variants={fadeUp}>
               “{quote.text}”
             </motion.blockquote>
           </motion.div>
@@ -278,16 +352,23 @@ export default function About() {
 
         {/* IMAGE */}
         <section className="section">
-          <div className="image-band about-image-band">
-            <motion.img
-              src={ConstructionSite}
-              alt="Land development and materials supply"
-              className="about-image"
+          <div ref={imageBandRef} className="image-band about-image-band">
+            <motion.div
+              className="about-image-reveal"
               initial={{ opacity: 0, scale: 1.03 }}
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ ...VIEWPORT, margin: "-120px" }}
               transition={{ duration: 0.9, ease: EASE }}
-            />
+            >
+              <div ref={imageParallaxRef} className="about-image-parallax">
+                <img
+                  src={ConstructionSite}
+                  alt="Land development and materials supply"
+                  className="about-image"
+                  onLoad={handleImgLoad}
+                />
+              </div>
+            </motion.div>
           </div>
         </section>
 
@@ -296,6 +377,6 @@ export default function About() {
           <AboutSection key={s.label} {...s} />
         ))}
       </PageShell>
-    </>
+    </div>
   );
 }

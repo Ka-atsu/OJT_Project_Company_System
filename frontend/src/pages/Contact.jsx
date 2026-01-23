@@ -1,28 +1,54 @@
-import { useState, useRef } from "react";
-import Card from "react-bootstrap/Card";
+import { useMemo, useRef, useState } from "react";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Alert from "react-bootstrap/Alert";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import PageShell from "../components/layouts/PageShell";
+import Accordion from "react-bootstrap/Accordion";
 import ReCAPTCHA from "react-google-recaptcha";
 import "../css/contact.css";
+import { RECAPTCHA_SITE_KEY } from "../api/publicApiKey";
 
 export default function Contact() {
+  const formSectionRef = useRef(null);
+  const captchaRef = useRef(null);
+
+  const recaptchaKey = RECAPTCHA_SITE_KEY;
+
   const [form, setForm] = useState({
     name: "",
     email: "",
+    location: "",
     subject: "",
     message: "",
   });
-
-  const captchaRef = useRef(null);
 
   const [errors, setErrors] = useState({});
   const [status, setStatus] = useState({ type: "", msg: "" });
   const [loading, setLoading] = useState(false);
   const [captcha, setCaptcha] = useState(null);
+
+  const FAQS = useMemo(
+    () => [
+      {
+        q: "What services do you offer?",
+        a: "We design and build modern, high-performing websites, landing pages, and UI systems—optimized for speed, clarity, and conversion.",
+      },
+      {
+        q: "How do projects start?",
+        a: "We begin with your goals, scope, and timeline. Then we confirm requirements and move into design + build with weekly check-ins.",
+      },
+      {
+        q: "How long is delivery?",
+        a: "Most small sites finish in 1–2 weeks. Larger builds typically take 2–4 weeks depending on scope and revisions.",
+      },
+      {
+        q: "Do you offer support after launch?",
+        a: "Yes—handover docs, small fixes, and ongoing improvements are available depending on your needs.",
+      },
+    ],
+    [],
+  );
 
   const validate = () => {
     const e = {};
@@ -51,9 +77,11 @@ export default function Contact() {
 
     setLoading(true);
     try {
+      // Replace this with your real API call
       await new Promise((r) => setTimeout(r, 800));
+
       setStatus({ type: "success", msg: "Message sent successfully!" });
-      setForm({ name: "", email: "", subject: "", message: "" });
+      setForm({ name: "", email: "", location: "", subject: "", message: "" });
       setCaptcha(null);
       captchaRef.current?.reset?.();
     } catch {
@@ -63,173 +91,179 @@ export default function Contact() {
     }
   };
 
-  const scrollToForm = () => {
-    document
-      .getElementById("contact-form")
-      ?.scrollIntoView({ behavior: "smooth" });
-  };
-
   return (
-    <PageShell className="contact-page p-0">
+    <div className="contact-page p-0">
       {/* HERO */}
       <section className="contact-hero">
         <div className="contact-hero-inner">
-          <h1>Contact Us</h1>
-          <Button variant="dark" size="sm" onClick={scrollToForm}>
-            Send a Message
-          </Button>
-        </div>
-      </section>
+          <div className="contact-hero-grid">
+            <div>
+              <div className="contact-kicker">
+                <span className="dot" />
+                Contact
+              </div>
 
-      {/* WAYS */}
-      <section className="contact-ways">
-        <div className="contact-ways-inner">
-          <h2>Ways to Contact us</h2>
+              <h1 className="contact-title">We’d love to hear from you!</h1>
 
-          <Row className="g-4 justify-content-center">
-            <Col xs={12} md={4} lg={3}>
-              <Card className="contact-way h-100 text-center">
-                <Card.Body>
-                  <div className="contact-way-icon" aria-hidden="true">
-                    📍
-                  </div>
-                  <div className="fw-semibold mt-2">Location</div>
-                  <div className="text-muted small mt-2">
-                    Insert address here <br />
-                    Mon–Fri 8:00 AM – 6:00 PM
-                  </div>
-                </Card.Body>
-              </Card>
-            </Col>
+              <p className="contact-lede">
+                Have any questions or requests? Reach out to us, and we'll get
+                back to you within 24–48 hours.
+              </p>
 
-            <Col xs={12} md={4} lg={3}>
-              <Card className="contact-way h-100 text-center">
-                <Card.Body>
-                  <div className="contact-way-icon" aria-hidden="true">
-                    📞
-                  </div>
-                  <div className="fw-semibold mt-2">Phone Number</div>
-                  <div className="text-muted small mt-2">0900000000</div>
-                </Card.Body>
-              </Card>
-            </Col>
-
-            <Col xs={12} md={4} lg={3}>
-              <Card className="contact-way h-100 text-center">
-                <Card.Body>
-                  <div className="contact-way-icon" aria-hidden="true">
-                    ✉️
-                  </div>
-                  <div className="fw-semibold mt-2">Email</div>
-                  <div className="text-muted small mt-2">
-                    something@gmail.com
-                  </div>
-                </Card.Body>
-              </Card>
-            </Col>
-          </Row>
-
-          <p className="contact-ways-note">
-            Our company services staff is waiting to assist you! <br />
-            Reach us through any of the channels above.
-          </p>
+              <div className="contact-hero-actions">
+                <Button
+                  variant="light"
+                  onClick={() =>
+                    formSectionRef.current.scrollIntoView({
+                      behavior: "smooth",
+                    })
+                  }
+                >
+                  Send a Message
+                </Button>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
       {/* FORM */}
-      <section id="contact-form" className="contact-form-section">
-        <div className="contact-form-inner">
-          <div className="contact-form-box">
-            <div className="contact-form-head">
-              <div className="title">Contact us!</div>
-              <div className="sub">You can send general enquiries here!</div>
+      <section
+        ref={formSectionRef}
+        className="contact-section"
+        id="contact-form"
+      >
+        <div className="contact-surface">
+          <h2 className="contact-section-title">Send us a message</h2>
+          <p className="contact-section-sub">
+            Fill out the form below, and we will get back to you as soon as
+            possible.
+          </p>
+
+          {/* CONTACT FORM & FAQ GRID */}
+          <div className="contact-form-wrap">
+            <div className="contact-form-box">
+              <div className="contact-form-head">
+                <p className="title">Contact us</p>
+                <div className="sub">General inquiries and requests.</div>
+              </div>
+
+              {status.msg && <Alert variant={status.type}>{status.msg}</Alert>}
+
+              <Form onSubmit={handleSubmit}>
+                <Row className="g-3">
+                  <Col xs={12} md={6}>
+                    <Form.Group>
+                      <Form.Label>Name</Form.Label>
+                      <Form.Control
+                        name="name"
+                        value={form.name}
+                        onChange={handleChange}
+                        placeholder="e.g. Jimmy Sales"
+                        isInvalid={!!errors.name}
+                      />
+                      <Form.Control.Feedback type="invalid">
+                        {errors.name}
+                      </Form.Control.Feedback>
+                    </Form.Group>
+                  </Col>
+
+                  <Col xs={12} md={6}>
+                    <Form.Group>
+                      <Form.Label>Email</Form.Label>
+                      <Form.Control
+                        type="email"
+                        name="email"
+                        value={form.email}
+                        onChange={handleChange}
+                        placeholder="e.g. jimmy.sales@gmail.com"
+                        isInvalid={!!errors.email}
+                      />
+                      <Form.Control.Feedback type="invalid">
+                        {errors.email}
+                      </Form.Control.Feedback>
+                    </Form.Group>
+                  </Col>
+
+                  <Col xs={12}>
+                    <Form.Group>
+                      <Form.Label>Subject</Form.Label>
+                      <Form.Control
+                        name="subject"
+                        value={form.subject}
+                        onChange={handleChange}
+                        placeholder="Subject"
+                        isInvalid={!!errors.subject}
+                      />
+                      <Form.Control.Feedback type="invalid">
+                        {errors.subject}
+                      </Form.Control.Feedback>
+                    </Form.Group>
+                  </Col>
+
+                  <Col xs={12}>
+                    <Form.Group>
+                      <Form.Label>Message</Form.Label>
+                      <Form.Control
+                        as="textarea"
+                        rows={5}
+                        name="message"
+                        value={form.message}
+                        onChange={handleChange}
+                        placeholder="Tell us what you need…"
+                        isInvalid={!!errors.message}
+                      />
+                      <Form.Control.Feedback type="invalid">
+                        {errors.message}
+                      </Form.Control.Feedback>
+                    </Form.Group>
+                  </Col>
+
+                  <Col xs={12}>
+                    <Form.Group>
+                      <ReCAPTCHA
+                        ref={captchaRef}
+                        sitekey={recaptchaKey}
+                        onChange={(value) => setCaptcha(value)}
+                      />
+                      {errors.captcha && (
+                        <div className="text-danger mt-1 small">
+                          {errors.captcha}
+                        </div>
+                      )}
+                    </Form.Group>
+                  </Col>
+                </Row>
+
+                <div className="contact-form-actions">
+                  <Button type="submit" variant="dark" disabled={loading}>
+                    {loading ? "Sending..." : "Submit"}
+                  </Button>
+                </div>
+              </Form>
             </div>
 
-            {status.msg && <Alert variant={status.type}>{status.msg}</Alert>}
+            {/* FAQ Section (on right side) */}
+            <div className="contact-faq">
+              <h2 className="contact-section-title">
+                Frequently asked questions
+              </h2>
+              <p className="contact-section-sub">
+                Quick answers to common questions.
+              </p>
 
-            <Form onSubmit={handleSubmit}>
-              <Form.Group className="mb-3">
-                <Form.Label>Name</Form.Label>
-                <Form.Control
-                  name="name"
-                  value={form.name}
-                  onChange={handleChange}
-                  placeholder="e.g. Jimmy Sales"
-                  isInvalid={!!errors.name}
-                />
-                <Form.Control.Feedback type="invalid">
-                  {errors.name}
-                </Form.Control.Feedback>
-              </Form.Group>
-
-              <Form.Group className="mb-3">
-                <Form.Label>Email</Form.Label>
-                <Form.Control
-                  name="email"
-                  value={form.email}
-                  onChange={handleChange}
-                  placeholder="e.g. jimmy.sales@gmail.com"
-                  isInvalid={!!errors.email}
-                />
-                <Form.Control.Feedback type="invalid">
-                  {errors.email}
-                </Form.Control.Feedback>
-              </Form.Group>
-
-              <Form.Group className="mb-3">
-                <Form.Label>Subject</Form.Label>
-                <Form.Control
-                  name="subject"
-                  value={form.subject}
-                  onChange={handleChange}
-                  placeholder="Subject"
-                  isInvalid={!!errors.subject}
-                />
-                <Form.Control.Feedback type="invalid">
-                  {errors.subject}
-                </Form.Control.Feedback>
-              </Form.Group>
-
-              <Form.Group className="mb-3">
-                <Form.Label>Message</Form.Label>
-                <Form.Control
-                  as="textarea"
-                  rows={5}
-                  name="message"
-                  value={form.message}
-                  onChange={handleChange}
-                  placeholder="Message"
-                  isInvalid={!!errors.message}
-                />
-                <Form.Control.Feedback type="invalid">
-                  {errors.message}
-                </Form.Control.Feedback>
-              </Form.Group>
-
-              <Form.Group className="mb-3">
-                <ReCAPTCHA
-                  ref={captchaRef}
-                  sitekey="6Lcw_04sAAAAAOz84QKlQUGSzIJZgasCu5wpy8e6"
-                  onChange={(value) => setCaptcha(value)}
-                />
-                {errors.captcha && (
-                  <div className="text-danger mt-1 small">{errors.captcha}</div>
-                )}
-              </Form.Group>
-
-              <div className="contact-form-actions">
-                <Button type="submit" variant="dark" disabled={loading}>
-                  {loading ? "Sending..." : "Submit"}
-                </Button>
-
-                <div className="hint">
-                  We typically respond within 24–48 hours.
-                </div>
-              </div>
-            </Form>
+              <Accordion className="contact-faq" defaultActiveKey="0">
+                {FAQS.map((item, idx) => (
+                  <Accordion.Item eventKey={String(idx)} key={item.q}>
+                    <Accordion.Header>{item.q}</Accordion.Header>
+                    <Accordion.Body>{item.a}</Accordion.Body>
+                  </Accordion.Item>
+                ))}
+              </Accordion>
+            </div>
           </div>
         </div>
       </section>
-    </PageShell>
+    </div>
   );
 }

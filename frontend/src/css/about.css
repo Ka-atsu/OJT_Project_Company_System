@@ -36,6 +36,31 @@
   color: #fff;
 }
 
+.about-hero {
+  position: relative;
+  overflow: hidden;
+}
+
+.about-hero-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.about-hero-bg-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.about-hero-overlay,
+.about-hero-stage,
+.about-hero-content {
+  position: relative;
+  z-index: 1;
+}
+
 /* =====================
    GRID WRAPPERS + STICKY META
 ===================== */
@@ -119,12 +144,23 @@
 ===================== */
 
 .about-image-band {
-  border-radius: 22px;
-  overflow: hidden;
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  border-radius: 1rem;
+}
+
+.about-image-parallax {
+  will-change: transform;
+  display: block;
 }
 
 .about-image {
-  filter: grayscale(100%) contrast(1.05);
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  display: block;
+  transform: scale(1.08);
 }
 
 /* =====================

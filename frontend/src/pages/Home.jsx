@@ -1,13 +1,7 @@
-import PageShell from "../components/layouts/PageShell";
 import { Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { useLayoutEffect, useRef, useState } from "react";
-import {
-  motion,
-  AnimatePresence,
-  useScroll,
-  useTransform,
-} from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -19,8 +13,8 @@ import "../css/home.css";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const VIEWPORT = { amount: 0.35 };
-const VIEWPORT_CARDS = { amount: 0.25 };
+const VIEWPORT = { amount: 0.35, once: true };
+const VIEWPORT_CARDS = { amount: 0.25, once: true };
 
 const EASE = [0.22, 1, 0.36, 1];
 
@@ -40,6 +34,22 @@ const fadeUpItem = {
     opacity: 1,
     y: 0,
     transition: { duration: 0.6, ease: EASE },
+  },
+};
+
+const heroSwap = {
+  hidden: { opacity: 0, y: 18, filter: "blur(6px)" },
+  visible: {
+    opacity: 1,
+    y: 0,
+    filter: "blur(0px)",
+    transition: { duration: 0.35, ease: "easeOut" },
+  },
+  exit: {
+    opacity: 0,
+    y: -10,
+    filter: "blur(6px)",
+    transition: { duration: 0.25, ease: "easeIn" },
   },
 };
 
@@ -102,6 +112,7 @@ export default function Home() {
 
   const wrapRef = useRef(null);
   const pinRef = useRef(null);
+  const stageRef = useRef(null);
 
   const [active, setActive] = useState(0);
   const total = heroScroll.slides.length;
@@ -110,13 +121,11 @@ export default function Home() {
   const counterLeft = String(active + 1).padStart(2, "0");
   const counterRight = String(total).padStart(2, "0");
 
-  const { scrollY } = useScroll();
-  const heroTextY = useTransform(scrollY, [0, 700], [0, -24]);
-
   useLayoutEffect(() => {
     if (!wrapRef.current || !pinRef.current) return;
 
     ScrollTrigger.getById("home-hero-pin")?.kill(true);
+    ScrollTrigger.getById("home-hero-parallax")?.kill(true);
 
     const ctx = gsap.context(() => {
       ScrollTrigger.create({
@@ -134,11 +143,27 @@ export default function Home() {
         },
       });
 
+      if (stageRef.current) {
+        gsap.to(stageRef.current, {
+          y: -24,
+          ease: "none",
+          scrollTrigger: {
+            id: "home-hero-parallax",
+            trigger: wrapRef.current,
+            start: "top top",
+            end: "+=700",
+            scrub: true,
+            invalidateOnRefresh: true,
+          },
+        });
+      }
+
       ScrollTrigger.refresh();
     }, wrapRef);
 
     return () => {
       ScrollTrigger.getById("home-hero-pin")?.kill(true);
+      ScrollTrigger.getById("home-hero-parallax")?.kill(true);
       ctx.revert();
     };
   }, [total]);
@@ -146,11 +171,11 @@ export default function Home() {
   return (
     <>
       <section ref={wrapRef} className="hero-scroll">
-        <section
-          ref={pinRef}
-          className="hero full-bleed home-hero"
-          style={{ "--hero-bg": `url(${ConstructionSite})` }}
-        >
+        <section ref={pinRef} className="hero full-bleed home-hero">
+          <div className="home-hero-bg" aria-hidden="true">
+            <img className="home-hero-bg-img" src={ConstructionSite} alt="" />
+          </div>
+
           <div className="hero-overlay home-hero-overlay" />
 
           <div className="home-hero-meta">
@@ -161,22 +186,21 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="home-hero-stage">
+          <div ref={stageRef} className="home-hero-stage">
             <AnimatePresence mode="wait">
               <motion.div
                 key={active}
                 className="hero-content home-hero-content"
-                style={{ y: heroTextY }}
-                initial={{ opacity: 0, y: 18, filter: "blur(6px)" }}
-                animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                exit={{ opacity: 0, y: -10, filter: "blur(6px)" }}
-                transition={{ duration: 0.35, ease: "easeOut" }}
+                variants={heroSwap}
+                initial="hidden"
+                animate="visible"
+                exit="exit"
               >
                 <motion.span
                   className="eyebrow"
                   initial={{ opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.25, delay: 0.05 }}
+                  transition={{ duration: 0.25, delay: 0.05, ease: EASE }}
                 >
                   {heroScroll.eyebrow}
                 </motion.span>
@@ -185,7 +209,7 @@ export default function Home() {
                   className="hero-title"
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.35, delay: 0.08 }}
+                  transition={{ duration: 0.35, delay: 0.08, ease: EASE }}
                 >
                   {slide.titleLines[0]}
                   <br />
@@ -197,7 +221,7 @@ export default function Home() {
                     className="home-hero-lede"
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.35, delay: 0.12 }}
+                    transition={{ duration: 0.35, delay: 0.12, ease: EASE }}
                   >
                     {slide.lede}
                   </motion.p>
@@ -208,7 +232,7 @@ export default function Home() {
                     className="hero-actions"
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.35, delay: 0.16 }}
+                    transition={{ duration: 0.35, delay: 0.16, ease: EASE }}
                   >
                     <Button
                       as={Link}
@@ -234,59 +258,56 @@ export default function Home() {
         </section>
       </section>
 
-      <PageShell pad={false}>
-        <section className="section section--tight home-modules">
-          <div className="home-modules-inner">
+      <section className="section section--tight home-modules">
+        <div className="home-modules-inner">
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={VIEWPORT}
+            variants={revealStagger}
+          >
+            <motion.span className="eyebrow" variants={fadeUpItem}>
+              {modules.eyebrow}
+            </motion.span>
+
+            <motion.h2 className="home-section-title" variants={fadeUpItem}>
+              {modules.title}
+            </motion.h2>
+
             <motion.div
+              className="home-modules-grid"
+              variants={revealStagger}
               initial="hidden"
               whileInView="visible"
-              viewport={VIEWPORT}
-              variants={revealStagger}
+              viewport={VIEWPORT_CARDS}
             >
-              <motion.span className="eyebrow" variants={fadeUpItem}>
-                {modules.eyebrow}
-              </motion.span>
+              {modules.items.map((item) => (
+                <motion.article
+                  key={item.num}
+                  className="home-module"
+                  variants={fadeUpItem}
+                  transition={{ duration: 0.25, ease: "easeOut" }}
+                >
+                  <div className="home-module-num">{item.num}</div>
 
-              <motion.h2 className="home-section-title" variants={fadeUpItem}>
-                {modules.title}
-              </motion.h2>
-
-              <motion.div
-                className="home-modules-grid"
-                variants={revealStagger}
-                initial="hidden"
-                whileInView="visible"
-                viewport={VIEWPORT_CARDS}
-              >
-                {modules.items.map((item) => (
-                  <motion.article
-                    key={item.num}
-                    className="home-module"
-                    variants={fadeUpItem}
-                    whileHover={{ y: -4 }}
-                    transition={{ duration: 0.25, ease: "easeOut" }}
+                  <motion.div
+                    className="home-module-media"
+                    initial={{ scale: 1.02 }}
+                    whileInView={{ scale: 1 }}
+                    viewport={VIEWPORT_CARDS}
+                    transition={{ duration: 0.8, ease: EASE }}
                   >
-                    <div className="home-module-num">{item.num}</div>
+                    <img src={item.img} alt={item.alt} />
+                  </motion.div>
 
-                    <motion.div
-                      className="home-module-media"
-                      initial={{ scale: 1.02 }}
-                      whileInView={{ scale: 1 }}
-                      viewport={VIEWPORT_CARDS}
-                      transition={{ duration: 0.8, ease: EASE }}
-                    >
-                      <img src={item.img} alt={item.alt} />
-                    </motion.div>
-
-                    <h3>{item.title}</h3>
-                    <p>{item.desc}</p>
-                  </motion.article>
-                ))}
-              </motion.div>
+                  <h3>{item.title}</h3>
+                  <p>{item.desc}</p>
+                </motion.article>
+              ))}
             </motion.div>
-          </div>
-        </section>
-      </PageShell>
+          </motion.div>
+        </div>
+      </section>
     </>
   );
 }

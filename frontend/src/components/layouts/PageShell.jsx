@@ -4,6 +4,9 @@ import Container from "react-bootstrap/Container";
  * Reusable page wrapper for consistent spacing
  * pad = true  → normal pages
  * pad = false → full-bleed (hero, landing pages)
+ * 
+ * 
+ * SCRAPPED
  */
 export default function PageShell({
   title,
