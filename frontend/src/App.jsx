@@ -8,6 +8,7 @@ import About from "./pages/About";
 import Safety from "./pages/Safety";
 import Services from "./pages/Services";
 import Contact from "./pages/Contact";
+import Projects from "./pages/Projects";
 import NotFound from "./pages/NotFound";
 
 import Login from "./pages/Login";
@@ -27,6 +28,7 @@ export default function App() {
         <Route path="services" element={<Services />} />
         <Route path="safety" element={<Safety />} />
         <Route path="contact" element={<Contact />} />
+        <Route path="projects" element={<Projects />} />
       </Route>
 
       <Route path="/dashboard" element={<DashboardLayout />}>

@@ -4,6 +4,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 import ConstructionSite from "../assets/Images/ConstructionSite.jpg";
+import BackHoe from "../assets/Images/backHoe.jpg";
 import PageShell from "../components/layouts/PageShell";
 import "../css/about.css";
 
@@ -107,6 +108,30 @@ const ABOUT = {
   ],
 };
 
+const TEAM = {
+  label: "Our people",
+  title: "The humans behind the company",
+  subtitle:
+    "A team of professionals committed to responsible land development, safety, and long-term value creation.",
+  members: [
+    {
+      name: "Juan Dela Cruz",
+      role: "President & CEO",
+      image: BackHoe,
+    },
+    {
+      name: "Maria Santos",
+      role: "Operations Manager",
+      image: ConstructionSite,
+    },
+    {
+      name: "Carlos Reyes",
+      role: "Project Engineer",
+      image: ConstructionSite,
+    },
+  ],
+};
+
 function AboutSection({ label, title, body, bullets }) {
   return (
     <section className="section about-slice">
@@ -140,6 +165,46 @@ function AboutSection({ label, title, body, bullets }) {
               ))}
             </motion.div>
           )}
+        </div>
+      </motion.div>
+    </section>
+  );
+}
+
+function TeamSection({ label, title, subtitle, members }) {
+  return (
+    <section className="section about-team">
+      <motion.div
+        className="about-team-inner"
+        variants={stagger}
+        initial="hidden"
+        whileInView="visible"
+        viewport={VIEWPORT}
+      >
+        <motion.aside className="about-team-meta" variants={fadeUp}>
+          <span className="eyebrow">{label}</span>
+        </motion.aside>
+
+        <div>
+          <motion.h2 className="about-team-title" variants={fadeUp}>
+            {title}
+          </motion.h2>
+
+          <motion.p className="about-team-subtitle" variants={fadeUp}>
+            {subtitle}
+          </motion.p>
+
+          <motion.div className="about-team-grid" variants={fadeUp}>
+            {members.map((m) => (
+              <div key={m.name} className="about-team-card">
+                <div className="about-team-image">
+                  <img src={m.image} alt={m.name} />
+                </div>
+                <div className="about-team-name">{m.name}</div>
+                <div className="about-team-role">{m.role}</div>
+              </div>
+            ))}
+          </motion.div>
         </div>
       </motion.div>
     </section>
@@ -263,7 +328,7 @@ export default function About() {
         initial="hidden"
         animate="visible"
       >
-        {/* Background layer (no inline style) */}
+        {/* Background layer */}
         <div className="about-hero-bg" aria-hidden="true">
           <img className="about-hero-bg-img" src={hero.bg} alt="" />
         </div>
@@ -362,7 +427,7 @@ export default function About() {
             >
               <div ref={imageParallaxRef} className="about-image-parallax">
                 <img
-                  src={ConstructionSite}
+                  src={BackHoe}
                   alt="Land development and materials supply"
                   className="about-image"
                   onLoad={handleImgLoad}
@@ -371,6 +436,9 @@ export default function About() {
             </motion.div>
           </div>
         </section>
+
+        {/* TEAM / HUMANS no pics to put
+        <TeamSection {...TEAM} /> */}
 
         {/* SLICES */}
         {sections.map((s) => (

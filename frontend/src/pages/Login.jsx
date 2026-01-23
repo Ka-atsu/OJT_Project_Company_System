@@ -20,7 +20,11 @@ export default function Login() {
       <div className="auth-card">
         {/* Left panel */}
         <div className="auth-left">
-          <h2>Hello, Welcome!</h2>
+          <h2>Welcome back</h2>
+          <p className="auth-muted">
+            Access your account to manage requests and projects.
+          </p>
+
           <p className="auth-muted">Don’t have an account?</p>
 
           <button
@@ -28,53 +32,25 @@ export default function Login() {
             type="button"
             onClick={() => navigate("/register")}
           >
-            Register
+            Create an account
           </button>
 
           <div className="auth-why">
             <p className="auth-whyTitle">Why log in?</p>
             <ul>
-              <li>Schedule on visit site</li>
-              <li>I dunno what other benefits is there???</li>
+              <li>Request project quotations</li>
+              <li>Schedule site inspections</li>
+              <li>Track project inquiries</li>
+              <li>Manage account details securely</li>
             </ul>
           </div>
         </div>
 
         {/* Right panel */}
         <div className="auth-right">
-          <MouseLook3D
-            url={`${import.meta.env.BASE_URL}models/tower_crane.glb`}
-          />
+          <MouseLook3D url={`${import.meta.env.BASE_URL}models/Backhoe.glb`} />
 
-          {/* CC-BY attribution (required) */}
-          <p className="auth-credit">
-            This work is based on{" "}
-            <a
-              href="https://sketchfab.com/3d-models/tower-crane-49851dc7a51b43bda6aea06856c26a85"
-              target="_blank"
-              rel="noreferrer"
-            >
-              &quot;Tower Crane&quot;
-            </a>{" "}
-            by{" "}
-            <a
-              href="https://sketchfab.com/Chamodp"
-              target="_blank"
-              rel="noreferrer"
-            >
-              Chamod
-            </a>{" "}
-            licensed under{" "}
-            <a
-              href="http://creativecommons.org/licenses/by/4.0/"
-              target="_blank"
-              rel="noreferrer"
-            >
-              CC-BY-4.0
-            </a>
-            .
-          </p>
-
+          <h2 className="auth-formTitle">SignIn</h2>
           <form
             onSubmit={(e) => {
               e.preventDefault();
@@ -86,7 +62,7 @@ export default function Login() {
             </label>
 
             <label className="auth-field">
-              <span className="auth-label">Enter password</span>
+              <span className="auth-label">Password</span>
 
               <div className="auth-pwWrap">
                 <input
@@ -116,7 +92,7 @@ export default function Login() {
 
               <div className="auth-rowRight">
                 <a className="auth-link" href="#">
-                  forgot password?
+                  Forgot your password?
                 </a>
               </div>
             </label>
@@ -127,8 +103,12 @@ export default function Login() {
             </label>
 
             <button className="auth-btn auth-btnSolid" type="submit">
-              Login
+              Sign in
             </button>
+
+            <p className="auth-credit">
+              Your information is kept secure and confidential.
+            </p>
           </form>
         </div>
       </div>

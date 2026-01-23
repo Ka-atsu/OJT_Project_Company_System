@@ -58,7 +58,7 @@ const HOME = {
     tag: "What we do",
     eyebrow: "Land Development & Materials Supply",
     primaryCta: { label: "Our Capabilities", to: "/services" },
-    secondaryCta: { label: "Request a Quote", to: "/contact" },
+    getStarted: { label: "Get Started", to: "/dashboard" },
     slides: [
       {
         titleLines: ["Reliable materials", "for land development."],
@@ -245,10 +245,10 @@ export default function Home() {
 
                     <Button
                       as={Link}
-                      to={heroScroll.secondaryCta.to}
+                      to={heroScroll.getStarted.to}
                       variant="outline-light"
                     >
-                      {heroScroll.secondaryCta.label}
+                      {heroScroll.getStarted.label}
                     </Button>
                   </motion.div>
                 )}

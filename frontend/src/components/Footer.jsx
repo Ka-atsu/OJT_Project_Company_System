@@ -35,7 +35,7 @@ export default function Footer() {
       <div className="site-footer-inner">
         <div className="site-footer-links">
           <small className="site-footer-copy">
-            © {new Date().getFullYear()} The Company · All rights reserved
+            © {new Date().getFullYear()} CLIBERDUCHE · All rights reserved
           </small>
         </div>
       </div>

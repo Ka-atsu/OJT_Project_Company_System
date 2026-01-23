@@ -1,14 +1,19 @@
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import "../css/services.css";
-import { useRef } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { useRef, useLayoutEffect } from "react";
+import { motion } from "framer-motion";
+
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 import projectManagementConsultation from "../assets/Images/projectManagementConsultation.jpg";
 import backfillImg from "../assets/Images/backfill.jpg";
 import landImg from "../assets/Images/land.jpg";
 import aggregatesImg from "../assets/Images/aggregates.jpg";
 import siteManagement from "../assets/Images/siteManagement.jpg";
+
+gsap.registerPlugin(ScrollTrigger);
 
 const fadeUp = {
   hidden: { opacity: 0, y: 14 },
@@ -28,7 +33,7 @@ const SERVICES = {
 };
 
 function ServiceCardItem({ i, title, desc, tags, image }) {
-  const isReverse = i % 2 === 1; // 2nd, 4th, etc.
+  const isReverse = i % 2 === 1;
 
   return (
     <div className="services-card">
@@ -37,12 +42,10 @@ function ServiceCardItem({ i, title, desc, tags, image }) {
           isReverse ? "flex-md-row-reverse" : ""
         }`}
       >
-        {/* Image */}
         <Col md={6} className="services-card-image">
           <img src={image} alt={title} className="services-image" />
         </Col>
 
-        {/* Text */}
         <Col md={6} className="services-card-body">
           <div className="services-card-body-inner">
             <h3 className="services-title">
@@ -71,7 +74,6 @@ function ServiceCardItem({ i, title, desc, tags, image }) {
 export default function Services() {
   const { hero, blocks } = SERVICES;
 
-  // ✅ COMPLETE PRIMARY
   const primary = [
     {
       title: "Backfill Sourcing / Land Sourcing",
@@ -99,7 +101,6 @@ export default function Services() {
     },
   ];
 
-  // ✅ SECONDARY
   const secondary = [
     {
       title: "Additional Land Development Support",
@@ -115,37 +116,45 @@ export default function Services() {
     },
   ];
 
-  const heroStageRef = useRef(null);
+  const stageRef = useRef(null);
+  const pinRef = useRef(null);
 
-  const { scrollYProgress } = useScroll({
-    target: heroStageRef,
-    offset: ["start start", "end start"],
-  });
+  useLayoutEffect(() => {
+    const ctx = gsap.context(() => {
+      // pin + cover
+      ScrollTrigger.create({
+        trigger: stageRef.current,
+        start: "top top",
+        end: "+=100%", // one screen scroll
+        pin: pinRef.current,
+        pinSpacing: false,
+        anticipatePin: 1,
+        invalidateOnRefresh: true,
+      });
 
-  // detach motion
-  const y = useTransform(scrollYProgress, [0, 1], [0, -140]);
-  const scale = useTransform(scrollYProgress, [0, 1], [1, 0.92]);
-  const rotateX = useTransform(scrollYProgress, [0, 1], [0, 12]);
-  const opacity = useTransform(scrollYProgress, [0, 0.75, 1], [1, 0.35, 0]);
+      // subtle fade as the sheet covers (no transform vibes)
+      gsap.to("[data-hero]", {
+        opacity: 0.18,
+        ease: "none",
+        scrollTrigger: {
+          trigger: stageRef.current,
+          start: "top top",
+          end: "+=100%",
+          scrub: true,
+        },
+      });
+    }, stageRef);
 
-  // blur string
-  const blurPx = useTransform(scrollYProgress, [0, 1], [0, 10]);
-  const filter = useTransform(blurPx, (v) => `blur(${v}px)`);
-
-  // optional: reveal “Primary Function” under it as hero vanishes
-  const underlayOpacity = useTransform(scrollYProgress, [0.55, 1], [0, 1]);
+    return () => ctx.revert();
+  }, []);
 
   return (
     <>
-      {/* SERVICES HERO */}
-      <section ref={heroStageRef} className="services-hero-stage">
-        <div className="services-hero-sticky">
-          {/* underlay reveal (optional but feels good) */}
-          <motion.div
-            className="services-hero-underlay"
-            style={{ opacity: underlayOpacity }}
-            aria-hidden="true"
-          >
+      {/* PINNED HERO STAGE */}
+      <section ref={stageRef} className="services-hero-stage">
+        <div ref={pinRef} className="services-hero-pin" data-hero>
+          {/* underlay behind hero */}
+          <div className="services-hero-underlay" aria-hidden="true">
             <div className="services-hero-underlay-inner">
               <span className="eyebrow">{blocks.primary.eyebrow}</span>
               <h2 className="services-hero-underlay-title">
@@ -155,39 +164,18 @@ export default function Services() {
                 Scroll to explore the full list of services.
               </p>
             </div>
-          </motion.div>
+          </div>
 
-          {/* your hero (detaches + vanishes) */}
-          <motion.section
-            className="services-editorial full-bleed services-hero-detach"
-            style={{
-              y,
-              scale,
-              rotateX,
-              opacity,
-              filter,
-            }}
-          >
+          {/* hero */}
+          <section className="services-editorial full-bleed">
             <div className="services-intro">
               <span className="eyebrow">{hero.eyebrow}</span>
 
-              <motion.h1
-                className="services-hero-title"
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.7 }}
-              >
+              <h1 className="services-hero-title">
                 Built for land development at scale.
-              </motion.h1>
+              </h1>
 
-              <motion.p
-                className="services-intro-text"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 1.2, delay: 0.1 }}
-              >
-                {hero.intro}
-              </motion.p>
+              <p className="services-intro-text">{hero.intro}</p>
 
               <div className="services-hero-actions">
                 <a className="btn btn-dark services-hero-btn" href="#primary">
@@ -202,12 +190,7 @@ export default function Services() {
               </div>
             </div>
 
-            <motion.div
-              className="services-hero-visual"
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.1 }}
-            >
+            <div className="services-hero-visual">
               <div
                 className="services-hero-media"
                 style={{ "--hero-img": `url(${landImg})` }}
@@ -231,8 +214,8 @@ export default function Services() {
                   </div>
                 </div>
               </div>
-            </motion.div>
-          </motion.section>
+            </div>
+          </section>
         </div>
       </section>
 
@@ -261,7 +244,7 @@ export default function Services() {
       </section>
 
       {/* SECONDARY */}
-      <section id="primary" className="services-block">
+      <section id="secondary" className="services-block">
         <div className="services-block-head">
           <span className="eyebrow">{blocks.secondary.eyebrow}</span>
           <h2 className="services-block-title">{blocks.secondary.title}</h2>

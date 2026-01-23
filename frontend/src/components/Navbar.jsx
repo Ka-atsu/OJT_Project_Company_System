@@ -30,12 +30,12 @@ export default function Navbar() {
       <div className="site-nav-inner">
         {/* LEFT */}
         <NavLink to="/" className="site-brand">
-          THE COMPANY
+          CLIBERDUCHE
         </NavLink>
 
         {/* CENTER */}
         <div className="site-links">
-          {["about", "services", "safety"].map((item) => (
+          {["about", "services", "projects", "safety"].map((item) => (
             <NavLink key={item} to={`/${item}`} className="site-link">
               {item}
             </NavLink>

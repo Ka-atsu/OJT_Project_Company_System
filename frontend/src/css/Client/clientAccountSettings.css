@@ -1,0 +1,174 @@
+/* =====================
+   ACCOUNT SETTINGS
+===================== */
+
+.account-settings {
+  margin: 0 auto;
+  padding: 2.5rem 2rem;
+}
+
+.account-title {
+  margin-bottom: 1.5rem;
+  font-size: 1.35rem;
+  font-weight: 600;
+}
+
+/* =====================
+   TOP NAV (MINIMAL)
+===================== */
+
+.account-tabs {
+  display: flex;
+  gap: 1.75rem;
+  padding-bottom: 0.75rem;
+  margin-bottom: 2.5rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.tab {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: rgba(0, 0, 0, 0.55);
+  cursor: pointer;
+}
+
+.tab:hover {
+  color: rgba(0, 0, 0, 0.75);
+}
+
+.tab.active {
+  color: rgba(0, 0, 0, 0.9);
+  font-weight: 600;
+  position: relative;
+}
+
+.tab.active::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -0.75rem;
+  height: 2px;
+  background: rgba(0, 0, 0, 0.85);
+}
+
+/* =====================
+   CONTENT PANEL
+===================== */
+
+.account-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 2rem;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+/* =====================
+   ROWS
+===================== */
+
+.setting-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 2rem;
+}
+
+.setting-row + .setting-row {
+  margin-top: 2rem;
+}
+
+.setting-text {
+  max-width: 65%;
+}
+
+.setting-title {
+  font-weight: 600;
+}
+
+.setting-desc {
+  margin-top: 0.35rem;
+  font-size: 0.85rem;
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.setting-value {
+  margin-top: 0.4rem;
+  font-size: 0.85rem;
+  color: rgba(0, 0, 0, 0.7);
+}
+
+/* =====================
+   DIVIDER
+===================== */
+
+.divider {
+  height: 1px;
+  background: rgba(0, 0, 0, 0.06);
+  margin: 2rem 0;
+}
+
+/* =====================
+   BUTTONS
+===================== */
+
+.btn-outline {
+  background: none;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  padding: 0.45rem 0.85rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+.btn-danger {
+  background: none;
+  border: none;
+  color: #c0392b;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+/* =====================
+   TOGGLE
+===================== */
+
+.toggle {
+  width: 42px;
+  height: 22px;
+  position: relative;
+}
+
+.toggle input {
+  display: none;
+}
+
+.slider {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 999px;
+}
+
+.slider::before {
+  content: "";
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  background: #fff;
+  border-radius: 50%;
+  top: 2px;
+  left: 2px;
+  transition: transform 0.2s ease;
+}
+
+.toggle input:checked + .slider {
+  background: rgba(0, 0, 0, 0.6);
+}
+
+.toggle input:checked + .slider::before {
+  transform: translateX(20px);
+}
