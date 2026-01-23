@@ -3,7 +3,7 @@ import { Routes, Route } from "react-router-dom";
 import RootLayout from "./components/layouts/RootLayout";
 import DashboardLayout from "./components/layouts/DashboardLayout";
 
-import Home from "./pages/landingPage/Home/Home";
+import HomeEntry from "./pages/animation/HomeEntry";
 import About from "./pages/landingPage/About/About";
 import Safety from "./pages/landingPage/Safety/Safety";
 import Services from "./pages/landingPage/Services/Services";
@@ -23,7 +23,7 @@ export default function App() {
   return (
     <Routes>
       <Route path="/" element={<RootLayout />}>
-        <Route index element={<Home />} />
+        <Route index element={<HomeEntry />} />
         <Route path="about" element={<About />} />
         <Route path="services" element={<Services />} />
         <Route path="safety" element={<Safety />} />
