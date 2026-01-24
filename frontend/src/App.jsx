@@ -19,32 +19,59 @@ import ClientDashboard from "./pages/clientSide/Dashboard/ClientDashboard";
 import warlyTestingRoutes from "./testingRoutes/warlyTestingRoutes";
 import kentTestingRoutes from "./testingRoutes/kentTestingRoutes";
 
+import { useEffect } from "react";
+import { useLocation } from "react-router-dom";
+
+export function DisableScrollRestoration() {
+  useEffect(() => {
+    if ("scrollRestoration" in window.history) {
+      window.history.scrollRestoration = "manual";
+    }
+  }, []);
+
+  return null;
+}
+
+function ScrollToTop() {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+
+  return null;
+}
+
 export default function App() {
   return (
-    <Routes>
-      <Route path="/" element={<RootLayout />}>
-        <Route index element={<HomeEntry />} />
-        <Route path="about" element={<About />} />
-        <Route path="services" element={<Services />} />
-        <Route path="safety" element={<Safety />} />
-        <Route path="contact" element={<Contact />} />
-        <Route path="projects" element={<Projects />} />
-      </Route>
+    <>
+      <DisableScrollRestoration />
+      <ScrollToTop />
+      <Routes>
+        <Route path="/" element={<RootLayout />}>
+          <Route index element={<HomeEntry />} />
+          <Route path="about" element={<About />} />
+          <Route path="services" element={<Services />} />
+          <Route path="safety" element={<Safety />} />
+          <Route path="contact" element={<Contact />} />
+          <Route path="projects" element={<Projects />} />
+        </Route>
 
-      <Route path="/dashboard" element={<DashboardLayout />}>
-        <Route index element={<ClientDashboard />} />
-        {/* <Route path="projects" element={<Projects />} />
+        <Route path="/dashboard" element={<DashboardLayout />}>
+          <Route index element={<ClientDashboard />} />
+          {/* <Route path="projects" element={<Projects />} />
         <Route path="documents" element={<Documents />} /> */}
-      </Route>
+        </Route>
 
-      {warlyTestingRoutes()}
-      {kentTestingRoutes()}
+        {warlyTestingRoutes()}
+        {kentTestingRoutes()}
 
-      <Route path="/login" element={<Login />} />
-      <Route path="/register" element={<Register />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
 
-      {/* FALLBACK */}
-      <Route path="*" element={<NotFound />} />
-    </Routes>
+        {/* FALLBACK */}
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </>
   );
 }

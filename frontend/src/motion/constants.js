@@ -24,3 +24,9 @@ export const FADE_IN = {
   hidden: { opacity: 0 },
   visible: { opacity: 1 },
 };
+
+export const VIEWPORT_EARLY = {
+  once: true,
+  amount: 0.1,
+  margin: "0px 0px -20% 0px",
+};

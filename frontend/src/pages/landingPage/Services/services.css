@@ -450,3 +450,28 @@
 .services-image {
   will-change: transform;
 }
+
+/* wrapper (you already have this) */
+.services-image-wrap {
+  position: relative;
+  border-radius: 16px;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.services-image-cover {
+  position: absolute;
+  inset: 0;
+  background: var(--services-cover, #fff);
+  z-index: 3;
+  transform-origin: right center;
+  transform: scaleX(1); /* starts fully black */
+  will-change: transform;
+}
+
+/* keep image below cover */
+.services-image {
+  position: relative;
+  z-index: 1;
+  display: block;
+}

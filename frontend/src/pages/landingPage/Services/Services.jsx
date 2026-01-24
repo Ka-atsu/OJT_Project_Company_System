@@ -1,5 +1,5 @@
 import "./services.css";
-import { useRef } from "react";
+import { useRef, useLayoutEffect } from "react";
 import { motion } from "framer-motion";
 import { VIEWPORT, EASE, FADE_UP } from "../../../motion/constants";
 import { useSheetCoverPin } from "../../../hooks/useSheetCoverPin";
@@ -17,7 +17,7 @@ export default function Services() {
   const secondaryRef = useRef(null);
 
   const pageRef = useRef(null);
-   useServicesCardScrollFx(pageRef);
+  useServicesCardScrollFx(pageRef);
 
   useSheetCoverPin({
     heroStageRef,
