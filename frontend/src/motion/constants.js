@@ -14,3 +14,13 @@ export const FADE_UP = {
   hidden: { opacity: 0, y: 14 },
   visible: { opacity: 1, y: 0 },
 };
+
+export const STAGGER = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.12, delayChildren: 0.04 } },
+};
+
+export const FADE_IN = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1 },
+};

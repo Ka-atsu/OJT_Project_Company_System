@@ -6,6 +6,7 @@ import { useSheetCoverPin } from "../../../hooks/useSheetCoverPin";
 import { ServicesSection } from "./ServicesSection";
 import { SERVICES } from "./services.content";
 import { ImgLand } from "../../../assets/images";
+import { useServicesCardScrollFx } from "./useServicesCardScrollFx";
 
 export default function Services() {
   const { hero, blocks, primary, secondary } = SERVICES;
@@ -15,6 +16,9 @@ export default function Services() {
   const primaryRef = useRef(null);
   const secondaryRef = useRef(null);
 
+  const pageRef = useRef(null);
+   useServicesCardScrollFx(pageRef);
+
   useSheetCoverPin({
     heroStageRef,
     heroPinRef,
@@ -23,7 +27,7 @@ export default function Services() {
   });
 
   return (
-    <>
+    <div ref={pageRef}>
       {/* PINNED HERO STAGE */}
       <section ref={heroStageRef} className="services-hero-stage">
         <div ref={heroPinRef} className="services-hero-pin" data-hero>
@@ -112,6 +116,6 @@ export default function Services() {
         title={blocks.secondary.title}
         items={secondary}
       />
-    </>
+    </div>
   );
 }

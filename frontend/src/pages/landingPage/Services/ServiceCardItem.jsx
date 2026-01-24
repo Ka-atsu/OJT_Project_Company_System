@@ -12,7 +12,20 @@ export function ServiceCardItem({ i, title, desc, tags, image }) {
         }`}
       >
         <Col md={6} className="services-card-image">
-          <img src={image} alt={title} className="services-image" />
+          <div
+            className="services-image-wrap"
+            style={{ "--img": `url(${image})` }}
+          >
+            <img src={image} alt={title} className="services-image" />
+
+            {/* shatter layers (hidden until scroll triggers) */}
+            <div className="services-image-shards" aria-hidden="true">
+              <span className="shard shard--1" />
+              <span className="shard shard--2" />
+              <span className="shard shard--3" />
+              <span className="shard shard--4" />
+            </div>
+          </div>
         </Col>
 
         <Col md={6} className="services-card-body">

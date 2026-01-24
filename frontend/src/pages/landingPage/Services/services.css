@@ -348,15 +348,14 @@
 .services-card-body .services-desc,
 .services-card-body .services-tags {
   max-width: 46ch;
-  margin-left: auto;
-  margin-right: auto;
+  margin: auto;
 }
 
 .services-card-body .services-title {
   font-size: 1.35rem;
   font-weight: 750;
   color: #111;
-  margin: 0;
+  margin: auto;
   letter-spacing: -0.02em;
 }
 
@@ -388,4 +387,66 @@
   background: transparent;
   box-shadow: none;
   border: 0;
+}
+
+/* break apart */
+
+/* image wrapper so we can animate + shatter */
+.services-card-image {
+  position: relative;
+}
+
+.services-image-wrap {
+  position: relative;
+  border-radius: 16px;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+/* let wrapper control rounding */
+.services-image-wrap .services-image {
+  border-radius: 0;
+  will-change: transform, filter, opacity;
+}
+
+/* shards overlay */
+.services-image-shards {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+  opacity: 0; /* we’ll turn this on via GSAP */
+}
+
+.services-image-shards .shard {
+  position: absolute;
+  inset: 0;
+  background-image: var(--img);
+  background-size: 200% 200%;
+  transform: translate3d(0, 0, 0);
+  will-change: transform, opacity;
+}
+
+/* 4 quadrants */
+.shard--1 {
+  clip-path: polygon(0 0, 50% 0, 50% 50%, 0 50%);
+  background-position: 0% 0%;
+}
+.shard--2 {
+  clip-path: polygon(50% 0, 100% 0, 100% 50%, 50% 50%);
+  background-position: 100% 0%;
+}
+.shard--3 {
+  clip-path: polygon(0 50%, 50% 50%, 50% 100%, 0 100%);
+  background-position: 0% 100%;
+}
+.shard--4 {
+  clip-path: polygon(50% 50%, 100% 50%, 100% 100%, 50% 100%);
+  background-position: 100% 100%;
+}
+
+.services-card-image,
+.services-card-body-inner,
+.services-image {
+  will-change: transform;
 }

@@ -7,29 +7,15 @@ import { ImgConstructionSite, ImgBackhoe } from "../../../assets/images";
 import PageShell from "../../../components/layouts/PageShell";
 import "./about.css";
 
+import {
+  VIEWPORT,
+  EASE,
+  FADE_UP,
+  STAGGER,
+  FADE_IN,
+} from "../../../motion/constants";
+
 gsap.registerPlugin(ScrollTrigger);
-
-const VIEWPORT = { amount: 0.35, once: true };
-const EASE = [0.22, 1, 0.36, 1];
-
-const fadeUp = {
-  hidden: { opacity: 0, y: 22 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.7, ease: EASE },
-  },
-};
-
-const heroFade = {
-  hidden: { opacity: 0 },
-  visible: { opacity: 1, transition: { duration: 0.8, ease: EASE } },
-};
-
-const stagger = {
-  hidden: {},
-  visible: { transition: { staggerChildren: 0.12, delayChildren: 0.04 } },
-};
 
 const ABOUT = {
   hero: {
@@ -43,61 +29,79 @@ const ABOUT = {
     title:
       "A responsible land development company supplying high-quality backfill materials across CALABARZON and beyond.",
     body: [
+      "CLIBERDUCHE CORPORATION was established to address a recurring challenge in land development projects: the need for reliable sourcing, consistent material quality, and dependable delivery timelines. From the beginning, the company set out to support projects that require scale, precision, and accountability.",
+
       "CLIBERDUCHE CORPORATION provides high-quality backfill materials as specified by clients—such as sub-base, aggregates, and boulders—to customers in the CALABARZON area and beyond.",
-      "Our company-owned land development sites are located in Laguna and Cavite, Philippines, with over 14 million cubic meters of landfill/backfilling materials across both sites to meet the growing needs of the industry.",
-      "We are proud of our growing roster of satisfied clients and look forward to servicing more.",
-      "We pursue potential business relationships and long-term arrangements that mutually benefit both parties. We also believe in a sustainable and eco-friendly business venture, and we follow strict protocols and guidelines of government institutions such as the Department of Environment and Natural Resources (DENR).",
-      "As client needs evolved, the company expanded into General Engineering and Civil Works. We also provide Construction and Development for both horizontal and vertical projects—working hard to achieve the status of a one-stop shop company.",
+
+      "Our company-owned land development sites are strategically located in Laguna and Cavite, Philippines, with over 14 million cubic meters of landfill and backfilling materials available to meet the growing demands of the construction and development industry.",
+
+      "Our operations are led by experienced engineers, site managers, and field teams with hands-on expertise in land development, materials sourcing, and site coordination—ensuring safety, quality, and efficiency at every stage of execution.",
+
+      "We pursue long-term business relationships built on trust, transparency, and mutual benefit. The company is committed to sustainable and eco-friendly operations, strictly complying with regulations and guidelines set by government institutions such as the Department of Environment and Natural Resources (DENR).",
+
+      "As client needs evolved, the company expanded into General Engineering and Civil Works, providing construction and development services for both horizontal and vertical projects—working toward becoming a reliable one-stop partner for land development requirements.",
     ],
     stats: [
-      { k: "14M+ m³", v: "Landfill / backfilling materials" },
-      { k: "Laguna + Cavite", v: "Company-owned sites" },
+      { k: "14M+ m³", v: "Landfill & backfilling materials" },
+      { k: "Laguna + Cavite", v: "Company-owned development sites" },
       { k: "CALABARZON+", v: "Service area coverage" },
     ],
   },
 
   quote: {
     label: "Statement",
-    text: "We are a responsible land development company that provides high-quality backfill materials for land development projects and other infrastructures, including but not limited to sub-base materials like aggregates, mixed soil, and boulders. We support sustainable land development by adhering to the existing environmental regulations of the Philippines. We provide jobs for fellow Filipinos, contributing to the economy, and we aim to deliver excellent value to partner communities, investors, employees, and stakeholders.",
+    text: "We are a responsible land development company committed to delivering high-quality backfill materials and dependable site solutions for infrastructure and land development projects. Our operations strictly adhere to environmental regulations in the Philippines while creating jobs, supporting communities, and delivering long-term value to our partners, employees, and stakeholders.",
+  },
+
+  founding: {
+    label: "Background",
+    title: "Founded in 2018 to build locally, at scale.",
+    body: [
+      "CLIBERDUCHE CORPORATION was officially registered with the Securities and Exchange Commission on November 28, 2018. The company was founded to pursue long-term opportunities in the Philippine construction and land development industry—building a future locally through responsible, scalable operations.",
+
+      "The name CLIBERDUCHE is derived from the surnames of the original incorporators: Climaco, Beronilla, and Piaduche. As the company matured, leadership was refined to support operational focus, long-term stability, and strategic growth.",
+
+      "Today, CLIBERDUCHE CORPORATION continues to operate with a clear mandate: deliver reliable materials, disciplined site execution, and sustainable land development solutions that meet the evolving needs of the industry.",
+    ],
   },
 
   sections: [
     {
       label: "Projects information",
       title: "From small to large commercial and industrial projects.",
-      body: "CLIBERDUCHE CORPORATION handles a variety of projects—from small and medium to large commercial and industrial work. We specialize in supplying backfilling materials, aggregates, and other land resources based on client requirements.",
+      body: "CLIBERDUCHE CORPORATION supports a wide range of projects including residential developments, commercial facilities, industrial sites, and public infrastructure works. Our experience spans small- to large-scale operations that require high-volume material sourcing, coordinated logistics, and strict adherence to project specifications.",
     },
     {
       label: "Land development",
       title: "End-to-end site preparation and civil works support.",
-      body: "We also engage in land development services including clearing, cutting and peeling, levelling, and RCP/PVC pipe laying. Our work includes bridges, concrete roads, gutters, ripraps, easements, slope protection, and solutions that support erosion prevention and reduce liquefaction risk.",
+      body: "We provide end-to-end land development services including clearing, cutting and peeling, levelling, and RCP/PVC pipe laying. Our scope also covers bridges, concrete roads, gutters, ripraps, easements, and slope protection. By combining owned material sources with coordinated site execution, we help reduce delays, control costs, and maintain consistent quality across project phases.",
     },
     {
       label: "Mission",
       title: "Quality materials, sustainable operations, and shared value.",
-      body: "We provide high-quality backfill materials and land development services while adhering to environmental regulations in the Philippines. We create jobs, support communities, and deliver strong value to investors, employees, and stakeholders through responsible operations.",
+      body: "We deliver high-quality backfill materials and land development services while adhering to environmental regulations in the Philippines. Through responsible operations, we create jobs, support communities, and deliver long-term value to investors, employees, and stakeholders.",
     },
     {
       label: "Vision",
       title: "To be a highly respected, world-class land development company.",
-      body: "Our vision is to be a highly respected, world-class natural resource land development company committed to international standards in operations and environmental conservation—developing sustainable projects and enabling future economic use of land development sites.",
+      body: "Our vision is to become a world-class land development company committed to international standards in operational excellence and environmental stewardship—developing sustainable projects that enable long-term economic use of land resources.",
     },
     {
       label: "Values",
       title: "Quality. Safety. Integrity.",
-      body: "We take pride in offering services at competitive prices while prioritizing Quality, Safety, and Integrity in every project and transaction.",
+      body: "We take pride in offering reliable services at competitive prices while upholding the highest standards of Quality, Safety, and Integrity across all projects and partnerships.",
       bullets: [
         {
           k: "Quality",
-          v: "Ensures projects are of high quality and aligned with local standards to remain competitive in national and local markets.",
+          v: "Delivering materials and services that meet client specifications and comply with local and international standards.",
         },
         {
           k: "Safety",
-          v: "Ensures safety at worksites, safety of projects, and safety of personnel—before, during, and after execution of projects.",
+          v: "Maintaining safe worksites and operations to protect personnel, partners, and surrounding communities.",
         },
         {
           k: "Integrity",
-          v: "Ensures compliance with existing laws covering the construction industry, reliable workforce, and timely project delivery.",
+          v: "Operating with transparency, regulatory compliance, and accountability in every project and transaction.",
         },
       ],
     },
@@ -109,26 +113,26 @@ function AboutSection({ label, title, body, bullets }) {
     <section className="section about-slice">
       <motion.div
         className="about-slice-inner"
-        variants={stagger}
+        variants={STAGGER}
         initial="hidden"
         whileInView="visible"
         viewport={VIEWPORT}
       >
-        <motion.aside className="about-slice-meta" variants={fadeUp}>
+        <motion.aside className="about-slice-meta" variants={FADE_UP}>
           <span className="eyebrow">{label}</span>
         </motion.aside>
 
         <div>
-          <motion.h2 className="about-slice-title" variants={fadeUp}>
+          <motion.h2 className="about-slice-title" variants={FADE_UP}>
             {title}
           </motion.h2>
 
-          <motion.p className="about-slice-text" variants={fadeUp}>
+          <motion.p className="about-slice-text" variants={FADE_UP}>
             {body}
           </motion.p>
 
           {Array.isArray(bullets) && bullets.length > 0 && (
-            <motion.div className="about-bullets" variants={fadeUp}>
+            <motion.div className="about-bullets" variants={FADE_UP}>
               {bullets.map((b) => (
                 <div key={b.k} className="about-bullet">
                   <div className="about-bullet-k">{b.k}</div>
@@ -243,7 +247,7 @@ export default function About() {
       <motion.section
         ref={heroRef}
         className="hero hero--editorial full-bleed about-hero"
-        variants={heroFade}
+        variants={FADE_IN}
         initial="hidden"
         animate="visible"
       >
@@ -256,16 +260,16 @@ export default function About() {
         <div ref={stageRef} className="about-hero-stage">
           <motion.div
             className="hero-content about-hero-content"
-            variants={stagger}
+            variants={STAGGER}
             initial="hidden"
             animate="visible"
           >
-            <motion.span className="eyebrow" variants={fadeUp}>
+            <motion.span className="eyebrow" variants={FADE_UP}>
               {hero.eyebrow}
             </motion.span>
 
             <div ref={headlineWrapRef} className="about-hero-headline-wrap">
-              <motion.h1 className="kinetic-headline big" variants={fadeUp}>
+              <motion.h1 className="kinetic-headline big" variants={FADE_UP}>
                 {hero.headline}
               </motion.h1>
             </div>
@@ -278,17 +282,17 @@ export default function About() {
         <section className="section section--after-hero">
           <motion.div
             className="about-intro-inner"
-            variants={stagger}
+            variants={STAGGER}
             initial="hidden"
             whileInView="visible"
             viewport={VIEWPORT}
           >
-            <motion.aside className="about-intro-meta" variants={fadeUp}>
+            <motion.aside className="about-intro-meta" variants={FADE_UP}>
               <span className="eyebrow">{intro.label}</span>
             </motion.aside>
 
             <div>
-              <motion.h2 className="about-intro-title" variants={fadeUp}>
+              <motion.h2 className="about-intro-title" variants={FADE_UP}>
                 {intro.title}
               </motion.h2>
 
@@ -296,13 +300,13 @@ export default function About() {
                 <motion.p
                   key={i}
                   className="about-intro-text"
-                  variants={fadeUp}
+                  variants={FADE_UP}
                 >
                   {p}
                 </motion.p>
               ))}
 
-              <motion.div className="about-stats" variants={fadeUp}>
+              <motion.div className="about-stats" variants={FADE_UP}>
                 {intro.stats.map((s) => (
                   <div key={s.k} className="about-stat">
                     <div className="about-stat-k">{s.k}</div>
@@ -313,21 +317,52 @@ export default function About() {
             </div>
           </motion.div>
         </section>
+        
+        {/* FOUNDING */}
+        <section className="section">
+          <motion.div
+            className="about-intro-inner"
+            variants={STAGGER}
+            initial="hidden"
+            whileInView="visible"
+            viewport={VIEWPORT}
+          >
+            <motion.aside className="about-intro-meta" variants={FADE_UP}>
+              <span className="eyebrow">{ABOUT.founding.label}</span>
+            </motion.aside>
+
+            <div>
+              <motion.h2 className="about-intro-title" variants={FADE_UP}>
+                {ABOUT.founding.title}
+              </motion.h2>
+
+              {ABOUT.founding.body.map((p, i) => (
+                <motion.p
+                  key={i}
+                  className="about-intro-text"
+                  variants={FADE_UP}
+                >
+                  {p}
+                </motion.p>
+              ))}
+            </div>
+          </motion.div>
+        </section>
 
         {/* QUOTE */}
         <section className="section">
           <motion.div
             className="about-quote-inner"
-            variants={stagger}
+            variants={STAGGER}
             initial="hidden"
             whileInView="visible"
             viewport={VIEWPORT}
           >
-            <motion.aside className="about-quote-meta" variants={fadeUp}>
+            <motion.aside className="about-quote-meta" variants={FADE_UP}>
               <span className="eyebrow">{quote.label}</span>
             </motion.aside>
 
-            <motion.blockquote className="about-quote-text" variants={fadeUp}>
+            <motion.blockquote className="about-quote-text" variants={FADE_UP}>
               “{quote.text}”
             </motion.blockquote>
           </motion.div>
