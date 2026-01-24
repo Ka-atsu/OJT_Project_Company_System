@@ -164,7 +164,6 @@
   border-radius: 26px;
   position: relative;
   overflow: hidden;
-  background-image: var(--hero-img);
   background-size: cover;
   background-position: center;
   box-shadow: 0 26px 70px rgba(0, 0, 0, 0.14);
@@ -231,6 +230,10 @@
   color: rgba(0, 0, 0, 0.65);
 }
 
+.services-hero-media--land {
+  background-image: url("../../../assets/images/land.jpg");
+}
+
 @media (max-width: 992px) {
   .services-editorial {
     grid-template-columns: 1fr;
@@ -274,8 +277,9 @@
 
 .services-block--primary {
   z-index: 2;
-  transform: translateY(-18px);
-  padding-bottom: clamp(1.5rem, 3vh, 2.25rem);
+  transform: translateY(
+    -18px
+  ); /* to make the section appear earlier than expected */
 }
 
 .services-block--secondary {
@@ -298,8 +302,8 @@
   padding-bottom: clamp(2rem, 5vh, 4rem);
 }
 
-.services-grid .services-col:last-child {
-  padding-bottom: 0;
+.services-grid--primary .services-col:last-child {
+  padding-bottom: calc(var(--sheet-cover));
 }
 
 /* =====================

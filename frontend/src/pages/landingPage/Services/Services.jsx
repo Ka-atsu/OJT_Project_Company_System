@@ -1,189 +1,26 @@
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
 import "./services.css";
-import { useRef, useLayoutEffect } from "react";
+import { useRef } from "react";
 import { motion } from "framer-motion";
-
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-
-import {
-  ImgConsultation,
-  ImgBackfill,
-  ImgLand,
-  ImgAggregates,
-  ImgSiteManagement,
-} from "../../../assets/images";
-
-gsap.registerPlugin(ScrollTrigger);
-
-const fadeUp = {
-  hidden: { opacity: 0, y: 14 },
-  visible: { opacity: 1, y: 0 },
-};
-
-const SERVICES = {
-  hero: {
-    eyebrow: "Service",
-    intro:
-      "Structured capabilities for land development and materials supply—built for scale, reliability, and safe operations.",
-  },
-  blocks: {
-    primary: { eyebrow: "Primary Function", title: "Core capabilities" },
-    secondary: { eyebrow: "Secondary Function", title: "Support services" },
-  },
-};
-
-function ServiceCardItem({ i, title, desc, tags, image }) {
-  const isReverse = i % 2 === 1;
-
-  return (
-    <div className="services-card">
-      <Row
-        className={`services-card-row g-4 align-items-center ${
-          isReverse ? "flex-md-row-reverse" : ""
-        }`}
-      >
-        <Col md={6} className="services-card-image">
-          <img src={image} alt={title} className="services-image" />
-        </Col>
-
-        <Col md={6} className="services-card-body">
-          <div className="services-card-body-inner">
-            <h3 className="services-title">
-              <span className="services-index">
-                {String(i + 1).padStart(2, "0")}
-              </span>{" "}
-              {title}
-            </h3>
-
-            <p className="services-desc">{desc}</p>
-
-            <div className="services-tags">
-              {tags.map((t) => (
-                <span key={t} className="services-tag">
-                  {t}
-                </span>
-              ))}
-            </div>
-          </div>
-        </Col>
-      </Row>
-    </div>
-  );
-}
+import { VIEWPORT, EASE, FADE_UP } from "../../../motion/constants";
+import { useSheetCoverPin } from "../../../hooks/useSheetCoverPin";
+import { ServicesSection } from "./ServicesSection";
+import { SERVICES } from "./services.content";
+import { ImgLand } from "../../../assets/images";
 
 export default function Services() {
-  const { hero, blocks } = SERVICES;
-
-  const primary = [
-    {
-      title: "Backfill Sourcing / Land Sourcing",
-      desc: "Sourcing backfill and land resources based on client specifications, volumes, and site requirements.",
-      tags: ["Sourcing", "Backfill", "Land resources"],
-      image: ImgBackfill,
-    },
-    {
-      title: "Land Development",
-      desc: "Site preparation and land development support including clearing, grading, and coordinated project execution.",
-      tags: ["Land dev", "Site prep", "Civil works"],
-      image: ImgLand,
-    },
-    {
-      title: "Site Management",
-      desc: "On-site coordination focused on safety, workflow, and execution to keep operations efficient and compliant.",
-      tags: ["Coordination", "Safety", "Operations"],
-      image: ImgSiteManagement,
-    },
-    {
-      title: "Equipment Leasing",
-      desc: "Equipment support and leasing options to help projects scale efficiently based on schedule and scope.",
-      tags: ["Equipment", "Leasing", "Support"],
-      image: ImgAggregates,
-    },
-  ];
-
-  const secondary = [
-    {
-      title: "Additional Land Development Support",
-      desc: "Additional land development support for projects requiring extended scope or supplemental services.",
-      tags: ["Support", "Extended scope", "Coordination"],
-      image: ImgLand,
-    },
-    {
-      title: "Project Management Consultation",
-      desc: "Consultation on planning, sequencing, sourcing, and delivery strategy for smoother project execution.",
-      tags: ["Consultation", "Planning", "Strategy"],
-      image: ImgConsultation,
-    },
-  ];
+  const { hero, blocks, primary, secondary } = SERVICES;
 
   const heroStageRef = useRef(null);
   const heroPinRef = useRef(null);
-
   const primaryRef = useRef(null);
   const secondaryRef = useRef(null);
 
-  useLayoutEffect(() => {
-    const ctx = gsap.context(() => {
-      // ===== HERO: pin + cover (your current technique) =====
-      ScrollTrigger.create({
-        trigger: heroStageRef.current,
-        start: "top top",
-        end: "+=100%",
-        pin: heroPinRef.current,
-        pinSpacing: false,
-        anticipatePin: 1,
-        invalidateOnRefresh: true,
-      });
-
-      gsap.to(heroPinRef.current, {
-        opacity: 0.18,
-        ease: "none",
-        scrollTrigger: {
-          trigger: heroStageRef.current,
-          start: "top top",
-          end: "+=100%",
-          scrub: true,
-        },
-      });
-
-      // ===== PRIMARY -> SECONDARY: end-lock pin so Secondary covers Primary =====
-      const getCoverPx = () => {
-        const v = getComputedStyle(document.documentElement)
-          .getPropertyValue("--sheet-cover")
-          .trim();
-        const n = parseFloat(v);
-        return Number.isFinite(n) ? n : 160;
-      };
-
-      ScrollTrigger.create({
-        trigger: primaryRef.current,
-        // start pin near the end so the last card stops climbing
-        start: () => `bottom bottom-=${getCoverPx()}`,
-        endTrigger: secondaryRef.current,
-        end: "top top",
-        pin: primaryRef.current,
-        pinSpacing: false,
-        anticipatePin: 1,
-        invalidateOnRefresh: true,
-      });
-
-      // optional: tiny “dimming” as Secondary approaches (no rotate/scale vibes)
-      gsap.to(primaryRef.current, {
-        opacity: 0.55,
-        ease: "none",
-        scrollTrigger: {
-          trigger: secondaryRef.current,
-          start: "top bottom",
-          end: "top top",
-          scrub: true,
-        },
-      });
-    });
-
-    return () => ctx.revert();
-  }, []);
+  useSheetCoverPin({
+    heroStageRef,
+    heroPinRef,
+    primaryRef,
+    secondaryRef,
+  });
 
   return (
     <>
@@ -203,7 +40,14 @@ export default function Services() {
           </div>
 
           <section className="services-editorial full-bleed">
-            <div className="services-intro">
+            <motion.div
+              className="services-intro"
+              variants={FADE_UP}
+              initial="hidden"
+              whileInView="visible"
+              viewport={VIEWPORT}
+              transition={{ duration: 0.6, ease: EASE }}
+            >
               <span className="eyebrow">{hero.eyebrow}</span>
               <h1 className="services-hero-title">
                 Built for land development at scale.
@@ -221,13 +65,12 @@ export default function Services() {
                   Request a quote
                 </a>
               </div>
-            </div>
+            </motion.div>
 
             <div className="services-hero-visual">
               <div
-                className="services-hero-media"
-                style={{ "--hero-img": `url(${ImgLand})` }}
-                aria-hidden="true"
+                className="services-hero-media services-hero-media--land"
+                aria-hidden
               >
                 <div className="services-hero-card">
                   <div className="services-hero-chip">Core</div>
@@ -252,61 +95,23 @@ export default function Services() {
         </div>
       </section>
 
-      {/* PRIMARY (normal scroll, only pins at the end) */}
-      <section
+      <ServicesSection
         id="primary"
-        ref={primaryRef}
-        className="services-block services-block--primary"
-      >
-        <div className="services-block-head">
-          <span className="eyebrow">{blocks.primary.eyebrow}</span>
-          <h2 className="services-block-title">{blocks.primary.title}</h2>
-        </div>
+        innerRef={primaryRef}
+        variant="primary"
+        eyebrow={blocks.primary.eyebrow}
+        title={blocks.primary.title}
+        items={primary}
+      />
 
-        <Row className="services-grid services-grid--primary">
-          {primary.map((s, i) => (
-            <Col md={12} key={s.title} className="services-col">
-              <motion.div
-                variants={fadeUp}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ amount: 0.35 }}
-                transition={{ duration: 0.5, delay: i * 0.05 }}
-              >
-                <ServiceCardItem i={i} {...s} />
-              </motion.div>
-            </Col>
-          ))}
-        </Row>
-      </section>
-
-      {/* SECONDARY (covers Primary) */}
-      <section
+      <ServicesSection
         id="secondary"
-        ref={secondaryRef}
-        className="services-block services-block--secondary"
-      >
-        <div className="services-block-head">
-          <span className="eyebrow">{blocks.secondary.eyebrow}</span>
-          <h2 className="services-block-title">{blocks.secondary.title}</h2>
-        </div>
-
-        <Row className="services-grid services-grid--secondary">
-          {secondary.map((s, i) => (
-            <Col md={12} key={s.title} className="services-col">
-              <motion.div
-                variants={fadeUp}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ amount: 0.35 }}
-                transition={{ duration: 0.5, delay: i * 0.05 }}
-              >
-                <ServiceCardItem i={i} {...s} />
-              </motion.div>
-            </Col>
-          ))}
-        </Row>
-      </section>
+        innerRef={secondaryRef}
+        variant="secondary"
+        eyebrow={blocks.secondary.eyebrow}
+        title={blocks.secondary.title}
+        items={secondary}
+      />
     </>
   );
 }

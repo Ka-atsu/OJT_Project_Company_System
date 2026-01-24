@@ -9,3 +9,8 @@ export const VIEWPORT_CARDS = {
   amount: 0.25,
   once: true,
 };
+
+export const FADE_UP = {
+  hidden: { opacity: 0, y: 14 },
+  visible: { opacity: 1, y: 0 },
+};

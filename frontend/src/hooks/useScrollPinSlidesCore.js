@@ -2,6 +2,8 @@ import { useLayoutEffect } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
+import { VIEWPORT_CARDS, EASE } from "../motion/constants";
+
 gsap.registerPlugin(ScrollTrigger);
 
 export function useScrollPinSlidesCore({
