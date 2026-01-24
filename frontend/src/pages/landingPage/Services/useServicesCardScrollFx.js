@@ -10,12 +10,15 @@ export function useServicesCardScrollFx(scopeRef) {
     if (!root) return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
+    // prevent ScrollTrigger from restoring/adjusting previous scroll
+    ScrollTrigger.clearScrollMemory();
+    window.scrollTo(0, 0);
+
     const ctx = gsap.context(() => {
       const cards = gsap.utils.toArray(".services-card");
 
-      // ===== knobs =====
-      const REVEAL_START = "top 75%"; // ✅ start when image is actually near viewport
-      const REVEAL_DUR = 3 // ✅ slow/fast of the reveal animation
+      const REVEAL_START = "top 75%";
+      const REVEAL_DUR = 3;
       const REVEAL_EASE = "power3.out";
 
       const DRIFT_START = "top 45%";
@@ -42,10 +45,6 @@ export function useServicesCardScrollFx(scopeRef) {
           return flexDir.includes("reverse") ? -1 : 1;
         };
 
-        // =========================
-        // 1) REVEAL: play once on enter
-        // =========================
-        // initial states (always)
         gsap.set(cover, { scaleX: 1, transformOrigin: "right center" });
         gsap.set(img, { scale: 1.06, y: 10, filter: "blur(8px)" });
 
@@ -71,13 +70,10 @@ export function useServicesCardScrollFx(scopeRef) {
         ScrollTrigger.create({
           trigger: imgWrap,
           start: REVEAL_START,
-          once: true, // ✅ will only fire one time
+          once: true,
           onEnter: () => revealTl.play(),
         });
 
-        // =========================
-        // 2) DRIFT: still scrubbed later
-        // =========================
         ScrollTrigger.create({
           trigger: card,
           start: DRIFT_START,
@@ -92,24 +88,18 @@ export function useServicesCardScrollFx(scopeRef) {
             const p = raw <= HOLD ? 0 : (raw - HOLD) / (1 - HOLD);
             const t = gsap.parseEase("power2.inOut")(p);
 
-            gsap.set(imgCol, {
-              x: -splitX * t * dir,
-              y: 0,
-              rotate: 0,
-              scale: 1,
-            });
-            gsap.set(bodyInner, {
-              x: splitX * 0.55 * t * dir,
-              y: 0,
-              rotate: 0,
-            });
+            gsap.set(imgCol, { x: -splitX * t * dir });
+            gsap.set(bodyInner, { x: splitX * 0.55 * t * dir });
           },
         });
       });
 
       ScrollTrigger.refresh();
+
+      // force top AFTER refresh/pin math
+      requestAnimationFrame(() => window.scrollTo(0, 0));
     }, scopeRef);
 
     return () => ctx.revert();
-  }, [scopeRef]);
+  }, []);
 }

@@ -19,24 +19,31 @@ import ClientDashboard from "./pages/clientSide/Dashboard/ClientDashboard";
 import warlyTestingRoutes from "./testingRoutes/warlyTestingRoutes";
 import kentTestingRoutes from "./testingRoutes/kentTestingRoutes";
 
-import { useEffect } from "react";
+import { useLayoutEffect } from "react";
 import { useLocation } from "react-router-dom";
 
 export function DisableScrollRestoration() {
-  useEffect(() => {
+  useLayoutEffect(() => {
     if ("scrollRestoration" in window.history) {
       window.history.scrollRestoration = "manual";
     }
   }, []);
-
   return null;
 }
 
 function ScrollToTop() {
   const { pathname } = useLocation();
 
-  useEffect(() => {
-    window.scrollTo(0, 0);
+  useLayoutEffect(() => {
+    const toTop = () => {
+      (document.scrollingElement || document.documentElement).scrollTop = 0;
+      document.body.scrollTop = 0; // iOS fallback
+      window.scrollTo(0, 0);
+    };
+
+    toTop();
+    requestAnimationFrame(toTop); // after layout/pin adjustments
+    setTimeout(toTop, 50); // after images/refresh (extra safe)
   }, [pathname]);
 
   return null;

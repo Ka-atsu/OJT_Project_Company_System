@@ -16,6 +16,10 @@ export function useAboutScrollFx({
   useLayoutEffect(() => {
     if (!rootRef.current || !heroRef.current) return;
 
+    // prevent ScrollTrigger from restoring/adjusting previous scroll
+    ScrollTrigger.clearScrollMemory();
+    window.scrollTo(0, 0);
+
     const ctx = gsap.context(() => {
       if (stageRef.current) {
         gsap.to(stageRef.current, {
@@ -84,6 +88,9 @@ export function useAboutScrollFx({
       }
 
       ScrollTrigger.refresh();
+
+      // force top AFTER refresh/pin math
+      requestAnimationFrame(() => window.scrollTo(0, 0));
     }, rootRef);
 
     return () => ctx.revert();
