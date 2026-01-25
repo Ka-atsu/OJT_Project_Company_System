@@ -1,11 +1,10 @@
 import "./services.css";
-import { useRef, useLayoutEffect } from "react";
+import { useRef } from "react";
 import { motion } from "framer-motion";
 import { VIEWPORT, EASE, FADE_UP } from "../../../motion/constants";
 import { useSheetCoverPin } from "../../../hooks/useSheetCoverPin";
 import { ServicesSection } from "./ServicesSection";
 import { SERVICES } from "./services.content";
-import { ImgLand } from "../../../assets/images";
 import { useServicesCardScrollFx } from "./useServicesCardScrollFx";
 
 export default function Services() {

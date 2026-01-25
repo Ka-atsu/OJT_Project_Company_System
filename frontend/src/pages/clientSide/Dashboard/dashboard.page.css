@@ -1,0 +1,262 @@
+/* =========================================================
+   DASHBOARD PAGE — SCOPED
+   Active when wrapped with `.dashboard`
+========================================================= */
+
+.dashboard {
+  --dash-gap: 1.5rem;
+  --dash-gap-lg: 2rem;
+}
+
+/* -------------------------
+   PAGE WRAPPER
+------------------------- */
+
+.dashboard .dash-page {
+  padding: 2rem;
+}
+
+/* -------------------------
+   HEADER
+------------------------- */
+
+.dashboard .dash-page-header {
+  margin-bottom: var(--dash-gap-lg);
+}
+
+.dashboard .dash-title {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #111827;
+}
+
+.dashboard .dash-subtitle {
+  margin-top: 0.25rem;
+  font-size: 0.9rem;
+  color: #6b7280;
+}
+
+/* -------------------------
+   STATS ROW
+------------------------- */
+
+.dashboard .dash-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: var(--dash-gap);
+  margin-bottom: var(--dash-gap-lg);
+}
+
+.dashboard .dash-stat {
+  text-align: center;
+}
+
+.dashboard .dash-stat-label {
+  font-size: 0.65rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #6b7280;
+}
+
+.dashboard .dash-stat-value {
+  margin-top: 0.25rem;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #111827;
+}
+
+/* -------------------------
+   MAIN GRID
+------------------------- */
+
+.dashboard .dash-grid {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: var(--dash-gap-lg);
+}
+
+.dashboard .dash-col {
+  display: flex;
+  flex-direction: column;
+  gap: var(--dash-gap);
+  margin-bottom: 1rem;
+}
+
+/* -------------------------
+   DASHBOARD SURFACES
+------------------------- */
+
+.dashboard .dash-surface {
+  padding: 1.1rem;
+  border-radius: 16px;
+  background: #ffffff;
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.03),
+    0 12px 32px rgba(0, 0, 0, 0.04);
+}
+
+.dashboard .dash-surface-header {
+  margin-bottom: 0.75rem;
+  font-size: 0.65rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #6b7280;
+}
+
+/* -------------------------
+   LISTS (APPOINTMENTS / ALERTS)
+------------------------- */
+
+.dashboard .dash-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.dashboard .dash-list-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* -------------------------
+   DOCUMENT PREVIEW
+------------------------- */
+
+.dashboard .dash-doc {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 0;
+  font-size: 0.85rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.dashboard .dash-doc:last-child {
+  border-bottom: none;
+}
+
+/* -------------------------
+   TYPOGRAPHY HELPERS
+------------------------- */
+
+.dashboard .dash-item-title {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #111827;
+}
+
+.dashboard .dash-item-meta {
+  font-size: 0.75rem;
+  color: #6b7280;
+}
+
+/* -------------------------
+   PROJECTS SNAPSHOT
+------------------------- */
+
+.dashboard .dash-projects {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.dashboard .dash-project-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.dashboard .dash-project-name {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #111827;
+}
+
+/* =========================================================
+   RESPONSIVE — ENHANCED
+========================================================= */
+
+/* ---------- LARGE TABLETS / SMALL LAPTOPS ---------- */
+@media (max-width: 1200px) {
+  .dashboard {
+    --dash-gap: 1.25rem;
+    --dash-gap-lg: 1.75rem;
+  }
+
+  .dashboard .dash-title {
+    font-size: 1.45rem;
+  }
+}
+
+/* ---------- TABLETS ---------- */
+@media (max-width: 900px) {
+  .dashboard .dash-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .dashboard .dash-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .dashboard .dash-stat {
+    text-align: left;
+  }
+
+  .dashboard .dash-stat-value {
+    font-size: 1.4rem;
+  }
+}
+
+/* ---------- MOBILE ---------- */
+@media (max-width: 768px) {
+  .dashboard .dash-page {
+    padding: 1.25rem;
+  }
+
+  .dashboard .dash-page-header {
+    margin-bottom: 1.5rem;
+  }
+
+  .dashboard .dash-title {
+    font-size: 1.35rem;
+  }
+
+  .dashboard .dash-stats {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .dashboard .dash-surface {
+    padding: 1rem;
+    border-radius: 14px;
+  }
+
+  .dashboard .dash-project-row,
+  .dashboard .dash-list-item {
+    gap: 0.75rem;
+  }
+}
+
+/* ---------- SMALL MOBILE ---------- */
+@media (max-width: 480px) {
+  .dashboard .dash-title {
+    font-size: 1.25rem;
+  }
+
+  .dashboard .dash-stat-label {
+    font-size: 0.6rem;
+  }
+
+  .dashboard .dash-stat-value {
+    font-size: 1.3rem;
+  }
+
+  .dashboard .dash-item-title {
+    font-size: 0.85rem;
+  }
+
+  .dashboard .dash-item-meta {
+    font-size: 0.7rem;
+  }
+}

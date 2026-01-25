@@ -8,7 +8,7 @@ import {
 import "./clientAccountSettings.css";
 
 export default function ClientAccountSettings() {
-  const [activeTab, setActiveTab] = useState("Security");
+  const [activeTab, setActiveTab] = useState("My Profile");
 
   return (
     <div className="account-settings">

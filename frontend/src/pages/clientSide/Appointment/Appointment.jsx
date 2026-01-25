@@ -1,7 +1,10 @@
 import { useState } from "react";
-import "./appointment.css"
+import BookAppointment from "./BookAppointment";
+import "./appointment.css";
+
 export default function Appointment() {
   const [activeTab, setActiveTab] = useState("upcoming");
+  const [open, setOpen] = useState(false);
 
   const appointments = [
     {
@@ -24,67 +27,81 @@ export default function Appointment() {
     },
   ];
 
-  const handleTabChange = (tab) => {
-    setActiveTab(tab);
-  };
-
   return (
-    <section className="appointment-container">
+    <section className="appointment-page">
+      {/* THIS IS THE “CALL” */}
+      {open && <BookAppointment onClose={() => setOpen(false)} />}
+
       <header className="appointment-header">
-        <h1 className="appointment-title">Appointment</h1>
-        <p className="appointment-description">
-          Manage schedule and other consultation
-        </p>
+        <h1 className="dash-title">Appointments</h1>
+        <p className="dash-subtitle">Manage schedule and consultations.</p>
       </header>
+
+      <div className="appointment-actions">
+        <button
+          className="dash-btn primary"
+          type="button"
+          onClick={() => setOpen(true)}
+        >
+          + Schedule New Appointment
+        </button>
+      </div>
 
       {/* Tabs */}
       <div className="appointment-tabs">
         <button
-          className={`tab-button ${activeTab === "upcoming" ? "active" : ""}`}
-          onClick={() => handleTabChange("upcoming")}
+          className={`appointment-tab dash-btn ghost ${activeTab === "upcoming" ? "is-active" : ""}`}
+          onClick={() => setActiveTab("upcoming")}
+          type="button"
         >
           Upcoming
         </button>
+
         <button
-          className={`tab-button ${activeTab === "past" ? "active" : ""}`}
-          onClick={() => handleTabChange("past")}
+          className={`appointment-tab dash-btn ghost ${activeTab === "past" ? "is-active" : ""}`}
+          onClick={() => setActiveTab("past")}
+          type="button"
         >
           Past
         </button>
       </div>
 
       {/* Table */}
-      <div className="appointment-table">
-        <table>
-          <thead>
-            <tr>
-              <th>Date</th>
-              <th>Time</th>
-              <th>Project</th>
-              <th>Purpose</th>
-            </tr>
-          </thead>
-          <tbody>
-            {appointments.map((appointment, index) => (
-              <tr key={index}>
-                <td>{appointment.date}</td>
-                <td>{appointment.time}</td>
-                <td>{appointment.project}</td>
-                <td>{appointment.purpose}</td>
+      <div className="dash-surface">
+        <div className="dash-surface-header">
+          <span>
+            {activeTab === "upcoming"
+              ? "Upcoming appointments"
+              : "Past appointments"}
+          </span>
+        </div>
+
+        <div className="appointment-table-wrap">
+          <table className="appointment-table">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Project</th>
+                <th>Purpose</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+            </thead>
+            <tbody>
+              {appointments.map((a, i) => (
+                <tr key={i}>
+                  <td>{a.date}</td>
+                  <td>{a.time}</td>
+                  <td>{a.project}</td>
+                  <td>{a.purpose}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
 
-      {/* Pagination */}
-      <div className="appointment-pagination">
-        <span>1 2 3 ... 67 68</span>
-      </div>
-
-      {/* Add new appointment button */}
-      <div className="add-appointment">
-        <button className="btn-add">+ Schedule New Appointment</button>
+        <div className="appointment-pagination">
+          <span className="dash-item-meta">1 2 3 … 67 68</span>
+        </div>
       </div>
     </section>
   );

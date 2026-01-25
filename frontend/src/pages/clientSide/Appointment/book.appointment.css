@@ -1,0 +1,140 @@
+/* =========================================================
+   BOOK APPOINTMENT — FLOATING FORM
+========================================================= */
+
+.appointment-form-overlay {
+  min-height: calc(100vh - 64px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+
+  /* soft backdrop */
+  background: radial-gradient(
+    1200px 600px at 50% 0%,
+    rgba(0, 0, 0, 0.04),
+    transparent 60%
+  );
+}
+
+.appointment-form-float {
+  width: 100%;
+  max-width: 900px;
+  padding: 2rem;
+  border-radius: 18px;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, 0.08),
+    0 30px 80px rgba(0, 0, 0, 0.12);
+
+  animation: float-in 0.4s ease;
+}
+
+/* -------------------------
+   TITLE
+------------------------- */
+
+.appointment-form-title {
+  font-size: 1.35rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  color: #111827;
+}
+
+/* -------------------------
+   GRID
+------------------------- */
+
+.appointment-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+.form-col {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* -------------------------
+   FIELDS
+------------------------- */
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.form-field span {
+  font-size: 0.75rem;
+  color: #374151;
+}
+
+.form-field input,
+.form-field select,
+.form-field textarea {
+  padding: 0.65rem 0.75rem;
+  border-radius: 8px;
+  border: none;
+  background: #f1f1f1;
+  font-size: 0.85rem;
+}
+
+.form-field textarea {
+  resize: none;
+}
+
+/* -------------------------
+   FOOTER
+------------------------- */
+
+.appointment-form-footer {
+  margin-top: 1.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* -------------------------
+   ANIMATION
+------------------------- */
+
+@keyframes float-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* -------------------------
+   RESPONSIVE
+------------------------- */
+
+@media (max-width: 768px) {
+  .appointment-form-overlay {
+    align-items: flex-start;
+    padding: 1.25rem;
+  }
+
+  .appointment-form-float {
+    padding: 1.5rem;
+  }
+
+  .appointment-form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .appointment-form-footer {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
+  }
+}

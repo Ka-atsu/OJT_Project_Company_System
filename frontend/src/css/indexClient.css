@@ -238,50 +238,6 @@
   background: rgba(0, 0, 0, 0.04);
 }
 
-/* =========================================================
-   DASHBOARD PAGE
-========================================================= */
-
-.dash-page {
-  padding: 2rem;
-}
-
-/* -------------------------
-   HEADER
-------------------------- */
-
-.dash-page-header {
-  margin-bottom: 2rem;
-}
-
-.dash-title {
-  font-size: 1.6rem;
-  font-weight: 700;
-  color: #111827;
-}
-
-.dash-subtitle {
-  font-size: 0.9rem;
-  color: #6b7280;
-  margin-top: 0.25rem;
-}
-
-/* -------------------------
-   GRID
-------------------------- */
-
-.dash-grid {
-  display: grid;
-  grid-template-columns: 1.4fr 1fr;
-  gap: 1.5rem;
-}
-
-.dash-col {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-}
-
 /* -------------------------
    SURFACES
 ------------------------- */
@@ -410,10 +366,4 @@
 .dash-divider {
   height: 1px;
   background: rgba(0, 0, 0, 0.06);
-}
-
-.dash-pagination {
-  margin-top: 0.75rem;
-  font-size: 0.7rem;
-  color: #6b7280;
 }
