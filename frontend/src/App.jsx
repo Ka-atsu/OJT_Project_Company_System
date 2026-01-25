@@ -15,6 +15,7 @@ import Login from "./pages/authentication/Login";
 import Register from "./pages/authentication/Register";
 
 import ClientDashboard from "./pages/clientSide/Dashboard/ClientDashboard";
+import ClientAccountSettings from "./pages/clientSide/AccountSettings/ClientAccountSettings";
 
 import warlyTestingRoutes from "./testingRoutes/warlyTestingRoutes";
 import kentTestingRoutes from "./testingRoutes/kentTestingRoutes";
@@ -66,8 +67,7 @@ export default function App() {
 
         <Route path="/dashboard" element={<DashboardLayout />}>
           <Route index element={<ClientDashboard />} />
-          {/* <Route path="projects" element={<Projects />} />
-        <Route path="documents" element={<Documents />} /> */}
+          <Route path="profile" element={<ClientAccountSettings />} />
         </Route>
 
         {warlyTestingRoutes()}

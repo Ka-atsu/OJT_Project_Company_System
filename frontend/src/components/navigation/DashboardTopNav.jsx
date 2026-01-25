@@ -14,7 +14,7 @@ export default function DashboardTopNav() {
 
         {/* Actions */}
         <div className="dash-actions">
-          <NavLink to="/profile" className="dash-link">
+          <NavLink to="/dashboard/profile" className="dash-link">
             My account
           </NavLink>
 
