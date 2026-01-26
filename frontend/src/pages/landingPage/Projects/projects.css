@@ -54,63 +54,255 @@
 }
 
 /* =====================
-   PROJECT ROWS
+   PROJECT GALLERY (FULL-BLEED)
 ===================== */
 
-.project-row-inner {
+.projects-gallery {
+  padding-top: 0;
+  width: 100%;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+/* override global .section padding for this full-bleed section */
+.section.projects-gallery {
+  padding-left: 0;
+  padding-right: 0;
+  padding-top: var(--pad-y);
+  padding-bottom: var(--pad-y);
+}
+
+.projects-header {
   max-width: 1100px;
-  margin: 0 auto;
+  margin: 0 auto 1rem;
+  padding: 0 var(--pad-x);
+}
+
+.projects-header h2 {
+  font-size: 1.1rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.projects-header p {
+  margin-top: 0.5rem;
+  font-size: 0.92rem;
+  line-height: 1.6;
+  color: rgba(0, 0, 0, 0.65);
+  max-width: 70ch;
+}
+
+/* =====================
+   PROJECTS LIST (ONE CARD PER ROW)
+===================== */
+
+.projects-list {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: clamp(2.5rem, 6vw, 5rem);
-  align-items: center;
+  gap: 1.25rem;
+
+  padding-left: var(--pad-x);
+  padding-right: 0; /* flush right like your reference */
 }
 
-.project-row-inner.is-reverse {
-  direction: rtl;
+/* =====================
+   PROJECT CARD 
+===================== */
+
+.project-card {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+
+  overflow-x: auto;
+
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  padding: 0;
 }
 
-.project-row-inner.is-reverse > * {
-  direction: ltr;
+/* =====================
+   HORIZONTAL SCROLL STRIP (IMAGES)
+===================== */
+
+.project-media-scroll {
+  display: flex;
+  gap: 12px;
+
+  overflow-x: auto;
+  overflow-y: hidden;
+
+  scroll-snap-type: none;
+  -webkit-overflow-scrolling: touch;
+
+  padding-top: 10px;
+  padding-bottom: 16px;
+  padding-left: 2px;
+  padding-right: 0; /* IMPORTANT: no right padding */
+
+  scroll-padding-left: 2px;
+  scroll-padding-right: var(
+    --pad-x
+  ); /* this is your “right padding” for snapping */
+
+  cursor: grab;
+  touch-action: pan-y;
+  overscroll-behavior-x: contain;
 }
 
-.project-row-image {
-  border-radius: 1rem;
+.project-media-scroll::after {
+  content: "";
+  flex: 0 0 var(--pad-x);
+}
+
+.project-media-item:last-child {
+  scroll-snap-align: end; /* last image stops nicely with right breathing room */
+}
+.project-media-scroll.is-dragging {
+  cursor: grabbing;
+}
+
+.project-media-scroll:focus {
+  outline: none;
+}
+
+/* Keep scrollbar subtle (won’t break scrolling) */
+.project-media-scroll::-webkit-scrollbar {
+  height: 8px;
+}
+
+.project-media-scroll::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.18);
+  border-radius: 999px;
+}
+
+.project-media-scroll::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.07);
+  border-radius: 999px;
+}
+
+/* Firefox */
+.project-media-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.18) rgba(0, 0, 0, 0.07);
+}
+
+/* =====================
+   IMAGE TILES
+===================== */
+
+.project-media-item {
+  flex: 0 0 auto;
+  width: clamp(520px, 70vw, 1100px);
+  border-radius: 12px;
   overflow: hidden;
   background: #eee;
+  scroll-snap-align: start;
 }
 
-.project-row-image img {
+.project-media-item img {
   width: 100%;
-  height: 100%;
+  height: clamp(260px, 28vw, 440px);
   object-fit: cover;
+  display: block;
+
+  /* key: dragging works even when your cursor is on the image */
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-drag: none;
 }
 
-.project-row-title {
-  font-size: clamp(1.6rem, 2.6vw, 2.2rem);
-  letter-spacing: -0.03em;
-  line-height: 1.1;
+/* =====================
+   TEXT
+===================== */
+
+.project-title {
+  margin-top: 12px;
+  font-weight: 800;
+  font-size: 1rem;
+  letter-spacing: -0.01em;
 }
 
-.project-row-meta {
-  margin-top: 0.4rem;
+.project-scope {
+  overflow: hidden;
+
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+
+  line-clamp: 2; /* standard */
+  -webkit-line-clamp: 2; /* webkit fallback */
+}
+
+/* =====================
+   ACTIONS
+===================== */
+
+.project-actions {
+  margin-top: 10px;
+}
+
+.project-link {
+  border: none;
+  background: transparent;
+  padding: 0;
+  font-weight: 800;
   font-size: 0.9rem;
-  color: rgba(0, 0, 0, 0.55);
-}
-
-.project-row-desc {
-  margin-top: 1.1rem;
-  max-width: 60ch;
-  line-height: 1.75;
-  color: rgba(0, 0, 0, 0.72);
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 
 /* =====================
    RESPONSIVE
 ===================== */
 
-@media (max-width: 768px) {
-  .project-row-inner {
-    grid-template-columns: 1fr;
+@media (max-width: 600px) {
+  .project-media-item {
+    width: 88vw;
   }
+
+  .project-media-item img {
+    height: clamp(220px, 52vw, 360px);
+  }
+}
+
+@media (max-width: 480px) {
+  .projects-list {
+    padding-left: 1rem;
+    padding-right: 0;
+  }
+}
+/* Hide native scrollbar but keep scrolling */
+.project-media-scroll {
+  scrollbar-width: none; /* Firefox */
+}
+.project-media-scroll::-webkit-scrollbar {
+  height: 0; /* Chrome/Safari */
+}
+
+/* Custom bar (centered, not full width) */
+.project-scrollbar {
+  height: 2px;
+  width: min(520px, 70%); /* <-- this is why it stays centered */
+  margin: 12px auto 0; /* center it */
+  background: rgba(0, 0, 0, 0.18);
+  border-radius: 999px;
+  position: relative;
+}
+
+.project-scrollbar-thumb {
+  height: 100%;
+  width: 48px; /* JS overwrites this */
+  background: rgba(0, 0, 0, 0.9);
+  border-radius: 999px;
+  transform: translateX(0); /* JS overwrites this */
+  will-change: transform, width;
+  cursor: grab;
+}
+.project-scrollbar-thumb:active {
+  cursor: grabbing;
 }

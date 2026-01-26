@@ -60,7 +60,7 @@ export default function App() {
           <Route index element={<HomeEntry />} />
           <Route path="about" element={<About />} />
           <Route path="services" element={<Services />} />
-          <Route path="safety" element={<Safety />} />
+          {/* <Route path="safety" element={<Safety />} /> */}
           <Route path="contact" element={<Contact />} />
           <Route path="projects" element={<Projects />} />
         </Route>
