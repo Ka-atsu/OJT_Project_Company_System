@@ -7,6 +7,7 @@ import ImgLand from "./Images/land.jpg";
 import ImgAggregates from "./Images/aggregates.jpg";
 import ImgSiteManagement from "./Images/siteManagement.jpg";
 import ImgExcavationSite from "./Images/excavationSite.jpg";
+import ImgCBDBuilding from "./Images/CBDBuilding.jpg";
 
 export {
   ImgConstructionSite,
@@ -17,5 +18,6 @@ export {
   ImgLand,
   ImgAggregates,
   ImgSiteManagement,
-  ImgExcavationSite
+  ImgExcavationSite,
+  ImgCBDBuilding,
 };

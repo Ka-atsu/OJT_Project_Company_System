@@ -17,7 +17,7 @@ import {
 
 import AboutSection from "./AboutSection";
 import { useAboutScrollFx } from "./useAboutScrollFx";
-import { ABOUT, ImgBackhoe } from "./about.content";
+import { ABOUT, ImgBackhoe, ImgCBDBuilding } from "./about.content";
 
 export default function About() {
   const { hero, intro, quote, sections } = ABOUT;
@@ -132,7 +132,7 @@ export default function About() {
           </motion.div>
         </section>
 
-        {/* FOUNDING */}
+        {/* BACKGROUND */}
         <section className="section">
           <motion.div
             className="about-intro-inner"
@@ -145,26 +145,38 @@ export default function About() {
               <span className="eyebrow">{ABOUT.founding.label}</span>
             </motion.aside>
 
-            <div>
-              <TypewriterText
-                as={motion.h2}
-                className="about-intro-title"
-                text={ABOUT.founding.title}
-                start="inView"
-                speed={14}
-                inViewOptions={VIEWPORT_EARLY}
-                variants={FADE_UP}
-              />
+            <div className="about-background-card about-background-full">
+              {/* IMAGE */}
+              <div className="about-background-image">
+                <img
+                  src={ImgCBDBuilding}
+                  alt="Cliberduche Corporation Office"
+                  onLoad={handleImgLoad}
+                />
+              </div>
 
-              {ABOUT.founding.body.map((p, i) => (
-                <motion.p
-                  key={i}
-                  className="about-intro-text"
+              {/* TEXT */}
+              <div>
+                <TypewriterText
+                  as={motion.h2}
+                  className="about-intro-title"
+                  text={ABOUT.founding.title}
+                  start="inView"
+                  speed={14}
+                  inViewOptions={VIEWPORT_EARLY}
                   variants={FADE_UP}
-                >
-                  {p}
-                </motion.p>
-              ))}
+                />
+
+                {ABOUT.founding.body.map((p, i) => (
+                  <motion.p
+                    key={i}
+                    className="about-intro-text"
+                    variants={FADE_UP}
+                  >
+                    {p}
+                  </motion.p>
+                ))}
+              </div>
             </div>
           </motion.div>
         </section>
