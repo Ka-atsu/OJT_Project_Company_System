@@ -30,6 +30,24 @@
   /* KINETIC MODIFIERS */
   --kinetic-big: 1.6;
   --kinetic-small: 1.2;
+
+  /* =========================================================
+     BUTTON TOKENS (NEW)
+  ========================================================= */
+
+  --brand: #0b3b8f;
+  --brand-hover: #082f72;
+
+  --btn-radius: 999px;
+  --btn-pad-y: 0.85rem;
+  --btn-pad-x: 1.25rem;
+  --btn-fs: 0.85rem;
+  --btn-weight: 700;
+  --btn-letter: 0.12em;
+  --btn-ease: 0.18s ease;
+
+  --btn-ring-dark: rgba(0, 0, 0, 0.18);
+  --btn-ring-light: rgba(255, 255, 255, 0.25);
 }
 
 /* =========================================================
@@ -310,13 +328,7 @@ p {
   max-width: 62ch;
 }
 
-.cta .btn.btn-light {
-  border-radius: 999px;
-  padding: 0.85rem 1.2rem;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  font-weight: 800;
-}
+/* (REMOVED OLD CTA BUTTON DUPES) */
 
 /* Footer CTA spacing override (so it doesn’t inherit 18vh padding) */
 .site-footer .cta.section {
@@ -412,49 +424,7 @@ p {
   margin-top: 2.25rem;
 }
 
-.hero-actions .btn {
-  border-radius: 999px;
-  padding: 0.85rem 1.25rem;
-  font-size: 0.85rem;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  font-weight: 700;
-  transition:
-    transform 0.18s ease,
-    background-color 0.18s ease,
-    border-color 0.18s ease,
-    color 0.18s ease,
-    opacity 0.18s ease;
-}
-
-.hero-actions .btn.btn-light {
-  background: #fff;
-  border-color: #fff;
-  color: #000;
-}
-
-.hero-actions .btn.btn-light:hover {
-  transform: translateY(-1px);
-  opacity: 0.95;
-}
-
-.hero-actions .btn.btn-outline-light {
-  background: transparent;
-  border-color: rgba(255, 255, 255, 0.85);
-  color: #fff;
-}
-
-.hero-actions .btn.btn-outline-light:hover {
-  transform: translateY(-1px);
-  background: rgba(255, 255, 255, 0.12);
-  border-color: rgba(255, 255, 255, 1);
-}
-
-.hero-actions .btn:focus,
-.hero-actions .btn:focus-visible {
-  outline: none;
-  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.25);
-}
+/* (REMOVED OLD .hero-actions .btn DUPES) */
 
 /* =========================================================
    NAV BUTTON (CONTACT)
@@ -540,6 +510,7 @@ p {
 /* =========================================================
    Type Effect
 ========================================================= */
+
 .typing-effect {
   display: inline-block;
   font-weight: 500;
@@ -611,4 +582,116 @@ p {
     animation: none;
     opacity: 0.7;
   }
+}
+
+/* =========================================================
+   BUTTONS (UPDATED / SINGLE SOURCE OF TRUTH)
+========================================================= */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+
+  padding: var(--btn-pad-y) var(--btn-pad-x);
+  border-radius: var(--btn-radius);
+
+  font-size: var(--btn-fs);
+  font-weight: var(--btn-weight);
+  letter-spacing: var(--btn-letter);
+  text-transform: uppercase;
+  text-decoration: none;
+
+  cursor: pointer;
+  user-select: none;
+
+  border: 1px solid transparent;
+  background: transparent;
+  color: inherit;
+
+  transition:
+    transform var(--btn-ease),
+    background-color var(--btn-ease),
+    border-color var(--btn-ease),
+    color var(--btn-ease),
+    opacity var(--btn-ease),
+    box-shadow var(--btn-ease);
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+  opacity: 0.95;
+}
+
+.btn:active {
+  transform: translateY(0);
+  opacity: 0.92;
+}
+
+.btn:focus,
+.btn:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--btn-ring, var(--btn-ring-dark));
+}
+
+/* Optional: disable caps */
+.btn.no-caps {
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+/* Your custom variants */
+.btn-filled {
+  background-color: var(--brand);
+  border-color: var(--brand);
+  color: #fff;
+}
+
+.btn-filled:hover {
+  background-color: var(--brand-hover);
+  border-color: var(--brand-hover);
+}
+
+.btn-outline {
+  background: transparent;
+  border: 2px solid var(--brand);
+  color: #fff;
+}
+
+.btn-outline:hover {
+  background: var(--brand);
+  border-color: var(--brand);
+  color: #fff;
+}
+
+/* Light variants (hero/cta on dark images) */
+.btn-light {
+  background: #fff;
+  border-color: #fff;
+  color: #000;
+  --btn-ring: var(--btn-ring-light);
+}
+
+.btn-outline-light {
+  background: transparent;
+  border-color: rgba(255, 255, 255, 0.85);
+  color: #fff;
+  --btn-ring: var(--btn-ring-light);
+}
+
+.btn-outline-light:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 1);
+}
+
+/* Context-only tweaks (no duplication) */
+.hero-actions .btn {
+  --btn-pad-y: 0.85rem;
+  --btn-pad-x: 1.25rem;
+  --btn-fs: 0.85rem;
+}
+
+.cta .btn {
+  --btn-weight: 800; /* optional */
 }

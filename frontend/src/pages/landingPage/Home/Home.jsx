@@ -1,4 +1,3 @@
-import Button from "react-bootstrap/Button";
 import { Link } from "react-router-dom";
 import { useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -114,22 +113,21 @@ export default function Home() {
                       ease: EASE,
                     }}
                   >
-                    <Button
-                      as={Link}
+                    {/* PRIMARY CTA */}
+                    <Link
                       to={heroScroll.primaryCta.to}
-                      variant="light"
-                      size="lg"
+                      className="btn btn-filled"
                     >
                       {heroScroll.primaryCta.label}
-                    </Button>
+                    </Link>
 
-                    <Button
-                      as={Link}
+                    {/* SECONDARY CTA */}
+                    <Link
                       to={heroScroll.getStarted.to}
-                      variant="outline-light"
+                      className="btn btn-outline"
                     >
                       {heroScroll.getStarted.label}
-                    </Button>
+                    </Link>
                   </motion.div>
                 )}
               </motion.div>

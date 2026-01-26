@@ -52,8 +52,8 @@ export default function PreloaderVideo({ onDone, durationMs }) {
           onDone?.();
         }}
       >
-        <source src="/animation/InifiClib.mp4" type="video/mp4" />
-        <source src="/animation/InifiClib.webm" type="video/webm" />
+        <source src="/animation/InfiClibLight.mp4" type="video/mp4" />
+        {/* <source src="/animation/InifiClib.webm" type="video/webm" /> */}
       </video>
 
       <button

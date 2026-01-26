@@ -43,7 +43,7 @@ export default function Navbar() {
         </div>
 
         {/* RIGHT */}
-        <NavLink to="/contact" className="site-btn">
+        <NavLink to="/contact" className="btn btn-filled nav-btn">
           Contact
         </NavLink>
       </div>

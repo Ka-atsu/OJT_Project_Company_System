@@ -1,4 +1,3 @@
-import { Button } from "react-bootstrap";
 import { Link, useLocation } from "react-router-dom";
 import { ImgEarthmoving } from "../../assets/images";
 
@@ -25,9 +24,11 @@ export default function Footer() {
             <span className="eyebrow">{cta.eyebrow}</span>
             <h2>{cta.title}</h2>
             <p>{cta.body}</p>
-            <Button as={Link} to={cta.button.to} variant="light">
+
+            {/* NEW BUTTON */}
+            <Link to={cta.button.to} className="btn btn-filled">
               {cta.button.label}
-            </Button>
+            </Link>
           </div>
         </section>
       )}
