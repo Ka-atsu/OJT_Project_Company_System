@@ -2,6 +2,9 @@ import {
   ImgConstructionSite,
   ImgBackhoe,
   ImgCBDBuilding,
+  ImgBackfill,
+  ImgExcavationSite,
+  ImgSiteManagement,
 } from "../../../assets/images";
 
 export const ABOUT = {
@@ -31,15 +34,16 @@ export const ABOUT = {
   },
 
   /* =========================================================
-     STORY / BACKGROUND
-  ========================================================= */
+   STORY / BACKGROUND
+========================================================= */
   founding: {
     label: "Our Story",
     title: "Founded in 2018 to build locally, at scale.",
     body: [
-      "CLIBERDUCHE CORPORATION was officially registered with the Securities and Exchange Commission on November 28, 2018.",
-      "The company was founded to pursue long-term opportunities in the Philippine construction and land development industry through responsible, scalable operations.",
-      "The name CLIBERDUCHE is derived from the surnames of the original incorporators: Climaco, Beronilla, and Piaduche. Leadership was refined over time to support operational focus, stability, and sustainable growth.",
+      "CLIBERDUCHE CORPORATION was born out of a dream: to provide a better life for a family without having to leave the country. That dream found its opportunity in the construction industry—an environment full of growth, challenge, and purpose.",
+      "The founder invited close friends to join the venture, and CLIBERDUCHE CORPORATION was officially registered with the Securities and Exchange Commission on November 28, 2018.",
+      "The name CLIBERDUCHE is derived from the surnames of the founder and co-founders:\nCLI — Climaco\nBER — Beronilla\nDUCHE — Piaduche",
+      "As time passed, the two incorporators—Beronilla and Piaduche—pursued other interests. By mutual agreement, they officially parted ways with the company, and the founder’s spouse and brother became the new directors.",
     ],
   },
 
@@ -119,4 +123,11 @@ export const ABOUT = {
   ],
 };
 
-export { ImgBackhoe, ImgCBDBuilding };
+export {
+  ImgBackhoe,
+  ImgCBDBuilding,
+  ImgBackfill,
+  ImgConstructionSite,
+  ImgExcavationSite,
+  ImgSiteManagement,
+};

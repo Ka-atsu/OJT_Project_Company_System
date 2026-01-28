@@ -1,11 +1,16 @@
 import { useMemo, useRef } from "react";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 import PageShell from "../../../components/layouts/PageShell";
 import "./about.css";
 
-import { useAboutScrollFx } from "./useAboutScrollFx";
-import { ABOUT, ImgBackhoe, ImgCBDBuilding } from "./about.content";
+import {
+  ABOUT,
+  ImgBackhoe,
+  ImgCBDBuilding,
+  ImgBackfill,
+  ImgExcavationSite,
+  ImgSiteManagement,
+} from "./about.content";
 
 import SectionRenderer from "../../../utils/SectionRenderer";
 import HeroSection from "./HeroSection";
@@ -18,6 +23,7 @@ const FALLBACK_FLOW = [
   "missionVision",
   "whyUs",
   "story",
+  "projectsInfo",
   "coreValues",
   "team",
   "companyProfile",
@@ -26,31 +32,13 @@ const FALLBACK_FLOW = [
 export default function About() {
   const { hero, whyUs, intro, founding, team, slices, order } = ABOUT;
 
-  // refs / scroll fx
-  const rootRef = useRef(null);
+  // keep these refs ONLY if HeroSection uses them internally
   const heroRef = useRef(null);
   const stageRef = useRef(null);
   const headlineWrapRef = useRef(null);
   const overlayRef = useRef(null);
-  const imageBandRef = useRef(null);
-  const imageParallaxRef = useRef(null);
 
-  useAboutScrollFx({
-    rootRef,
-    heroRef,
-    stageRef,
-    headlineWrapRef,
-    overlayRef,
-    imageBandRef,
-    imageParallaxRef,
-  });
-
-  const handleImgLoad = () => ScrollTrigger.refresh();
-
-  // precedence controlled by about.content.js (fallback if missing)
   const FLOW = Array.isArray(order) && order.length ? order : FALLBACK_FLOW;
-
-  // supports both structures
   const WHY_US_DATA = whyUs ?? intro;
 
   const registry = useMemo(
@@ -76,10 +64,18 @@ export default function About() {
         founding ? (
           <StorySection
             founding={founding}
-            imageSrc={ImgCBDBuilding}
-            onImgLoad={handleImgLoad}
+            images={[
+              ImgCBDBuilding,
+              ImgSiteManagement,
+              ImgBackfill,
+              ImgBackhoe,
+              ImgExcavationSite,
+            ]}
           />
         ) : null,
+
+      projectsInfo: () =>
+        slices?.projectsInfo ? <AboutSlice {...slices.projectsInfo} /> : null,
 
       coreValues: () =>
         slices?.coreValues ? <AboutSlice {...slices.coreValues} /> : null,
@@ -90,15 +86,12 @@ export default function About() {
         slices?.companyProfile ? (
           <AboutSlice {...slices.companyProfile} />
         ) : null,
-
-      projectsInfo: () =>
-        slices?.projectsInfo ? <AboutSlice {...slices.projectsInfo} /> : null,
     }),
-    [slices, WHY_US_DATA, founding, team, handleImgLoad],
+    [slices, WHY_US_DATA, founding, team],
   );
 
   return (
-    <div ref={rootRef}>
+    <div>
       <HeroSection
         hero={hero}
         heroRef={heroRef}
@@ -109,7 +102,9 @@ export default function About() {
 
       <PageShell>
         {FLOW.map((key) => (
-          <SectionRenderer key={key} render={registry[key]} />
+          <div key={key} id={`about-${key}`} className="about-anchor">
+            <SectionRenderer render={registry[key]} />
+          </div>
         ))}
       </PageShell>
     </div>

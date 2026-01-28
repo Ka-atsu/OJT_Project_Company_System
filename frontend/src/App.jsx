@@ -32,20 +32,37 @@ export function DisableScrollRestoration() {
   return null;
 }
 
-function ScrollToTop() {
-  const { pathname } = useLocation();
+function ScrollManager() {
+  const { pathname, hash } = useLocation();
 
   useLayoutEffect(() => {
-    const toTop = () => {
-      (document.scrollingElement || document.documentElement).scrollTop = 0;
-      document.body.scrollTop = 0; // iOS fallback
-      window.scrollTo(0, 0);
-    };
+    // Hash navigation: scroll to the element with fixed-nav offset
+    if (hash) {
+      let tries = 0;
 
-    toTop();
-    requestAnimationFrame(toTop); // after layout/pin adjustments
-    setTimeout(toTop, 50); // after images/refresh (extra safe)
-  }, [pathname]);
+      const tryScroll = () => {
+        const el = document.querySelector(hash);
+        if (el) {
+          const nav = document.querySelector(".site-nav");
+          const navH = nav?.offsetHeight ?? 72;
+
+          const top =
+            el.getBoundingClientRect().top + window.scrollY - (navH + 16);
+
+          window.scrollTo({ top, behavior: "smooth" });
+          return;
+        }
+
+        if (tries++ < 60) requestAnimationFrame(tryScroll);
+      };
+
+      requestAnimationFrame(tryScroll);
+      return;
+    }
+
+    // No hash => normal route change => scroll to top
+    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+  }, [pathname, hash]);
 
   return null;
 }
@@ -54,13 +71,12 @@ export default function App() {
   return (
     <>
       <DisableScrollRestoration />
-      <ScrollToTop />
+      <ScrollManager />
       <Routes>
         <Route path="/" element={<RootLayout />}>
           <Route index element={<HomeEntry />} />
           <Route path="about" element={<About />} />
           <Route path="services" element={<Services />} />
-          {/* <Route path="safety" element={<Safety />} /> */}
           <Route path="contact" element={<Contact />} />
           <Route path="projects" element={<Projects />} />
         </Route>

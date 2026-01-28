@@ -1,12 +1,136 @@
 /* =========================================================
-   MODERN DASHBOARD SIDEBAR — REFINED
+   MODERN DASHBOARD — UPDATED CSS (Sidebar + Topnav + Surfaces)
+========================================================= */
+
+/* -------------------------
+   TOKENS
+------------------------- */
+:root {
+  --dash-topnav-h: 64px;
+  --dash-sidebar-w: 260px;
+
+  --dash-bg: #f6f7f9;
+  --dash-surface: #ffffff;
+  --dash-muted: #6b7280;
+  --dash-text: #111827;
+
+  --dash-border: rgba(0, 0, 0, 0.08);
+  --dash-border-soft: rgba(0, 0, 0, 0.06);
+
+  --dash-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.03);
+  --dash-shadow-md: 0 10px 28px rgba(0, 0, 0, 0.06);
+}
+
+/* Optional layout helper if you have a wrapper */
+.dash-layout {
+  min-height: 100vh;
+  background: var(--dash-bg);
+}
+
+/* =========================================================
+   TOP NAV
+========================================================= */
+
+.dash-topnav {
+  height: var(--dash-topnav-h);
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--dash-border);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.dash-topnav-inner {
+  height: 100%;
+  padding: 0 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.dash-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.dash-brand-text {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--dash-text);
+}
+
+.dash-brand-text span {
+  font-weight: 400;
+  color: var(--dash-muted);
+}
+
+.dash-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.dash-topnav-link {
+  font-size: 0.82rem;
+  color: #374151;
+  text-decoration: none;
+}
+
+.dash-topnav-link:hover {
+  text-decoration: underline;
+}
+
+.dash-logout {
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  background: transparent;
+  border-radius: 10px;
+  padding: 0.45rem 0.8rem;
+  font-size: 0.78rem;
+  cursor: pointer;
+  transition:
+    background 0.15s ease,
+    transform 0.12s ease;
+}
+
+.dash-logout:hover {
+  background: rgba(0, 0, 0, 0.04);
+  transform: translateY(-1px);
+}
+
+.dash-logout:focus-visible {
+  outline: 2px solid #2b8cff;
+  outline-offset: 2px;
+}
+
+/* =========================================================
+   BODY LAYOUT (Sidebar + Main)
+========================================================= */
+
+/* If your parent is a flex row, this helps:
+   <div class="dash-body"><aside class="dash-sidebar">...</aside><main class="dash-main">...</main></div>
+*/
+.dash-body {
+  display: flex;
+  min-height: calc(100vh - var(--dash-topnav-h));
+}
+
+/* =========================================================
+   SIDEBAR
 ========================================================= */
 
 .dash-sidebar {
-  width: 260px;
+  width: var(--dash-sidebar-w);
+  flex-shrink: 0;
+
   background: #f9fafb;
-  border-right: 1px solid rgba(0, 0, 0, 0.06);
-  min-height: calc(100vh - 64px);
+  border-right: 1px solid var(--dash-border-soft);
+
+  position: sticky;
+  top: var(--dash-topnav-h);
+  height: calc(100vh - var(--dash-topnav-h));
+  overflow: auto;
 }
 
 .dash-sidebar-inner {
@@ -16,10 +140,7 @@
   gap: 1.75rem;
 }
 
-/* -------------------------
-   NAV
-------------------------- */
-
+/* NAV */
 .dash-nav {
   display: flex;
   flex-direction: column;
@@ -34,21 +155,25 @@
   gap: 0.15rem;
 }
 
+/* Links */
 .dash-link {
+  position: relative;
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  padding: 0.55rem 0.75rem;
-  border-radius: 10px;
+
+  padding: 0.6rem 0.8rem;
+  padding-left: 1rem; /* room for active bar */
+
+  border-radius: 12px;
 
   font-size: 0.82rem;
-  font-weight: 500;
+  font-weight: 550;
   color: #1f2937;
   text-decoration: none;
 
   transition:
     background 0.18s ease,
-    color 0.18s ease,
     transform 0.12s ease;
 }
 
@@ -56,18 +181,27 @@
   background: rgba(0, 0, 0, 0.035);
 }
 
+.dash-link:focus-visible {
+  outline: 2px solid #2b8cff;
+  outline-offset: 2px;
+}
+
+/* Active: no layout shift (bar is absolute) */
 .dash-link.active {
   background: rgba(0, 0, 0, 0.08);
-  font-weight: 600;
+  font-weight: 650;
 }
 
 .dash-link.active::before {
   content: "";
+  position: absolute;
+  left: 0.55rem;
+  top: 50%;
+  transform: translateY(-50%);
   width: 4px;
   height: 18px;
   border-radius: 999px;
   background: #111827;
-  margin-right: 0.5rem;
 }
 
 .dash-icon {
@@ -75,50 +209,46 @@
   opacity: 0.85;
 }
 
-/* -------------------------
-   CARDS
-------------------------- */
+/* =========================================================
+   CARDS (Sidebar + Main)
+========================================================= */
 
 .dash-card {
-  background: #ffffff;
-  border-radius: 14px;
+  background: var(--dash-surface);
+  border-radius: 16px;
   padding: 1rem;
 
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
 
-  box-shadow:
-    0 1px 2px rgba(0, 0, 0, 0.03),
-    0 8px 24px rgba(0, 0, 0, 0.04);
+  box-shadow: var(--dash-shadow-sm), var(--dash-shadow-md);
+  border: 1px solid rgba(0, 0, 0, 0.04);
 }
 
 .dash-card.subtle {
   background: transparent;
+  border: 0;
   box-shadow: none;
   padding: 0.25rem 0.25rem;
 }
-
-/* -------------------------
-   CARD TITLES
-------------------------- */
 
 .dash-card-title {
   font-size: 0.65rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: #6b7280;
+  color: var(--dash-muted);
   margin-bottom: 0.25rem;
 }
 
-/* -------------------------
+/* =========================================================
    BUTTONS
-------------------------- */
+========================================================= */
 
 .dash-btn {
-  border-radius: 10px;
+  border-radius: 12px;
   font-size: 0.78rem;
-  padding: 0.55rem 0.75rem;
+  padding: 0.6rem 0.85rem;
 
   border: none;
   cursor: pointer;
@@ -133,6 +263,11 @@
     box-shadow 0.12s ease;
 }
 
+.dash-btn:focus-visible {
+  outline: 2px solid #2b8cff;
+  outline-offset: 2px;
+}
+
 .dash-btn.primary {
   background: #111827;
   color: #fff;
@@ -141,7 +276,7 @@
 .dash-btn.primary:hover {
   background: #000;
   transform: translateY(-1px);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.18);
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.18);
 }
 
 .dash-btn.ghost {
@@ -153,108 +288,40 @@
   background: rgba(0, 0, 0, 0.06);
 }
 
-/* -------------------------
-   SUPPORT
-------------------------- */
+/* =========================================================
+   SUPPORT / TEXT
+========================================================= */
 
 .dash-support {
   font-size: 0.74rem;
   color: #374151;
   line-height: 1.55;
 }
+
 /* =========================================================
-   DASHBOARD TOP NAV
+   MAIN CONTENT AREA
 ========================================================= */
 
-.dash-topnav {
-  height: 64px;
-  background: #ffffff;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
-  position: sticky;
-  top: 0;
-  z-index: 100;
-}
-
-.dash-topnav-inner {
-  height: 100%;
-  padding: 0 1.5rem;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
 .dash-main {
-  height: calc(100vh - 64px);
-  min-height: 0;
+  flex: 1;
+  min-width: 0; /* prevents overflow issues in flex */
+  height: calc(100vh - var(--dash-topnav-h));
   overflow: auto;
+
+  padding: 1.5rem;
+  background: var(--dash-bg);
 }
 
-/* -------------------------
-   BRAND
-------------------------- */
-
-.dash-brand {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-}
-
-.dash-brand-text {
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: #111827;
-}
-
-.dash-brand-text span {
-  font-weight: 400;
-  color: #6b7280;
-}
-
-/* -------------------------
-   ACTIONS
-------------------------- */
-
-.dash-actions {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-
-.dash-topnav-link {
-  font-size: 0.8rem;
-  color: #374151;
-  text-decoration: none;
-}
-
-.dash-topnav-link:hover {
-  text-decoration: underline;
-}
-
-.dash-logout {
-  border: 1px solid rgba(0, 0, 0, 0.12);
-  background: transparent;
-  border-radius: 8px;
-  padding: 0.4rem 0.75rem;
-  font-size: 0.75rem;
-  cursor: pointer;
-  transition: background 0.15s ease;
-}
-
-.dash-logout:hover {
-  background: rgba(0, 0, 0, 0.04);
-}
-
-/* -------------------------
+/* =========================================================
    SURFACES
-------------------------- */
+========================================================= */
 
 .dash-surface {
-  background: #ffffff;
-  border-radius: 16px;
+  background: var(--dash-surface);
+  border-radius: 18px;
   padding: 1.25rem;
-  box-shadow:
-    0 1px 2px rgba(0, 0, 0, 0.03),
-    0 12px 32px rgba(0, 0, 0, 0.04);
+  box-shadow: var(--dash-shadow-sm), var(--dash-shadow-md);
+  border: 1px solid rgba(0, 0, 0, 0.04);
 }
 
 .dash-surface.full {
@@ -265,13 +332,13 @@
   font-size: 0.75rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: #6b7280;
+  color: var(--dash-muted);
   margin-bottom: 1rem;
 }
 
-/* -------------------------
-   LISTS
-------------------------- */
+/* =========================================================
+   LISTS + ITEMS
+========================================================= */
 
 .dash-list {
   display: flex;
@@ -285,19 +352,15 @@
   align-items: center;
 }
 
-/* -------------------------
-   ITEMS
-------------------------- */
-
 .dash-item-title {
   font-size: 0.9rem;
-  font-weight: 600;
-  color: #111827;
+  font-weight: 650;
+  color: var(--dash-text);
 }
 
 .dash-item-meta {
   font-size: 0.75rem;
-  color: #6b7280;
+  color: var(--dash-muted);
 }
 
 .dash-project {
@@ -310,15 +373,15 @@
   font-size: 1.6rem;
 }
 
-/* -------------------------
-   STATUS
-------------------------- */
+/* =========================================================
+   STATUS PILLS
+========================================================= */
 
 .dash-status {
   font-size: 0.7rem;
   padding: 0.25rem 0.6rem;
   border-radius: 999px;
-  font-weight: 600;
+  font-weight: 650;
 }
 
 .dash-status.success {
@@ -336,16 +399,16 @@
   color: #374151;
 }
 
-/* -------------------------
+/* =========================================================
    DOCUMENTS
-------------------------- */
+========================================================= */
 
 .dash-doc {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0.5rem 0;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  padding: 0.55rem 0;
+  border-bottom: 1px solid var(--dash-border-soft);
   font-size: 0.85rem;
 }
 
@@ -365,11 +428,31 @@
   text-decoration: underline;
 }
 
-/* -------------------------
+/* =========================================================
    MISC
-------------------------- */
+========================================================= */
 
 .dash-divider {
   height: 1px;
-  background: rgba(0, 0, 0, 0.06);
+  background: var(--dash-border-soft);
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 1100px) {
+  :root {
+    --dash-sidebar-w: 240px;
+  }
+}
+
+@media (max-width: 900px) {
+  :root {
+    --dash-sidebar-w: 220px;
+  }
+
+  .dash-main {
+    padding: 1.1rem;
+  }
 }
