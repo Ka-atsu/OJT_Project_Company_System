@@ -5,7 +5,6 @@ import DashboardLayout from "./components/layouts/DashboardLayout";
 
 import HomeEntry from "./pages/animation/HomeEntry";
 import About from "./pages/landingPage/About/About";
-import Safety from "./pages/landingPage/Safety/Safety";
 import Services from "./pages/landingPage/Services/Services";
 import Contact from "./pages/landingPage/Contact/Contact";
 import Projects from "./pages/landingPage/Projects/Projects";
