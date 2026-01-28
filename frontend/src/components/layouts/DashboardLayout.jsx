@@ -10,7 +10,7 @@ export default function DashboardLayout() {
       <DashboardTopNav />
       <div className="d-flex flex-grow-1">
         <LeftSidebar />
-        <main className="flex-grow-1 p-4 bg-light">
+        <main className="dash-main flex-grow-1 p-4 bg-light">
           <Outlet />
         </main>
       </div>

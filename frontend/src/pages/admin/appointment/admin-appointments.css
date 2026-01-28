@@ -1,0 +1,351 @@
+.aa {
+  background: transparent;
+  color: var(--aa-text);
+
+  height: 100%;
+  min-height: 0;
+
+  display: grid;
+  grid-template-rows: auto 1fr;
+  gap: 12px;
+}
+
+.aa-header {
+  margin-bottom: 0;
+}
+
+.aa-eyebrow {
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--aa-muted);
+}
+
+.aa-title {
+  margin: 6px 0 0;
+  font-size: 28px;
+  line-height: 1.1;
+}
+
+.aa-sub {
+  margin: 6px 0 0;
+  color: var(--aa-muted);
+}
+
+/* make the two cards fill available height */
+.aa-grid {
+  display: grid;
+  grid-template-columns: minmax(320px, 40%) minmax(420px, 60%);
+  gap: 12px;
+
+  align-items: stretch;
+  min-height: 0;
+}
+
+/* Card shell: no scrolling here */
+.aa-card {
+  background: var(--aa-surface);
+  border: 1px solid var(--aa-border);
+  border-radius: var(--aa-radius);
+  box-shadow: var(--aa-shadow);
+
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+/* Optional: keep header readable while card scrolls */
+.aa-card__header {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--aa-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.aa-card__title {
+  margin: 0;
+  font-size: 14px;
+  letter-spacing: 0.02em;
+}
+
+.aa-card__meta {
+  font-size: 12px;
+  color: var(--aa-muted);
+}
+
+/* toolbar stays normal (it will scroll with the card in Option 2) */
+.aa-toolbar {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--aa-border);
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 10px;
+}
+
+.aa-field {
+  display: grid;
+  gap: 6px;
+}
+
+.aa-field__label {
+  font-size: 12px;
+  color: var(--aa-muted);
+}
+
+.aa-field select,
+.aa-field input {
+  border: 1px solid var(--aa-border);
+  background: color-mix(in oklab, var(--aa-surface), var(--aa-text) 3%);
+  color: var(--aa-text);
+  border-radius: 10px;
+  padding: 8px 10px;
+}
+
+.aa-list {
+  padding: 10px;
+  display: grid;
+  gap: 10px;
+
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+
+  max-height: none;
+}
+
+.aa-item {
+  text-align: left;
+  width: 100%;
+  border: 1px solid transparent;
+  border-radius: 14px;
+  padding: 12px;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+
+.aa-item:hover {
+  border-color: var(--aa-border);
+  background: color-mix(in oklab, var(--aa-surface), var(--aa-text) 3%);
+}
+
+.aa-item.is-active {
+  border-color: var(--aa-border);
+  background: color-mix(in oklab, var(--aa-surface), var(--aa-text) 5%);
+}
+
+.aa-item__top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.aa-item__bottom {
+  margin-top: 10px;
+  display: grid;
+  gap: 4px;
+}
+
+.aa-pagination {
+  padding: 12px 16px;
+  border-top: 1px solid var(--aa-border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+
+.aa-pagination__meta {
+  font-size: 12px;
+  color: var(--aa-muted);
+}
+
+.aa-details {
+  padding: 16px;
+  display: grid;
+  gap: 14px;
+
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+}
+
+.aa-block {
+  display: grid;
+  gap: 10px;
+  padding: 12px;
+  border: 1px solid var(--aa-border);
+  border-radius: 14px;
+}
+
+/* compact key/value rows */
+.aa-kv {
+  display: grid;
+  grid-template-columns: 160px 1fr; /* label | value */
+  gap: 8px 14px;
+  align-items: baseline;
+}
+
+.aa-k {
+  color: var(--aa-muted);
+  font-size: 12px;
+}
+
+.aa-v {
+  font-size: 13px;
+}
+
+/* 2-column block for forms */
+.aa-twoCol {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  min-width: 0;
+}
+
+.aa-twoCol > * {
+  min-width: 0;
+}
+
+.aa-note {
+  margin: 0;
+  color: var(--aa-muted);
+}
+
+.aa-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+
+.aa-formGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.aa-h3 {
+  margin: 0;
+  font-size: 13px;
+  letter-spacing: 0.02em;
+}
+
+.aa-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.aa-btn {
+  border: 1px solid var(--aa-border);
+  background: color-mix(in oklab, var(--aa-surface), var(--aa-text) 5%);
+  color: var(--aa-text);
+  padding: 9px 12px;
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+.aa-btn:hover {
+  background: color-mix(in oklab, var(--aa-surface), var(--aa-text) 8%);
+}
+
+.aa-btn--ghost {
+  background: transparent;
+}
+
+.aa-btn--danger {
+  border-color: rgba(255, 80, 80, 0.35);
+  color: rgb(170, 30, 30);
+}
+
+.aa-empty {
+  padding: 16px;
+  color: var(--aa-muted);
+}
+
+.aa-badge {
+  font-size: 12px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--aa-border);
+  background: color-mix(in oklab, var(--aa-surface), var(--aa-text) 3%);
+  color: var(--aa-muted);
+}
+
+.aa-badge--pending {
+  background: rgba(255, 210, 122, 0.18);
+  border-color: rgba(255, 210, 122, 0.6);
+  color: #8a5b00;
+}
+
+.aa-badge--approved {
+  background: rgba(136, 255, 167, 0.16);
+  border-color: rgba(136, 255, 167, 0.55);
+  color: #0b6b2b;
+}
+
+.aa-badge--rescheduled {
+  background: rgba(169, 182, 255, 0.16);
+  border-color: rgba(169, 182, 255, 0.6);
+  color: #2a3aa8;
+}
+
+.aa-badge--cancelled {
+  background: rgba(255, 168, 240, 0.12);
+  border-color: rgba(255, 168, 240, 0.55);
+  color: #7a1d63;
+}
+
+.aa-badge--rejected {
+  background: rgba(255, 80, 80, 0.12);
+  border-color: rgba(255, 80, 80, 0.35);
+  color: rgb(170, 30, 30);
+}
+
+.aa-strong {
+  font-weight: 600;
+}
+
+.aa-muted {
+  color: var(--aa-muted);
+}
+
+.aa-small {
+  font-size: 12px;
+}
+
+.aa-mono {
+  font-family:
+    ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
+    "Courier New", monospace;
+  font-size: 12px;
+}
+
+/* Responsive */
+@media (max-width: 980px) {
+  .aa-grid {
+    grid-template-columns: 1fr;
+    grid-auto-rows: auto; /* stacked cards can be natural height */
+  }
+
+  .aa-formGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .aa-toolbar {
+    grid-template-columns: 1fr;
+  }
+
+  .aa-twoCol {
+    grid-template-columns: 1fr;
+  }
+
+  .aa-kv {
+    grid-template-columns: 120px 1fr;
+  }
+}

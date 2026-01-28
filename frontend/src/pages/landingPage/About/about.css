@@ -1,9 +1,10 @@
 /* =====================
    ABOUT / about.css
+   Organized per component/function
 ===================== */
 
 /* =====================
-   HERO
+   1) HERO SECTION (HeroSection.jsx)
 ===================== */
 
 .about-hero.hero--editorial {
@@ -14,6 +15,24 @@
 .about-hero::before {
   animation: none;
   transform: none;
+}
+
+.about-hero {
+  position: relative;
+  overflow: hidden;
+}
+
+.about-hero-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.about-hero-bg-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }
 
 .about-hero-overlay {
@@ -36,24 +55,6 @@
   color: #fff;
 }
 
-.about-hero {
-  position: relative;
-  overflow: hidden;
-}
-
-.about-hero-bg {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-}
-
-.about-hero-bg-img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
-
 .about-hero-overlay,
 .about-hero-stage,
 .about-hero-content {
@@ -62,40 +63,71 @@
 }
 
 /* =====================
-   GRID WRAPPERS + STICKY META
+   2) PAGE LAYOUT WRAPPERS (used by multiple sections)
+   - Vertical scrolling mock: single column stacks
 ===================== */
 
 .about-intro-inner,
 .about-slice-inner,
-.about-quote-inner,
 .about-team-inner {
   max-width: 1100px;
   margin: 0 auto;
   display: grid;
-  grid-template-columns: minmax(160px, 220px) 1fr;
-  gap: clamp(2.5rem, 6vw, 5.5rem);
+  grid-template-columns: 1fr; /* ✅ single column */
+  gap: 1.25rem;
   align-items: start;
 }
 
+/* Meta blocks (eyebrow) */
 .about-intro-meta,
 .about-slice-meta,
 .about-quote-meta {
-  position: sticky;
-  top: calc(72px + 2.75rem);
-  opacity: 0.75;
+  position: static;
+  top: auto;
+  opacity: 1;
+  margin-bottom: 0.25rem;
+}
+
+/* Eyebrow styling */
+.about-intro-meta .eyebrow,
+.about-slice-meta .eyebrow,
+.about-quote-meta .eyebrow {
+  display: inline-block;
+  font-weight: 800;
+  opacity: 0.9;
 }
 
 /* =====================
-   INTRO
+   3) WHY US SECTION (WhyUsSection.jsx)
 ===================== */
 
+/* Wrapper: single column so eyebrow is on top */
+.about-whyus-inner {
+  max-width: 1240px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.85rem;
+  align-items: start;
+}
+
+/* Eyebrow on top */
+.about-whyus-eyebrow {
+  display: inline-block;
+  font-weight: 800;
+  opacity: 0.85;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* Title */
 .about-intro-title {
   font-size: clamp(2rem, 3.4vw, 2.9rem);
   line-height: 1.06;
   letter-spacing: -0.035em;
-  max-width: 26ch;
 }
 
+/* Body text */
 .about-intro-text {
   margin-top: 1.2rem;
   max-width: 70ch;
@@ -103,15 +135,47 @@
   color: rgba(0, 0, 0, 0.72);
 }
 
-/* =====================
-   STATS
-===================== */
-
-.about-stats {
-  margin-top: 2rem;
+/* Text + image layout */
+.about-whyus-content {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 1.5rem;
+  grid-template-columns: 1fr;
+  gap: 1.25rem;
+  align-items: start;
+}
+
+/* Image card */
+.about-whyus-media {
+  width: 100%;
+  max-width: 480px;
+  aspect-ratio: 4 / 3;
+  border-radius: 10px;
+  overflow: hidden;
+  align-self: center;
+}
+
+.about-whyus-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+@media (min-width: 900px) {
+  .about-whyus-content {
+    grid-template-columns: minmax(0, 1fr) 460px; 
+    gap: 1.25rem;
+    align-items: start;
+  }
+
+  .about-whyus-media {
+    max-width: none;
+    width: 100%;
+    align-self: self-end; 
+  }
+
+  .about-whyus-content .about-intro-title {
+    max-width: none;
+  }
 }
 
 .about-stat {
@@ -131,71 +195,64 @@
 }
 
 /* =====================
-   QUOTE / STATEMENT
+   4) STORY / BACKGROUND (StorySection.jsx)
 ===================== */
 
-.about-quote-text {
-  margin: 0;
-  font-size: clamp(1.15rem, 2.1vw, 1.6rem);
-  line-height: 1.4;
-  letter-spacing: -0.02em;
-  color: rgba(0, 0, 0, 0.82);
-  max-width: 60ch;
+.about-background-card {
+  max-width: 1100px;
+  margin: 0 auto;
+  width: 100%;
+  background: #ededed;
+  border-radius: 18px;
+
+  padding: clamp(2rem, 3vw, 3rem);
+
+  display: grid;
+  grid-template-columns: clamp(300px, 32vw, 460px) 1fr;
+  gap: clamp(1.5rem, 3vw, 2.5rem);
+  align-items: center;
 }
 
-/* =====================
-   IMAGE BAND
-===================== */
-
-.about-image-band {
+/* IMAGE */
+.about-background-image {
   width: 100%;
-  max-width: none;
-  margin: 0;
-  border-radius: 1.1rem;
-  min-height: clamp(300px, 46vw, 540px);
+  aspect-ratio: 4 / 3;
+  border-radius: 14px;
   overflow: hidden;
-  background: #f4f4f4;
+  background: #ddd;
 }
 
-.about-image-reveal {
-  width: 100%;
-  height: 100%;
-}
-
-.about-image-parallax {
-  will-change: transform;
-  display: block;
-  height: 100%;
-  transform: scale(1.06);
-}
-
-.about-image {
+.about-background-image img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center 90%;
   display: block;
-  transform: none;
+}
+
+/* Text inside story card */
+.about-background-card .about-intro-text {
+  max-width: 72ch;
 }
 
 /* =====================
-   SLICES
+   5) GENERIC SLICE SECTION (AboutSlice.jsx)
 ===================== */
 
 .about-slice {
-  padding-top: clamp(5.5rem, 9vw, 7.5rem);
-  padding-bottom: clamp(5.5rem, 9vw, 7.5rem);
+  padding-top: 2.5rem;
+  padding-bottom: 2.5rem;
 }
 
 .about-slice + .about-slice {
-  border-top: 1px solid rgba(0, 0, 0, 0.08);
+  border-top: none;
 }
 
 .about-slice-title {
   font-size: clamp(1.75rem, 3vw, 2.5rem);
   line-height: 1.08;
   letter-spacing: -0.035em;
-  max-width: 28ch;
+  max-width: 42ch;
+  margin-top: 0.25rem;
 }
 
 .about-slice-text {
@@ -206,50 +263,81 @@
 }
 
 /* =====================
-   VALUES BULLETS
+   6) MISSION / VISION (inside AboutSlice.jsx)
 ===================== */
 
-.about-bullets {
-  margin-top: 2rem;
+.about-mv-grid {
   display: grid;
+  grid-template-columns: 1fr;
   gap: 1.25rem;
+  margin-top: 1.25rem;
 }
 
-.about-bullet {
-  border-top: 1px solid rgba(0, 0, 0, 0.12);
-  padding-top: 1rem;
+.about-mv-card {
+  border-radius: 14px;
+  padding: 1.25rem;
+
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 1.25rem;
+  align-items: center;
 }
 
-.about-bullet-k {
-  font-weight: 800;
-  letter-spacing: -0.015em;
+.about-mv-card.reverse {
+  grid-template-columns: 0.8fr 1.2fr;
 }
 
-.about-bullet-v {
-  margin-top: 0.4rem;
-  color: rgba(0, 0, 0, 0.7);
-  font-size: 0.95rem;
+/* Media */
+.about-mv-media {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #dcdcdc;
+}
+
+.about-mv-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.about-mv-card h4 {
+  margin: 0 0 0.5rem;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+}
+
+.about-mv-card p {
+  margin: 0;
   line-height: 1.7;
+  color: rgba(0, 0, 0, 0.72);
 }
 
 /* =====================
-   SAFETY / SUBTITLE
+   7) CORE VALUES (inside AboutSlice.jsx)
 ===================== */
 
-.about-safety-callout {
-  margin-top: 2rem;
-  padding: 1.75rem;
-  border-left: 2px solid rgba(0, 0, 0, 0.15);
-  background: rgba(0, 0, 0, 0.03);
+.about-values-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  margin-top: 1.25rem;
 }
 
-.about-subtitle {
-  font-weight: 800;
-  margin: 0.5rem 0 0.85rem;
+.about-value-card {
+  background: #ededed;
+  border-radius: 14px;
+  padding: 1.15rem;
+}
+
+.about-value-card.highlight {
+  border: 2px solid var(--brand);
 }
 
 /* =====================
-   TEAM / HUMANS (LIGHT)
+   8) TEAM (TeamSection.jsx)
 ===================== */
 
 .about-team {
@@ -315,114 +403,55 @@
 }
 
 /* =====================
-   STRUCTURE MATCH (CARDS ONLY)
+   9) IMAGE BAND (ImageBandSection.jsx) - if you use it later
 ===================== */
 
-/* ---------- BACKGROUND CARD ---------- */
-/* optional: if you later wrap Background in a card */
-.about-background-card {
-  background: #ededed;
-  border-radius: 14px;
-  padding: 1.5rem;
-  display: grid;
-  grid-template-columns: 160px 1fr;
-  gap: 1.5rem;
-}
-
-/* ---------- MISSION / VISION ---------- */
-
-.about-mv-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 1.5rem;
-  margin-top: 1.75rem;
-}
-
-.about-mv-card {
-  background: #ededed;
-  border-radius: 14px;
-  padding: 1.5rem;
-}
-
-/* ---------- CORE VALUES ---------- */
-
-.about-values-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1.25rem;
-  margin-top: 1.75rem;
-}
-
-.about-value-card {
-  background: #ededed;
-  border-radius: 14px;
-  padding: 1.4rem;
-}
-
-.about-value-card.highlight {
-  border: 2px solid var(--brand);
-}
-
-/* ---------- RESPONSIVE ---------- */
-
-@media (max-width: 768px) {
-  .about-mv-grid,
-  .about-values-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .about-background-card {
-    grid-template-columns: 1fr;
-  }
-}
-
-/* =====================
-   BACKGROUND SECTION (FULL-WIDTH CARD)
-===================== */
-
-.about-background-card {
-  /* ⬅️ THIS IS THE FIX */
-  grid-column: 1 / -1;
-
-  /* center within page like other sections */
-  max-width: 1100px;
-  margin-left: auto;
-  margin-right: auto;
-
+.about-image-band {
   width: 100%;
-  background: #ededed;
-  border-radius: 18px;
-
-  padding: clamp(2rem, 3vw, 3rem);
-
-  display: grid;
-  grid-template-columns: clamp(300px, 32vw, 460px) 1fr;
-  gap: clamp(1.5rem, 3vw, 2.5rem);
-  align-items: center;
-}
-
-/* IMAGE */
-.about-background-image {
-  width: 100%;
-  aspect-ratio: 4 / 3;
-  border-radius: 14px;
+  max-width: none;
+  margin: 0;
+  border-radius: 1.1rem;
+  min-height: clamp(300px, 46vw, 540px);
   overflow: hidden;
-  background: #ddd;
+  background: #f4f4f4;
 }
 
-.about-background-image img {
+.about-image-reveal {
+  width: 100%;
+  height: 100%;
+}
+
+.about-image-parallax {
+  will-change: transform;
+  display: block;
+  height: 100%;
+  transform: scale(1.06);
+}
+
+.about-image {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: center 90%;
   display: block;
+  transform: none;
 }
 
-/* TEXT */
-.about-background-card .about-intro-text {
-  max-width: 72ch;
+/* =====================
+   10) RESPONSIVE
+===================== */
+
+@media (max-width: 900px) {
+  .about-mv-card,
+  .about-mv-card.reverse {
+    grid-template-columns: 1fr;
+  }
+
+  .about-values-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
-/* MOBILE */
 @media (max-width: 768px) {
   .about-background-card {
     grid-template-columns: 1fr;
@@ -430,5 +459,9 @@
 
   .about-background-image {
     aspect-ratio: 16 / 9;
+  }
+
+  .about-stats {
+    grid-template-columns: 1fr;
   }
 }
