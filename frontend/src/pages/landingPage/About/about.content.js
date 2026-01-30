@@ -75,8 +75,8 @@ export const ABOUT = {
       label: "Mission and Vision",
       title: "Responsible operations with long-term impact.",
       body: [
-        "Our mission is to deliver high-quality backfill materials and land development services while adhering to environmental regulations in the Philippines.",
-        "Our vision is to become a highly respected, world-class land development company committed to international standards in operational excellence and environmental stewardship.",
+        "“We are a responsible land development company that provides high- quality backfill materials for land development projects and other infrastructures, including but not limited to sub-base materials like aggregates, mixed soil, and boulders. We support sustainable land development by adhering to the existing environmental regulations of the Philippines. We provide jobs for fellow Filipinos, which significantly contributes to boosting our country's economy. We are also keen to deliver excellent value to our partner communities, investors, employees, and other stakeholders. ”",
+        "“Our vision is to be a highly respected, world-class natural resource land development company committed to adhering to international standards in land development operations and environmental conservation, sustainable projects that cover converting land development sites into other useful and economic projects in the future, thus converting land development projects to future commercial and housing projects. ”",
       ],
     },
 
