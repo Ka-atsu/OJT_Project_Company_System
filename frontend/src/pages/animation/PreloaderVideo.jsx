@@ -52,7 +52,7 @@ export default function PreloaderVideo({ onDone, durationMs }) {
           onDone?.();
         }}
       >
-        <source src="/animation/InfiClibLight.mp4" type="video/mp4" />
+        <source src="/animation/ClibWhiteBg.mp4" type="video/mp4" />
         {/* <source src="/animation/InifiClib.webm" type="video/webm" /> */}
       </video>
 

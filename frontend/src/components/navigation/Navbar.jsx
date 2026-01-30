@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
+import logo from "../../assets/Images/logo.jpg";
 
 const ABOUT_MENU = [
   { label: "Mission and Vision", hash: "#about-missionVision" },
@@ -100,7 +101,8 @@ export default function Navbar() {
     >
       <div className="site-nav-inner">
         <NavLink to="/" className="site-brand">
-          CLIBERDUCHE
+          <img src={logo} alt="Cliberduche Logo" className="nav-logo" />
+          <span>CLIBERDUCHE</span>
         </NavLink>
 
         <div className="site-links">
