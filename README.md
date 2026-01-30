@@ -99,6 +99,8 @@ cd ../frontend
     - npm install axios
     - npm install react-bootstrap bootstrap
     - npm install gsap
+    - npm install react-datepicker
+    - npm install react-select
 
     Step 7 — Configure Frontend Environment (Vite)
     Create a .env file inside the frontend folder:

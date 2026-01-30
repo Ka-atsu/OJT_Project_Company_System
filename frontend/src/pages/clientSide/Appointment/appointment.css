@@ -32,29 +32,50 @@
 }
 
 /* -------------------------
-   TABLE
+   TABLE (Scroll Area)
 ------------------------- */
 
 .appointment-table-wrap {
   width: 100%;
-  overflow-x: auto; /* responsive for small screens */
+  max-height: 420px;
+  overflow: auto;
+
+  border: 1px solid rgba(0, 0, 0, 0.08);
   border-radius: 12px;
+  background: #fff;
 }
 
 .appointment-table {
   width: 100%;
-  min-width: 640px;
-  border-collapse: collapse;
+  min-width: 860px;
+  border-collapse: separate;
+  border-spacing: 0;
 }
 
 .appointment-table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+
   text-align: left;
   font-size: 0.7rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: #6b7280;
   padding: 0.85rem 0.75rem;
+
+  background: #fff;
   border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.appointment-table thead th,
+.appointment-table tbody td {
+  border-right: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.appointment-table thead th:last-child,
+.appointment-table tbody td:last-child {
+  border-right: none;
 }
 
 .appointment-table tbody td {
@@ -69,21 +90,38 @@
   border-bottom: none;
 }
 
-/* subtle hover (desktop only) */
 @media (hover: hover) {
   .appointment-table tbody tr:hover td {
     background: rgba(0, 0, 0, 0.02);
   }
 }
 
+.appointment-loading {
+  padding: 16px;
+}
+
+.appointment-empty {
+  padding: 16px;
+  opacity: 0.7;
+}
+
 /* -------------------------
-   PAGINATION
+   PAGINATION (Separate Bar)
 ------------------------- */
 
 .appointment-pagination {
   margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+
   display: flex;
+  align-items: center;
   justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+.appointment-page-meta {
+  padding: 0 10px;
 }
 
 /* -------------------------
@@ -102,6 +140,10 @@
   .appointment-actions .dash-btn.primary {
     width: 100%;
     justify-content: center;
+  }
+
+  .appointment-table-wrap {
+    max-height: 320px;
   }
 }
 
@@ -177,7 +219,6 @@
   background: rgba(0, 0, 0, 0.1);
 }
 
-/* form grid */
 .appointment-form-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -202,7 +243,6 @@
 }
 
 .form-field input,
-.form-field select,
 .form-field textarea {
   padding: 0.65rem 0.75rem;
   border-radius: 8px;
@@ -223,15 +263,36 @@
   gap: 1rem;
 }
 
-/* responsive */
+/* Meeting type spacing */
+.meeting-type {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  margin-top: 8px;
+}
+
+.radio-pill {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.meeting-hint {
+  display: block;
+  margin-top: 8px;
+}
+
+/* responsive (overlay) */
 @media (max-width: 768px) {
   .appointment-form-grid {
     grid-template-columns: 1fr;
   }
+
   .appointment-float-footer {
     flex-direction: column;
     align-items: stretch;
   }
+
   .appointment-float-footer .dash-btn.primary {
     width: 100%;
     justify-content: center;

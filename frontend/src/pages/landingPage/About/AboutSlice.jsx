@@ -1,10 +1,6 @@
 import { motion } from "framer-motion";
 import { FADE_UP, STAGGER, VIEWPORT_EARLY } from "../../../motion/constants";
-import WeeklyReport from "../../../assets/WeeklyReport.pdf";
-
-
-                                                                        // add images and buttons props
-export default function AboutSlice({ label, title, body, bullets, mvImages, images, buttons }) {
+export default function AboutSlice({ label, title, body, bullets, mvImages }) {
   const isMissionVision = label === "Mission and Vision";
   const isValues = label === "Core Values";
 

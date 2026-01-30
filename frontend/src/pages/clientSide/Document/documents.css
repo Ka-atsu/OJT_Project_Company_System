@@ -1,0 +1,235 @@
+/* =========================================================
+   DOCUMENTS — PAGE ONLY (matches your dash theme)
+========================================================= */
+
+.docs-page {
+  padding: 2rem;
+}
+
+.docs-header {
+  margin-bottom: 1.25rem;
+}
+
+/* =========================================================
+   TOOLBAR
+========================================================= */
+
+.docs-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+/* Search pill */
+.docs-search {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  background: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 12px;
+
+  padding: 0.55rem 0.75rem;
+  min-width: 260px;
+  flex: 1;
+  max-width: 420px;
+}
+
+.docs-search-icon {
+  opacity: 0.6;
+  font-size: 0.9rem;
+}
+
+/* Uses global dash-input; keep only what is needed */
+.docs-search-input {
+  border: 0;
+  background: transparent;
+  padding: 0; /* avoid double padding (dash-input already has padding) */
+  font-size: 0.85rem;
+}
+
+/* Controls */
+.docs-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.docs-control {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.docs-control-label {
+  font-size: 0.75rem;
+  color: #6b7280;
+}
+
+/* React Select wrapper */
+.docs-select-wrap {
+  min-width: 170px;
+}
+
+.docs-sort {
+  justify-content: center;
+}
+
+/* =========================================================
+   SURFACE + LIST
+========================================================= */
+
+.docs-surface {
+  background: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.docs-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.docs-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+
+  padding: 0.9rem 1rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.docs-row:last-child {
+  border-bottom: none;
+}
+
+@media (hover: hover) {
+  .docs-row:hover {
+    background: rgba(0, 0, 0, 0.02);
+  }
+}
+
+/* File meta */
+.docs-file {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  min-width: 0;
+  flex: 1;
+}
+
+.docs-badge {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+
+  background: rgba(220, 38, 38, 0.12);
+  color: #b91c1c;
+  font-weight: 800;
+  font-size: 0.7rem;
+
+  flex-shrink: 0;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.docs-file-meta {
+  min-width: 0;
+}
+
+.docs-file-name {
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: #111827;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.docs-file-sub {
+  margin-top: 0.15rem;
+  font-size: 0.75rem;
+  color: #6b7280;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  align-items: center;
+}
+
+.docs-dot {
+  opacity: 0.7;
+}
+
+/* Actions */
+.docs-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+.docs-action-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  background: rgba(0, 0, 0, 0.03);
+  cursor: pointer;
+  font-size: 0.95rem;
+}
+
+.docs-action-btn:hover {
+  background: rgba(0, 0, 0, 0.06);
+}
+
+/* Empty + footer */
+.docs-empty {
+  padding: 16px;
+  opacity: 0.7;
+}
+
+.docs-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+
+  padding: 0.8rem 1rem;
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+  flex-wrap: wrap;
+}
+
+.docs-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+.docs-page-meta {
+  padding: 0 10px;
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 768px) {
+  .docs-page {
+    padding: 1.25rem;
+  }
+
+  .docs-search {
+    max-width: 100%;
+  }
+}

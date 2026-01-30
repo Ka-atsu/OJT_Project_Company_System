@@ -1,36 +1,58 @@
-import { useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import BookAppointment from "./BookAppointment";
+import { listAppointments, createAppointment } from "./appointments.service";
 import "./appointment.css";
 
 export default function Appointment() {
   const [activeTab, setActiveTab] = useState("upcoming");
   const [open, setOpen] = useState(false);
 
-  const appointments = [
-    {
-      date: "Jan 21, 2026",
-      time: "11:00 AM",
-      project: "Random Building",
-      purpose: "Contract",
-    },
-    {
-      date: "Jan 28, 2026",
-      time: "11:00 AM",
-      project: "Random Building",
-      purpose: "Documents",
-    },
-    {
-      date: "Jan 29, 2026",
-      time: "11:00 AM",
-      project: "Random Building",
-      purpose: "Planning",
-    },
-  ];
+  const [appointments, setAppointments] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const limit = 7;
+
+  const load = useCallback(async () => {
+    setLoading(true);
+    try {
+      const res = await listAppointments({
+        status: activeTab,
+        page,
+        limit,
+      });
+
+      setAppointments(res.data);
+      setTotalPages(res.totalPages || 1);
+
+      if (page > (res.totalPages || 1)) setPage(res.totalPages || 1);
+    } finally {
+      setLoading(false);
+    }
+  }, [activeTab, page]);
+
+  useEffect(() => {
+    load();
+  }, [load]);
+
+  const handleTab = (tab) => {
+    setActiveTab(tab);
+    setPage(1);
+  };
 
   return (
     <section className="appointment-page">
-      {/* THIS IS THE “CALL” */}
-      {open && <BookAppointment onClose={() => setOpen(false)} />}
+      {open && (
+        <BookAppointment
+          onClose={() => setOpen(false)}
+          onSubmit={async (payload) => {
+            await createAppointment(payload);
+            setPage(1);
+            await load();
+          }}
+        />
+      )}
 
       <header className="appointment-header">
         <h1 className="dash-title">Appointments</h1>
@@ -47,26 +69,28 @@ export default function Appointment() {
         </button>
       </div>
 
-      {/* Tabs */}
       <div className="appointment-tabs">
         <button
-          className={`appointment-tab dash-btn ghost ${activeTab === "upcoming" ? "is-active" : ""}`}
-          onClick={() => setActiveTab("upcoming")}
+          className={`appointment-tab dash-btn ghost ${
+            activeTab === "upcoming" ? "is-active" : ""
+          }`}
+          onClick={() => handleTab("upcoming")}
           type="button"
         >
           Upcoming
         </button>
 
         <button
-          className={`appointment-tab dash-btn ghost ${activeTab === "past" ? "is-active" : ""}`}
-          onClick={() => setActiveTab("past")}
+          className={`appointment-tab dash-btn ghost ${
+            activeTab === "past" ? "is-active" : ""
+          }`}
+          onClick={() => handleTab("past")}
           type="button"
         >
           Past
         </button>
       </div>
 
-      {/* Table */}
       <div className="dash-surface">
         <div className="dash-surface-header">
           <span>
@@ -77,30 +101,92 @@ export default function Appointment() {
         </div>
 
         <div className="appointment-table-wrap">
-          <table className="appointment-table">
-            <thead>
-              <tr>
-                <th>Date</th>
-                <th>Time</th>
-                <th>Project</th>
-                <th>Purpose</th>
-              </tr>
-            </thead>
-            <tbody>
-              {appointments.map((a, i) => (
-                <tr key={i}>
-                  <td>{a.date}</td>
-                  <td>{a.time}</td>
-                  <td>{a.project}</td>
-                  <td>{a.purpose}</td>
+          {loading ? (
+            <div className="appointment-loading">Loading…</div>
+          ) : (
+            <table className="appointment-table">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Time</th>
+                  <th>Project</th>
+                  <th>Purpose</th>
+                  <th>Type</th>
+                  <th>Status / Details</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+
+              <tbody>
+                {appointments.length === 0 ? (
+                  <tr>
+                    <td colSpan={6} className="appointment-empty">
+                      {activeTab === "upcoming"
+                        ? "No upcoming appointments yet."
+                        : "No past appointments yet."}
+                    </td>
+                  </tr>
+                ) : (
+                  appointments.map((a) => {
+                    const typeLabel =
+                      a.mode === "f2f" ? "Face-to-face" : "Online";
+
+                    let detailsText = "";
+                    if (a.approvalStatus === "pending") {
+                      detailsText =
+                        "Pending — admin will confirm and send details.";
+                    } else if (a.approvalStatus === "declined") {
+                      detailsText = "Declined.";
+                    } else {
+                      if (a.mode === "online") {
+                        detailsText = a.meetingLink
+                          ? `Link: ${a.meetingLink}`
+                          : "Accepted — meeting link to be provided.";
+                      } else {
+                        detailsText = a.location
+                          ? `Location: ${a.location}`
+                          : "Accepted — location to be provided.";
+                      }
+                    }
+
+                    return (
+                      <tr key={a.id}>
+                        <td>{a.date}</td>
+                        <td>{a.time}</td>
+                        <td>{a.project}</td>
+                        <td>{a.purpose}</td>
+                        <td>{typeLabel}</td>
+                        <td>{detailsText}</td>
+                      </tr>
+                    );
+                  })
+                )}
+              </tbody>
+            </table>
+          )}
         </div>
 
         <div className="appointment-pagination">
-          <span className="dash-item-meta">1 2 3 … 67 68</span>
+          <button
+            className="dash-btn ghost"
+            type="button"
+            onClick={() => setPage((p) => Math.max(1, p - 1))}
+            disabled={page <= 1}
+          >
+            Prev
+          </button>
+
+          <span className="dash-item-meta appointment-page-meta">
+            Page {page} of {totalPages}
+          </span>
+
+          <button
+            className="dash-btn ghost"
+            type="button"
+            onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+            disabled={page >= totalPages}
+          >
+            Next
+          </button>
         </div>
       </div>
     </section>

@@ -1,9 +1,57 @@
-import "./book.appointment.css";
+import { useState } from "react";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import Select from "react-select";
 
-export default function BookAppointment({ onClose }) {
+export default function BookAppointment({ onClose, onSubmit }) {
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    dateTime: null,
+    project: "",
+    purpose: "Consultation",
+    details: "",
+    mode: "online",
+  });
+
+  const update = (key) => (e) =>
+    setForm((prev) => ({ ...prev, [key]: e.target.value }));
+
+  const handleSubmit = async () => {
+    if (!form.dateTime || !form.project) return;
+
+    const payload = {
+      name: form.name,
+      email: form.email,
+      phone: form.phone,
+      project: form.project,
+      purpose: form.purpose,
+      details: form.details,
+      mode: form.mode,
+
+      date: form.dateTime.toLocaleDateString("en-US", {
+        month: "short",
+        day: "2-digit",
+        year: "numeric",
+      }),
+      time: form.dateTime.toLocaleTimeString("en-US", {
+        hour: "2-digit",
+        minute: "2-digit",
+      }),
+
+      status: "upcoming",
+      approvalStatus: "pending",
+      meetingLink: null,
+      location: null,
+    };
+
+    await onSubmit?.(payload);
+    onClose();
+  };
+
   return (
     <section className="appointment-overlay" role="dialog" aria-modal="true">
-      {/* click outside to close */}
       <button
         className="appointment-overlay-bg"
         type="button"
@@ -25,45 +73,128 @@ export default function BookAppointment({ onClose }) {
           </button>
         </div>
 
-        <form className="appointment-form-grid">
-          {/* LEFT */}
+        <form
+          className="appointment-form-grid"
+          onSubmit={(e) => e.preventDefault()}
+        >
           <div className="form-col">
             <label className="form-field">
               <span>Name</span>
-              <input type="text" placeholder="Enter your name" />
+              <input
+                value={form.name}
+                onChange={update("name")}
+                type="text"
+                placeholder="Enter your name"
+              />
             </label>
 
             <label className="form-field">
               <span>Email</span>
-              <input type="email" placeholder="Enter your email" />
+              <input
+                value={form.email}
+                onChange={update("email")}
+                type="email"
+                placeholder="Enter your email"
+              />
             </label>
 
             <label className="form-field">
               <span>Phone Number</span>
-              <input type="tel" placeholder="Enter phone number" />
+              <input
+                value={form.phone}
+                onChange={update("phone")}
+                type="tel"
+                placeholder="Enter phone number"
+              />
             </label>
 
             <label className="form-field">
-              <span>Date</span>
-              <input type="date" />
+              <span>Date & Time</span>
+              <DatePicker
+                selected={form.dateTime}
+                onChange={(d) => setForm((p) => ({ ...p, dateTime: d }))}
+                showTimeSelect
+                timeIntervals={15}
+                dateFormat="MMM dd, yyyy h:mm aa"
+                placeholderText="Select date and time"
+                className="dash-input"
+                calendarClassName="appt-dp"
+                popperClassName="appt-dp-popper"
+                showPopperArrow={false}
+              />
             </label>
+
+            <div className="form-field">
+              <span>Meeting Type</span>
+
+              <div className="meeting-type">
+                <label className="radio-pill">
+                  <input
+                    type="radio"
+                    name="mode"
+                    value="online"
+                    checked={form.mode === "online"}
+                    onChange={update("mode")}
+                  />
+                  Online
+                </label>
+
+                <label className="radio-pill">
+                  <input
+                    type="radio"
+                    name="mode"
+                    value="f2f"
+                    checked={form.mode === "f2f"}
+                    onChange={update("mode")}
+                  />
+                  Face-to-face
+                </label>
+              </div>
+
+              <small className="dash-item-meta meeting-hint">
+                If accepted, admin will send the meeting link or location.
+              </small>
+            </div>
           </div>
 
-          {/* RIGHT */}
           <div className="form-col">
             <label className="form-field">
-              <span>Project Type</span>
-              <select>
-                <option>Project Type</option>
-                <option>Commercial</option>
-                <option>Residential</option>
-                <option>Consultation</option>
-              </select>
+              <span>Project</span>
+              <input
+                value={form.project}
+                onChange={update("project")}
+                type="text"
+                placeholder="Enter project name"
+              />
+            </label>
+
+            <label className="form-field">
+              <span>Purpose</span>
+
+              <Select
+                classNamePrefix="appt-select"
+                value={{ value: form.purpose, label: form.purpose }}
+                onChange={(opt) =>
+                  setForm((p) => ({ ...p, purpose: opt.value }))
+                }
+                options={[
+                  { value: "Consultation", label: "Consultation" },
+                  { value: "Contract", label: "Contract" },
+                  { value: "Documents", label: "Documents" },
+                  { value: "Planning", label: "Planning" },
+                ]}
+                isSearchable={false}
+              />
             </label>
 
             <label className="form-field">
               <span>Additional Details</span>
-              <textarea rows="6" placeholder="Describe your request" />
+              <textarea
+                value={form.details}
+                onChange={update("details")}
+                rows="6"
+                placeholder="Describe your request"
+              />
             </label>
           </div>
         </form>
@@ -73,7 +204,11 @@ export default function BookAppointment({ onClose }) {
             We typically respond within 24–48 hours.
           </p>
 
-          <button className="dash-btn primary" type="button" onClick={onClose}>
+          <button
+            className="dash-btn primary"
+            type="button"
+            onClick={handleSubmit}
+          >
             Submit
           </button>
         </div>

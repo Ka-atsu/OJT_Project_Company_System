@@ -7,6 +7,7 @@ import AdminAppointments from "../pages/admin/appointment/AdminAppointments";
 import AdminProjects from "../pages/admin/project/AdminProjects";
 import AdminSettings from "../pages/admin/settings/AdminSettings";
 import AdminDashboard from "../pages/admin/dashboard/AdminDashboard";
+import ClientDocuments from "../pages/clientSide/Document/ClientDocuments";
 
 export default function kentTestingRoutes() {
   return (
@@ -18,6 +19,7 @@ export default function kentTestingRoutes() {
       <Route path="projects2" element={<AdminProjects />} />
       <Route path="settings2" element={<AdminSettings />} />
       <Route path="admindash" element={<AdminDashboard />} />
+      <Route path="documents" element={<ClientDocuments />} />
     </Route>
   );
 }

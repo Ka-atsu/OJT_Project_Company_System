@@ -1,195 +1,391 @@
-/* =====================
-   Project Container
-===================== */
-.project-container {
+/* =========================================================
+   PROJECTS PAGE — PAGE ONLY
+   Uses global dash primitives from index.css
+   (cleaned: removed duplicates + made modal backend-image-ready)
+========================================================= */
+
+/* =========================================================
+   PAGE
+========================================================= */
+
+.project-page {
+  padding: 2rem;
+}
+
+.project-header {
+  margin-bottom: 1.25rem;
+}
+
+/* =========================================================
+   SURFACE
+========================================================= */
+
+.project-surface {
   background: #fff;
-  border: 1px solid #ddd;
-  border-radius: 6px;
-  padding: 0;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 12px;
+  overflow: hidden;
 }
 
-/* Header strip */
-.project-section-header {
+.project-surface-header {
+  padding: 0.9rem 1rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  font-size: 0.85rem;
+  color: #111827;
+}
+
+/* =========================================================
+   FILTERS (Tabs-like)
+========================================================= */
+
+.project-filters {
   display: flex;
-  align-items: center;
-  gap: 10px;
-  background: #e5e5e5;
-  padding: 12px 16px;
-  border-bottom: 1px solid #ccc;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  flex-wrap: wrap;
 }
 
-.project-section-header h5 {
-  margin: 0;
-  font-weight: 500;
+.project-filter.is-active {
+  background: rgba(0, 0, 0, 0.08);
+  font-weight: 600;
 }
 
-.section-icon {
-  font-size: 18px;
+/* =========================================================
+   LIST (Scroll Area)
+========================================================= */
+
+.project-list-wrap {
+  max-height: 450px;
+  overflow: auto;
 }
 
-/* Filters */
-.project-filters.centered {
-  display: flex;
-  justify-content: center;
-  gap: 40px;
-  padding: 14px 0;
-}
-
-.project-filters .filter {
-  background: none;
-  border: none;
-  font-weight: 500;
-  cursor: pointer;
-  padding-bottom: 6px;
-}
-
-.project-filters .active {
-  border-bottom: 2px solid #000;
-}
-
-/* List */
 .project-list {
-  max-height: 420px;
-  overflow-y: auto;
-  padding: 0 20px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
 }
 
-/* Scrollbar */
-.project-list::-webkit-scrollbar {
-  width: 6px;
-}
+/* Row (also supports button) */
+.project-row {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
 
-.project-list::-webkit-scrollbar-thumb {
-  background: #ccc;
-  border-radius: 4px;
-}
-
-.project-list::-webkit-scrollbar-track {
+  padding: 0.9rem 1rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
   background: transparent;
 }
 
-/* Individual Project Card - FIXED */
-.project-item.card {
-  background: #fff;
-  border-radius: 8px;
-  padding: 16px 18px;
-  display: flex; /* Flexbox container */
-  flex-direction: row; /* Explicitly set to row */
-  justify-content: space-between; /* Left and right alignment */
-  align-items: flex-start; /* Align items to top */
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
-  word-break: break-word;
-  width: 100%;
-  box-sizing: border-box;
+.project-row:last-child {
+  border-bottom: none;
 }
 
-/* Hover effect */
-.project-item.card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
+/* clickability without breaking layout */
+.project-row-btn {
+  border: 0;
+  text-align: left;
   cursor: pointer;
 }
 
-/* Left side (icon + text) */
-.project-left {
-  display: flex;
-  gap: 12px;
-  flex: 1; /* Takes available space */
-  min-width: 0; /* Allows text truncation */
+.project-row-btn:focus-visible {
+  outline: 2px solid #2b8cff;
+  outline-offset: 2px;
+  border-radius: 10px;
 }
 
-/* Icon */
-.project-icon {
-  font-size: 44px;
-  flex-shrink: 0;
-  align-self: flex-start;
-  line-height: 1; /* Prevents extra vertical space */
+@media (hover: hover) {
+  .project-row:hover {
+    background: rgba(0, 0, 0, 0.02);
+  }
 }
 
-/* Text stacked vertically */
-.project-text {
+.project-main {
+  min-width: 0;
+  flex: 1;
+}
+
+.project-meta {
   display: flex;
   flex-direction: column;
   gap: 4px;
-  flex: 1;
-  min-width: 0; /* Allows text truncation */
+  min-width: 0;
 }
 
-.project-text h6 {
+.project-title {
   margin: 0;
-  font-weight: 600;
-  font-size: 16px;
-  word-break: break-word;
-  /* Optional: Add ellipsis for very long text */
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: #111827;
+
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-.project-text small {
+.project-subtitle {
   margin: 0;
-  font-size: 14px;
-  color: #555;
-  word-break: break-word;
-}
+  font-size: 0.85rem;
+  color: #6b7280;
 
-/* Status pill on the right */
-.project-status {
-  padding: 6px 16px;
-  border-radius: 8px;
-  font-size: 12px;
-  font-weight: 600;
   white-space: nowrap;
-  flex-shrink: 0; /* Prevents shrinking */
-  text-align: center;
-  text-transform: capitalize;
-  min-width: 80px;
-  margin-left: 16px; /* Space between text and status */
-  align-self: center; /* Vertically centers with content */
-  height: fit-content;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-/* Status colors */
-.project-status.in-progress { background: #3a3a3a; color: #fff; }
-.project-status.completed { background: #28a745; color: #fff; }
-.project-status.active { background: #ffc107; color: #000; }
+/* Status pill */
+.project-status {
+  padding: 6px 12px;
+  border-radius: 10px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  white-space: nowrap;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+}
 
-/* Pagination */
+.project-status.in-progress {
+  background: rgba(17, 24, 39, 0.08);
+  color: #111827;
+}
+
+.project-status.completed {
+  background: rgba(16, 185, 129, 0.14);
+  color: #065f46;
+}
+
+.project-status.active {
+  background: rgba(245, 158, 11, 0.18);
+  color: #92400e;
+}
+
+/* Empty state */
+.project-empty {
+  padding: 16px;
+  opacity: 0.7;
+}
+
+/* =========================================================
+   PAGINATION (Separate Bar)
+========================================================= */
+
 .project-pagination {
+  padding: 0.75rem;
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+
   display: flex;
-  justify-content: center;
-  gap: 14px;
-  padding: 18px 0;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.5rem;
 }
 
-.project-pagination .page {
-  background: none;
+.project-page-meta {
+  padding: 0 10px;
+}
+
+/* =========================================================
+   PROJECT MODAL (Overlay)
+========================================================= */
+
+.project-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  display: grid;
+  place-items: center;
+  padding: 1.5rem;
+}
+
+.project-overlay-bg {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
   border: none;
   cursor: pointer;
 }
 
-.project-pagination .active {
-  background: #333;
-  color: #fff;
-  padding: 4px 10px;
-  border-radius: 6px;
+.project-modal {
+  position: relative;
+  z-index: 1000;
+  width: min(900px, 100%);
+  border-radius: 18px;
+  background: #fff;
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, 0.12),
+    0 30px 80px rgba(0, 0, 0, 0.18);
+  animation: project-pop 0.25s ease;
+  overflow: hidden;
 }
 
-/* Dash content spacing */
-.dash-content .mb-4 {
-  margin-bottom: 1.5rem;
+@keyframes project-pop {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
-.dash-title {
+.project-modal-top {
+  padding: 1rem 1.25rem;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.project-modal-title {
   margin: 0;
-  font-weight: 700;
+  font-size: 1rem;
+  font-weight: 800;
+  color: #111827;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
 }
 
-.dash-subtitle {
-  margin: 4px 0 0 0;
-  color: #555;
+.project-modal-subtitle {
+  margin: 2px 0 0;
+  font-size: 0.85rem;
+  color: #6b7280;
+}
+
+.project-modal-close {
+  border: none;
+  background: rgba(0, 0, 0, 0.06);
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.project-modal-close:hover {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.project-modal-body {
+  padding: 1.25rem;
+  display: grid;
+  gap: 1rem;
+}
+
+.project-modal-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.85rem 1rem;
+}
+
+.project-modal-item {
+  display: grid;
+  gap: 4px;
+}
+
+.project-modal-label {
+  font-size: 0.75rem;
+  color: #6b7280;
+}
+
+.project-modal-value {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #111827;
+}
+
+/* =========================================================
+   MODAL MEDIA (backend-ready images + thumbs)
+========================================================= */
+
+.project-modal-media {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.project-modal-media-main {
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 14px;
+  overflow: hidden;
+  position: relative;
+}
+
+.project-modal-img {
+  width: 100%;
+  height: 240px;
+  object-fit: cover;
+  display: block;
+}
+
+.project-modal-media-bar {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  margin-bottom: 0.6rem;
+}
+
+.project-modal-count {
+  font-weight: 800;
+  color: #111827;
+  background: rgba(17, 24, 39, 0.06);
+  padding: 0.45rem 0.85rem;
+  border-radius: 999px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  font-size: 0.85rem;
+}
+
+/* thumbs */
+.project-modal-thumbs {
+  display: flex;
+  gap: 0.5rem;
+  overflow-x: auto;
+  padding-bottom: 2px;
+}
+
+.project-modal-thumb {
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  background: #fff;
+  border-radius: 12px;
+  padding: 0;
+  cursor: pointer;
+  overflow: hidden;
+  flex: 0 0 auto;
+}
+
+.project-modal-thumb.is-active {
+  border-color: rgba(0, 0, 0, 0.25);
+}
+
+.project-modal-thumb-img {
+  width: 88px;
+  height: 56px;
+  object-fit: cover;
+  display: block;
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 768px) {
+  .project-page {
+    padding: 1.25rem;
+  }
+
+  .project-list-wrap {
+    max-height: 320px;
+  }
+
+  .project-modal-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .project-modal-img {
+    height: 190px;
+  }
+
+  .project-modal-thumb-img {
+    width: 78px;
+    height: 50px;
+  }
 }
