@@ -107,9 +107,13 @@ export const ABOUT = {
     },
 
     companyProfile: {
-      label: "Company Profile",
-      title: "A trusted partner in land development.",
-      body: "CLIBERDUCHE CORPORATION is a Philippine-based land development and materials supply company serving CALABARZON and nearby regions. The company maintains company-owned sites, experienced technical teams, and a commitment to sustainable development—positioning itself as a reliable long-term partner for infrastructure and land development projects.",
+      label: "Download Company Profile",
+      title: "Want to learn more about us? Download our Company Profile or something... It’s not a virus promise",
+      // body: "CLIBERDUCHE CORPORATION is a Philippine-based land development and materials supply company serving CALABARZON and nearby regions. The company maintains company-owned sites, experienced technical teams, and a commitment to sustainable development—positioning itself as a reliable long-term partner for infrastructure and land development projects.",
+      buttons: [
+        {label: "View PDF", href: "/path/to/company-profile.pdf", type: "view"},
+        {label: "Download PDF", href: "/path/to/company-profile.pdf", type: "download"}
+      ],
     },
   },
 

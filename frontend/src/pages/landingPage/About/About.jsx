@@ -84,7 +84,10 @@ export default function About() {
 
       companyProfile: () =>
         slices?.companyProfile ? (
-          <AboutSlice {...slices.companyProfile} />
+          <AboutSlice {...slices.companyProfile } 
+            mvImages={{ page1: ImgCBDBuilding, allPages: ImgBackhoe  //added mvImages prop
+    
+            }}/>
         ) : null,
     }),
     [slices, WHY_US_DATA, founding, team],

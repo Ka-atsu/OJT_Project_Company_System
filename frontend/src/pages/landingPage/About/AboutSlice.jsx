@@ -1,13 +1,19 @@
 import { motion } from "framer-motion";
 import { FADE_UP, STAGGER, VIEWPORT_EARLY } from "../../../motion/constants";
+import WeeklyReport from "../../../assets/WeeklyReport.pdf";
 
-export default function AboutSlice({ label, title, body, bullets, mvImages }) {
+
+                                                                        // add images and buttons props
+export default function AboutSlice({ label, title, body, bullets, mvImages, images, buttons }) {
   const isMissionVision = label === "Mission and Vision";
   const isValues = label === "Core Values";
+
   const bodyIsArray = Array.isArray(body);
 
   const missionImg = mvImages?.mission;
   const visionImg = mvImages?.vision;
+
+  
 
   return (
     <section className="section about-slice">
@@ -27,7 +33,7 @@ export default function AboutSlice({ label, title, body, bullets, mvImages }) {
             {title}
           </motion.h2>
 
-          {/* NORMAL TEXT */}
+          {/* NORMAL TEXT // Download Company Profile */}
           {!isMissionVision && !isValues && (
             <>
               {bodyIsArray ? (
@@ -36,15 +42,64 @@ export default function AboutSlice({ label, title, body, bullets, mvImages }) {
                     key={i}
                     className="about-slice-text"
                     variants={FADE_UP}
-                  >
+                  > 
                     {p}
                   </motion.p>
                 ))
-              ) : (
-                <motion.p className="about-slice-text" variants={FADE_UP}>
-                  {body}
-                </motion.p>
-              )}
+              ) : 
+              (
+                <motion.div className="about-company-profile" variants={FADE_UP}>
+                  {/* Images */}
+                  <div className="company-profile-images">
+                    <div className="company-profile-image">
+                      <img src={mvImages?.page1} alt="Company profile image 1" />
+                    </div>
+                    <div className="company-profile-image">
+                      <img src={mvImages?.allPages} alt="Company profile image 2" />
+                    </div>
+                  </div>
+
+                  {/* Buttons */}
+                  <div className="company-profile-actions">
+                    <button className="btn"
+                    >
+                      <a 
+                         href="https://drive.google.com/file/d/1P6eeeph-igHN2kz22J4ooTfXALkjd454/view?usp=sharing"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="btn"
+                      >
+                        View
+                      </a>
+                      
+                    </button>
+
+                    <button 
+                      className="btn"
+                    >
+                      <a
+                        href = "https://drive.google.com/uc?export=download&id=1P6eeeph-igHN2kz22J4ooTfXALkjd454"
+                        download="WeeklyReport.pdf"
+                        className="btn"
+                      >
+                        Download
+                      </a>
+                      
+                    </button>
+                  </div>
+                </motion.div>
+              )
+
+              //about to remove
+              
+              // (
+              //   <motion.p className="about-slice-text" variants={FADE_UP}>
+              //     {body}
+              //   </motion.p>
+              // )
+              
+              }
+
             </>
           )}
 
