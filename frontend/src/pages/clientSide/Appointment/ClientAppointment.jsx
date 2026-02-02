@@ -3,7 +3,7 @@ import BookAppointment from "./BookAppointment";
 import { listAppointments, createAppointment } from "./appointments.service";
 import "./appointment.css";
 
-export default function Appointment() {
+export default function ClientAppointment() {
   const [activeTab, setActiveTab] = useState("upcoming");
   const [open, setOpen] = useState(false);
 

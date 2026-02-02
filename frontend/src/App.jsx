@@ -15,6 +15,14 @@ import Register from "./pages/authentication/Register";
 
 import ClientDashboard from "./pages/clientSide/Dashboard/ClientDashboard";
 import ClientAccountSettings from "./pages/clientSide/AccountSettings/ClientAccountSettings";
+import ClientAppointment from "./pages/clientSide/Appointment/ClientAppointment";
+import ClientProject from "./pages/clientSide/Project/ClientProject";
+import ClientDocuments from "./pages/clientSide/Document/ClientDocuments";
+
+import AdminAppointments from "./pages/admin/appointment/AdminAppointments";
+import AdminDashboard from "./pages/admin/dashboard/AdminDashboard";
+import AdminProjects from "./pages/admin/project/AdminProjects";
+import AdminSettings from "./pages/admin/settings/AdminSettings";
 
 import warlyTestingRoutes from "./testingRoutes/warlyTestingRoutes";
 import kentTestingRoutes from "./testingRoutes/kentTestingRoutes";
@@ -72,6 +80,7 @@ export default function App() {
       <DisableScrollRestoration />
       <ScrollManager />
       <Routes>
+        {/* LANDING */}
         <Route path="/" element={<RootLayout />}>
           <Route index element={<HomeEntry />} />
           <Route path="about" element={<About />} />
@@ -80,19 +89,33 @@ export default function App() {
           <Route path="projects" element={<Projects />} />
         </Route>
 
+        {/* CLIENT DASHBOARD */}
         <Route path="/dashboard" element={<DashboardLayout />}>
           <Route index element={<ClientDashboard />} />
           <Route path="profile" element={<ClientAccountSettings />} />
+          <Route path="appointments" element={<ClientAppointment />} />
+          <Route path="documents" element={<ClientDocuments />} />
+          <Route path="projects" element={<ClientProject />} />
         </Route>
 
-        {warlyTestingRoutes()}
-        {kentTestingRoutes()}
+        {/* ADMIN (TEMP / INTERNAL) */}
+        <Route path="/admin" element={<DashboardLayout />}>
+          <Route index element={<AdminDashboard />} />
+          <Route path="appointments" element={<AdminAppointments />} />
+          <Route path="projects" element={<AdminProjects />} />
+          <Route path="settings" element={<AdminSettings />} />
+        </Route>
 
+        {/* AUTH */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
 
         {/* FALLBACK */}
         <Route path="*" element={<NotFound />} />
+
+        {/* Route tester to avoid merge conflict */}
+        {warlyTestingRoutes()}
+        {kentTestingRoutes()}
       </Routes>
     </>
   );
