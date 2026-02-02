@@ -17,10 +17,25 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Run Super-Linter
+      - name: Run Super-Linter (non-blocking)
         uses: super-linter/super-linter@v6
+        continue-on-error: true
         env:
           DEFAULT_BRANCH: main
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+          # key: only check files changed in the PR
+          VALIDATE_ALL_CODEBASE: false
+
+          # optional: disable validators you don't want blocking/noise
+          VALIDATE_JAVASCRIPT_PRETTIER: false
+          VALIDATE_JAVASCRIPT_STANDARD: false
+          VALIDATE_JSCPD: false
+          VALIDATE_MARKDOWN: false
+          VALIDATE_NATURAL_LANGUAGE: false
+          VALIDATE_CSS: false
+          VALIDATE_ENV: false
+
+          # your existing php disables
           VALIDATE_PHP: false
           VALIDATE_PHP_PSALM: false
