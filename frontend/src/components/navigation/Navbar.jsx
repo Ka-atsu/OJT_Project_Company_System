@@ -110,7 +110,13 @@ export default function Navbar() {
             <button
               type="button"
               className={`site-link nav-dd-btn ${aboutOpen ? "is-open" : ""}`}
-              onClick={() => setAboutOpen((v) => !v)}
+              onClick={() => {
+                if (location.pathname !== "/about") {
+                  navigate("/about");
+                } else {
+                  setAboutOpen((v) => !v);
+                }
+              }}
               aria-haspopup="menu"
               aria-expanded={aboutOpen}
             >

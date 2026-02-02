@@ -1,41 +1,43 @@
-import {
-  ImgConstructionSite,
-  ImgBackhoe,
-  ImgCBDBuilding,
-  ImgBackfill,
-  ImgExcavationSite,
-  ImgSiteManagement,
-} from "../../../assets/images";
+import { ImgPlan } from "../../../assets/images";
 
 export const ABOUT = {
   /* =========================================================
      HERO
   ========================================================= */
   hero: {
-    bg: ImgConstructionSite,
-    headline: "ABOUT US",
+    bg: ImgPlan,
     eyebrow: "Cliberduche Corporation",
+    headline: "About Us",
+    lede: "Your trusted partner in land development and premium construction materials across CALABARZON",
   },
 
   /* =========================================================
-     WHY US / ABOUT
-     (You can use this in About.jsx for the "whyUs" section)
+   WHY US / ABOUT
   ========================================================= */
   whyUs: {
     label: "Why Us",
-    title:
-      "A responsible land development company supplying high-quality backfill materials across CALABARZON and beyond.",
     body: [
-      "CLIBERDUCHE CORPORATION was established to address a recurring challenge in land development projects: the need for reliable sourcing, consistent material quality, and dependable delivery timelines.",
-      "From the beginning, the company set out to support projects that require scale, precision, and accountability—providing high-quality backfill materials such as sub-base, aggregates, and boulders as specified by clients.",
-      "Our company-owned land development sites are strategically located in Laguna and Cavite, Philippines, with over 14 million cubic meters of landfill and backfilling materials available to support the growing demands of the construction industry.",
-      "Operations are led by experienced engineers, site managers, and field teams with hands-on expertise in land development, materials sourcing, and site coordination—ensuring safety, quality, and efficiency at every stage.",
+      {
+        title: "Premium Quality Materials",
+        text: "CLIBERDUCHE CORPORATION provides the best quality backfill materials as specified by clients like sub-base, aggregates and boulders to interested customers in the CALABARZON area and beyond.",
+        icon: "badge",
+      },
+      {
+        title: "Strategic Locations",
+        text: "Our land development sites are located in the heart of Laguna and Cavite Provinces, Philippines, with over 14 million cubic meters of landfill / backfilling materials available.",
+        icon: "globe",
+      },
+      {
+        title: "Eco-Friendly Practices",
+        text: "We believe in sustainable and eco-friendly business ventures, following strict protocols and guidelines of the Department of Environment and Natural Resources (DENR).",
+        icon: "shield",
+      },
     ],
   },
 
   /* =========================================================
    STORY / BACKGROUND
-========================================================= */
+  ========================================================= */
   founding: {
     label: "Our Story",
     title: "Founded in 2018 to build locally, at scale.",
@@ -44,6 +46,20 @@ export const ABOUT = {
       "The founder invited close friends to join the venture, and CLIBERDUCHE CORPORATION was officially registered with the Securities and Exchange Commission on November 28, 2018.",
       "The name CLIBERDUCHE is derived from the surnames of the founder and co-founders:\nCLI — Climaco\nBER — Beronilla\nDUCHE — Piaduche",
       "As time passed, the two incorporators—Beronilla and Piaduche—pursued other interests. By mutual agreement, they officially parted ways with the company, and the founder’s spouse and brother became the new directors.",
+    ],
+  },
+
+  /* =========================================================
+  Record
+  ========================================================= */
+
+  record: {
+    label: "Our Record",
+    items: [
+      { value: "14M+", label: "Cubic meters available" },
+      { value: "2018", label: "Year established" },
+      { value: "Laguna & Cavite", label: "Operational sites" },
+      { value: "CALABARZON+", label: "Service coverage" },
     ],
   },
 
@@ -80,58 +96,54 @@ export const ABOUT = {
       ],
     },
 
-    projectsInfo: {
-      label: "Projects Information",
-      title: "From small to large commercial and industrial projects.",
-      body: "CLIBERDUCHE CORPORATION supports residential developments, commercial facilities, industrial sites, and public infrastructure projects. Our experience spans small- to large-scale operations requiring high-volume material sourcing, coordinated logistics, and strict compliance with project specifications.",
-    },
-
     coreValues: {
       label: "Core Values",
-      title: "Quality. Safety. Integrity.",
-      body: "We take pride in delivering reliable services at competitive prices while upholding the highest standards across all projects and partnerships.",
       bullets: [
         {
           k: "Quality",
-          v: "Delivering materials and services that meet client specifications and comply with local and international standards.",
+          v: "Ensures projects are of high quality and fair with local standards to be able to be competitive in the national and local market scene.",
+          icon: "quality",
         },
         {
           k: "Safety",
-          v: "Maintaining safe worksites and operations to protect personnel, partners, and surrounding communities.",
+          v: "Ensures safety at work site, safety of projects and safety of personnel before, during, and after execution.",
+          icon: "safety",
         },
         {
           k: "Integrity",
-          v: "Operating with transparency, regulatory compliance, and accountability in every transaction.",
+          v: "Ensures compliance with existing laws covering the construction industry and reliable workforce.",
+          icon: "integrity",
         },
       ],
     },
 
     companyProfile: {
       label: "Download Company Profile",
-      title: "Want to learn more about us? Download our Company Profile or something... It’s not a virus promise",
+      title:
+        "Want to learn more about us? Download our Company Profile or something... It’s not a virus promise",
       // body: "CLIBERDUCHE CORPORATION is a Philippine-based land development and materials supply company serving CALABARZON and nearby regions. The company maintains company-owned sites, experienced technical teams, and a commitment to sustainable development—positioning itself as a reliable long-term partner for infrastructure and land development projects.",
       buttons: [
-        {label: "View PDF", href: "/path/to/company-profile.pdf", type: "view"},
-        {label: "Download PDF", href: "/path/to/company-profile.pdf", type: "download"}
+        {
+          label: "View PDF",
+          href: "/path/to/company-profile.pdf",
+          type: "view",
+        },
+        {
+          label: "Download PDF",
+          href: "/path/to/company-profile.pdf",
+          type: "download",
+        },
       ],
     },
   },
 
   order: [
-    "missionVision",
-    "whyUs",
     "story",
+    "record",
+    "whyUs",
+    "missionVision",
     "coreValues",
     "team",
     "companyProfile",
   ],
-};
-
-export {
-  ImgBackhoe,
-  ImgCBDBuilding,
-  ImgBackfill,
-  ImgConstructionSite,
-  ImgExcavationSite,
-  ImgSiteManagement,
 };

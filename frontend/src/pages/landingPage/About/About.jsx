@@ -5,12 +5,16 @@ import "./about.css";
 
 import {
   ABOUT,
+} from "./about.content";
+
+import {
+  ImgSiteInspection,
+  ImgSiteManagement,
   ImgBackhoe,
   ImgCBDBuilding,
   ImgBackfill,
   ImgExcavationSite,
-  ImgSiteManagement,
-} from "./about.content";
+} from "../../../assets/images";
 
 import SectionRenderer from "../../../utils/SectionRenderer";
 import HeroSection from "./HeroSection";
@@ -18,19 +22,20 @@ import WhyUsSection from "./WhyUsSection";
 import StorySection from "./StorySection";
 import TeamSection from "./TeamSection";
 import AboutSlice from "./AboutSlice";
+import RecordsSection from "./RecordsSection";
 
 const FALLBACK_FLOW = [
-  "missionVision",
-  "whyUs",
   "story",
-  "projectsInfo",
+  "whyUs",
+  "record",
+  "missionVision",
   "coreValues",
   "team",
   "companyProfile",
 ];
 
 export default function About() {
-  const { hero, whyUs, intro, founding, team, slices, order } = ABOUT;
+  const { hero, founding, whyUs, intro, team, slices, order, record } = ABOUT;
 
   // keep these refs ONLY if HeroSection uses them internally
   const heroRef = useRef(null);
@@ -43,23 +48,6 @@ export default function About() {
 
   const registry = useMemo(
     () => ({
-      missionVision: () =>
-        slices?.missionVision ? (
-          <AboutSlice
-            {...slices.missionVision}
-            mvImages={{ mission: ImgCBDBuilding, vision: ImgBackhoe }}
-          />
-        ) : null,
-
-      whyUs: () =>
-        WHY_US_DATA ? (
-          <WhyUsSection
-            intro={WHY_US_DATA}
-            imageSrc={ImgBackhoe}
-            imageAlt="Land development and materials supply"
-          />
-        ) : null,
-
       story: () =>
         founding ? (
           <StorySection
@@ -74,6 +62,25 @@ export default function About() {
           />
         ) : null,
 
+      missionVision: () =>
+        slices?.missionVision ? (
+          <AboutSlice
+            {...slices.missionVision}
+            mvImages={{ mission: ImgCBDBuilding, vision: ImgBackhoe }}
+          />
+        ) : null,
+
+      whyUs: () =>
+        WHY_US_DATA ? (
+          <WhyUsSection
+            intro={WHY_US_DATA}
+            imageSrc={ImgSiteInspection}
+            imageAlt="Land development and materials supply"
+          />
+        ) : null,
+
+      record: () => (record ? <RecordsSection data={record} /> : null),
+
       projectsInfo: () =>
         slices?.projectsInfo ? <AboutSlice {...slices.projectsInfo} /> : null,
 
@@ -84,10 +91,13 @@ export default function About() {
 
       companyProfile: () =>
         slices?.companyProfile ? (
-          <AboutSlice {...slices.companyProfile } 
-            mvImages={{ page1: ImgCBDBuilding, allPages: ImgBackhoe  //added mvImages prop
-    
-            }}/>
+          <AboutSlice
+            {...slices.companyProfile}
+            mvImages={{
+              page1: ImgCBDBuilding,
+              allPages: ImgBackhoe,
+            }}
+          />
         ) : null,
     }),
     [slices, WHY_US_DATA, founding, team],

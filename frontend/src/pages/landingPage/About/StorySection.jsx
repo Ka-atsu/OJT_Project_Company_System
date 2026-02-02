@@ -11,8 +11,7 @@ export default function StorySection({ founding, images = [], onImgLoad }) {
         className="about-story-inner"
         variants={STAGGER}
         initial="hidden"
-        whileInView="visible"
-        viewport={VIEWPORT_EARLY}
+        animate="visible"
       >
         {/* Eyebrow on top */}
         <motion.span className="eyebrow about-story-eyebrow" variants={FADE_UP}>

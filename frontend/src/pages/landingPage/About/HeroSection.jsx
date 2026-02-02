@@ -45,6 +45,11 @@ export default function HeroSection({
               inViewOptions={{ once: true, amount: 0.6 }}
               variants={FADE_UP}
             />
+            {hero.lede && (
+              <motion.p className="about-hero-lede" variants={FADE_UP}>
+                {hero.lede}
+              </motion.p>
+            )}
           </div>
         </motion.div>
       </div>
