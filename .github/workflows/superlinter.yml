@@ -1,7 +1,6 @@
 name: Super-Linter
 
 on:
-  push:
   pull_request:
 
 permissions:
@@ -21,8 +20,6 @@ jobs:
       - name: Run Super-Linter
         uses: super-linter/super-linter@v6
         env:
-            DEFAULT_BRANCH: main
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          
-            # exclude mode: ONLY FALSE values
-            VALIDATE_PHP_PSALM: false
+          DEFAULT_BRANCH: main
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VALIDATE_PHP_PSALM: false
