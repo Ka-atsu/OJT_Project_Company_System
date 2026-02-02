@@ -39,6 +39,18 @@
   --btn-ease: 0.18s ease;
   --btn-ring-dark: rgba(0, 0, 0, 0.18);
   --btn-ring-light: rgba(255, 255, 255, 0.25);
+  /* Additional button tokens */
+  --btn-gap: 0.55rem;
+  --btn-border-width: 1px;
+  --btn-border-width-thick: 2px;
+  --btn-ring-width: 3px;
+  --btn-hover-lift: -1px;
+  --btn-hover-opacity: 0.95;
+  --btn-active-opacity: 0.92;
+  --btn-light-bg: #ffffff;
+  --btn-light-text: #000000;
+  --btn-light-border: rgba(255, 255, 255, 0.85);
+  --btn-light-hover-bg: rgba(255, 255, 255, 0.12);
 }
 
 /* =========================================================
@@ -644,7 +656,7 @@ p {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.55rem;
+  gap: var(--btn-gap);
 
   padding: var(--btn-pad-y) var(--btn-pad-x);
   border-radius: var(--btn-radius);
@@ -658,7 +670,7 @@ p {
   cursor: pointer;
   user-select: none;
 
-  border: 1px solid transparent;
+  border: var(--btn-border-width) solid transparent;
   background: transparent;
   color: inherit;
 
@@ -672,19 +684,19 @@ p {
 }
 
 .btn:hover {
-  transform: translateY(-1px);
-  opacity: 0.95;
+  transform: translateY(var(--btn-hover-lift));
+  opacity: var(--btn-hover-opacity);
 }
 
 .btn:active {
   transform: translateY(0);
-  opacity: 0.92;
+  opacity: var(--btn-active-opacity);
 }
 
 .btn:focus,
 .btn:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 3px var(--btn-ring, var(--btn-ring-dark));
+  box-shadow: 0 0 0 var(--btn-ring-width) var(--btn-ring, var(--btn-ring-dark));
 }
 
 /* Optional: disable caps */
@@ -707,7 +719,7 @@ p {
 
 .btn-outline {
   background: transparent;
-  border: 2px solid var(--brand);
+  border: var(--btn-border-width-thick) solid var(--brand);
   color: #fff;
 }
 
@@ -719,22 +731,22 @@ p {
 
 /* Light variants (hero/cta on dark images) */
 .btn-light {
-  background: #fff;
-  border-color: #fff;
-  color: #000;
+  background: var(--btn-light-bg);
+  border-color: var(--btn-light-bg);
+  color: var(--btn-light-text);
   --btn-ring: var(--btn-ring-light);
 }
 
 .btn-outline-light {
   background: transparent;
-  border-color: rgba(255, 255, 255, 0.85);
+  border-color: var(--btn-light-border);
   color: #fff;
   --btn-ring: var(--btn-ring-light);
 }
 
 .btn-outline-light:hover {
-  background: rgba(255, 255, 255, 0.12);
-  border-color: rgba(255, 255, 255, 1);
+  background: var(--btn-light-hover-bg);
+  border-color: var(--btn-light-bg);
 }
 
 /* Context-only tweaks (no duplication) */
