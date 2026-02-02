@@ -3,6 +3,8 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import Select from "react-select";
 
+import { YEARS, MONTHS } from "../../../utils/dateConstants";
+
 export default function BookAppointment({ onClose, onSubmit }) {
   const [form, setForm] = useState({
     name: "",
@@ -110,17 +112,59 @@ export default function BookAppointment({ onClose, onSubmit }) {
 
             <label className="form-field">
               <span>Date & Time</span>
+
               <DatePicker
                 selected={form.dateTime}
                 onChange={(d) => setForm((p) => ({ ...p, dateTime: d }))}
                 showTimeSelect
                 timeIntervals={15}
+                minDate={new Date()}
                 dateFormat="MMM dd, yyyy h:mm aa"
                 placeholderText="Select date and time"
                 className="dash-input"
                 calendarClassName="appt-dp"
                 popperClassName="appt-dp-popper"
                 showPopperArrow={false}
+                timeCaption="Time"
+                renderCustomHeader={({
+                  date,
+                  changeYear,
+                  changeMonth,
+                  decreaseMonth,
+                  increaseMonth,
+                }) => (
+                  <div className="appt-dp-header">
+                    <button type="button" onClick={decreaseMonth}>
+                      ‹
+                    </button>
+
+                    <select
+                      value={date.getFullYear()}
+                      onChange={(e) => changeYear(Number(e.target.value))}
+                    >
+                      {YEARS(new Date().getFullYear(), 10).map((y) => (
+                        <option key={y} value={y}>
+                          {y}
+                        </option>
+                      ))}
+                    </select>
+
+                    <select
+                      value={date.getMonth()}
+                      onChange={(e) => changeMonth(Number(e.target.value))}
+                    >
+                      {MONTHS.map((m, i) => (
+                        <option key={m} value={i}>
+                          {m}
+                        </option>
+                      ))}
+                    </select>
+
+                    <button type="button" onClick={increaseMonth}>
+                      ›
+                    </button>
+                  </div>
+                )}
               />
             </label>
 

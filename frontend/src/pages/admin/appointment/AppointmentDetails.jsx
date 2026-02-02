@@ -1,3 +1,5 @@
+import DatePicker from "react-datepicker";
+
 function Badge({ status }) {
   return <span className={`aa-badge aa-badge--${status}`}>{status}</span>;
 }
@@ -10,6 +12,8 @@ function Field({ label, children }) {
     </label>
   );
 }
+
+import { MONTHS, YEARS } from "../../../utils/dateConstants";
 
 export default function AppointmentDetails({
   selected,
@@ -67,6 +71,7 @@ export default function AppointmentDetails({
           {selected.mode === "online" ? (
             <Field label="Meeting link">
               <input
+                className="dash-input"
                 value={meetingLink}
                 onChange={(e) => setMeetingLink(e.target.value)}
               />
@@ -74,6 +79,7 @@ export default function AppointmentDetails({
           ) : (
             <Field label="Location">
               <input
+                className="dash-input"
                 value={meetingLocation}
                 onChange={(e) => setMeetingLocation(e.target.value)}
               />
@@ -82,6 +88,7 @@ export default function AppointmentDetails({
 
           <Field label="Notes">
             <input
+              className="dash-input"
               value={meetingNotes}
               onChange={(e) => setMeetingNotes(e.target.value)}
             />
@@ -93,16 +100,66 @@ export default function AppointmentDetails({
 
           <Field label="Admin note">
             <input
+              className="dash-input"
               value={actionNote}
               onChange={(e) => setActionNote(e.target.value)}
             />
           </Field>
 
-          <Field label="Reschedule">
-            <input
-              type="datetime-local"
-              value={newDateTime}
-              onChange={(e) => setNewDateTime(e.target.value)}
+          <Field label="Reschedule date & time">
+            <DatePicker
+              selected={newDateTime ? new Date(newDateTime) : null}
+              onChange={(date) =>
+                setNewDateTime(date ? date.toISOString().slice(0, 16) : "")
+              }
+              showTimeSelect
+              timeIntervals={30}
+              minDate={new Date()}
+              dateFormat="yyyy-MM-dd HH:mm"
+              className="dash-input"
+              calendarClassName="appt-dp"
+              popperClassName="appt-dp-popper"
+              showPopperArrow={false}
+              timeCaption="Time"
+              renderCustomHeader={({
+                date,
+                changeYear,
+                changeMonth,
+                decreaseMonth,
+                increaseMonth,
+              }) => (
+                <div className="appt-dp-header">
+                  <button type="button" onClick={decreaseMonth}>
+                    ‹
+                  </button>
+
+                  <select
+                    value={date.getFullYear()}
+                    onChange={(e) => changeYear(Number(e.target.value))}
+                  >
+                    {YEARS(new Date().getFullYear() - 5, 10).map((y) => (
+                      <option key={y} value={y}>
+                        {y}
+                      </option>
+                    ))}
+                  </select>
+
+                  <select
+                    value={date.getMonth()}
+                    onChange={(e) => changeMonth(Number(e.target.value))}
+                  >
+                    {MONTHS.map((m, i) => (
+                      <option key={m} value={i}>
+                        {m}
+                      </option>
+                    ))}
+                  </select>
+
+                  <button type="button" onClick={increaseMonth}>
+                    ›
+                  </button>
+                </div>
+              )}
             />
           </Field>
 
