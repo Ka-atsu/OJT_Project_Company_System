@@ -92,7 +92,7 @@ cd ../frontend
     Install Node dependencies:
         npm install
 
-    ✅ Important: You do not need to run npm install react-router-dom separately if it already exists in frontend/package.json.
+    Important: You do not need to run npm install react-router-dom separately if it already exists in frontend/package.json.
     npm install installs all dependencies listed there.
     - npm install three
     - npm install react-router-dom
