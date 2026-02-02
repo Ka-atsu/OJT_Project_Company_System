@@ -23,4 +23,10 @@ jobs:
         env:
           DEFAULT_BRANCH: main
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          FILTER_REGEX_INCLUDE: (backend/.*)
+      
+          # prevent composer install attempts
+          VALIDATE_PHP_PSALM: false
+      
+          # optional: still allow basic PHP lint
+          VALIDATE_PHP: true
+          VALIDATE_PHP_BUILTIN: true
