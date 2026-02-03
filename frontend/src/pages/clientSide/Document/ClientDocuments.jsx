@@ -187,11 +187,18 @@ export default function ClientDocuments() {
                   <div className="docs-file-meta">
                     <div className="docs-file-name">{d.name}</div>
                     <div className="docs-file-sub">
-                      <span>Type: {d.type}</span>
-                      <span className="docs-dot">•</span>
-                      <span>Shared by: {d.sharedBy}</span>
-                      <span className="docs-dot">•</span>
-                      <span>Date: {d.date}</span>
+                      <div className="doc-file-sub-categ">
+                        <span className="docs-dot">•</span>
+                        <span>Type: {d.type}</span>
+                      </div>
+                      <div className="doc-file-sub-categ">
+                        <span className="docs-dot">•</span>
+                        <span>Shared by: {d.sharedBy}</span>
+                      </div>
+                      <div className="doc-file-sub-categ">
+                        <span className="docs-dot">•</span>
+                        <span>Date: {d.date}</span>
+                      </div>
                     </div>
                   </div>
                 </div>

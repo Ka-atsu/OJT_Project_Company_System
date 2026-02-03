@@ -52,10 +52,12 @@
 }
 
 .dashboard .dash-stat-label {
-  font-size: 0.65rem;
+  font-size: 0.7rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: #6b7280;
+  margin-right: 10%;
+  font-weight: 500; 
+  color: #4a4f57;
 }
 
 .dashboard .dash-stat-value {
@@ -91,16 +93,17 @@
   border-radius: 16px;
   background: #ffffff;
   box-shadow:
-    0 1px 2px rgba(0, 0, 0, 0.03),
-    0 12px 32px rgba(0, 0, 0, 0.04);
+    0 4px 10px rgba(0, 0, 0, 0.05),
+    0 18px 40px rgba(0, 0, 0, 0.06);
 }
 
 .dashboard .dash-surface-header {
   margin-bottom: 0.75rem;
-  font-size: 0.65rem;
-  letter-spacing: 0.12em;
+  font-size: 0.7rem;
+  letter-spacing: 0.12rem;
   text-transform: uppercase;
-  color: #6b7280;
+  font-weight: bold;
+  color: #4a4f57;
 }
 
 /* -------------------------
@@ -129,11 +132,47 @@
   justify-content: space-between;
   padding: 0.5rem 0;
   font-size: 0.85rem;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 .dashboard .dash-doc:last-child {
   border-bottom: none;
+}
+
+/* -------------------------
+   DOCUMENT ACTION BUTTON
+------------------------- */
+
+.dashboard .dash-doc-action {
+  font-size: 0.75rem;
+  font-weight: 500;
+  padding: 0.35rem 0.7rem;
+  border-radius: 999px;
+  background: #e0ecfe;
+  color: #0369a1; 
+  box-shadow: 0 2px 6px rgba(3, 105, 161, 0.2);
+  border: none;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    transform 0.15s ease;
+}
+
+.dashboard .dash-doc-action:hover {
+  background: #a0cbe2;
+  color: #034d75; 
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(3, 105, 161, 0.3);
+}
+
+.dashboard .dash-doc-action:active {
+  transform: translateY(0);
+}
+
+.dashboard .dash-doc-action:focus-visible {
+  outline: 2px solid #38bdf8;
+  outline-offset: 2px;
 }
 
 /* -------------------------
@@ -171,6 +210,31 @@
   font-size: 0.85rem;
   font-weight: 500;
   color: #111827;
+}
+
+/* -------------------------
+   STATUS PILLS
+------------------------- */
+
+.dashboard .dash-status {
+  font-size: 0.7rem;
+  font-weight: 500;
+  padding: 0.35rem 0.7rem;
+  border-radius: 999px;
+  white-space: nowrap;
+  line-height: 1;
+}
+.dashboard .dash-status.success {
+  background: #d1fae5;
+  color: #047857;
+}
+.dashboard .dash-status.active {
+  background: #e0e7ff;
+  color: #4338ca;
+}
+.dashboard .dash-status.muted {
+  background: #fee2e2;
+  color: #b91c1c;
 }
 
 /* =========================================================
