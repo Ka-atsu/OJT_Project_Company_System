@@ -15,6 +15,7 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [hidden, setHidden] = useState(false);
   const [aboutOpen, setAboutOpen] = useState(false);
+  const [isTouch, setIsTouch] = useState(false);
 
   const navRef = useRef(null);
   const wrapRef = useRef(null);
@@ -49,6 +50,16 @@ export default function Navbar() {
     };
     window.addEventListener("mousedown", onDown);
     return () => window.removeEventListener("mousedown", onDown);
+  }, []);
+
+  // detect touch devices so hover behavior is disabled there
+  useEffect(() => {
+    try {
+      const touch = typeof window !== "undefined" && ("ontouchstart" in window || navigator.maxTouchPoints > 0);
+      setIsTouch(Boolean(touch));
+    } catch (e) {
+      setIsTouch(false);
+    }
   }, []);
 
   // scroll after we arrive at /about#...
@@ -106,14 +117,27 @@ export default function Navbar() {
         </NavLink>
 
         <div className="site-links">
-          <div className="nav-dd" ref={wrapRef}>
+          <NavLink to="/" className="site-link">
+            Home
+          </NavLink>
+          <div
+            className="nav-dd"
+            ref={wrapRef}
+            onMouseEnter={() => {
+              if (!isTouch) setAboutOpen(true);
+            }}
+            onMouseLeave={() => {
+              if (!isTouch) setAboutOpen(false);
+            }}
+          >
             <button
               type="button"
               className={`site-link nav-dd-btn ${aboutOpen ? "is-open" : ""}`}
               onClick={() => {
                 if (location.pathname !== "/about") {
                   navigate("/about");
-                } else {
+                } else if (isTouch) {
+                  // allow toggle on touch devices where hover isn't available
                   setAboutOpen((v) => !v);
                 }
               }}
