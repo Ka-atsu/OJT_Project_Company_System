@@ -18,8 +18,12 @@ function ProjectRow({ project, onClick }) {
     >
       <div className="project-main">
         <div className="project-meta">
-          <h6 className="project-title">{project.name}</h6>
-          <p className="project-subtitle">{project.type}</p>
+          {/* This shall be a placeholder for now, may change the icon*/}
+          <span className="dash-icon">🏠</span> 
+          <div className="project-text">
+            <h6 className="project-title">{project.name}</h6>
+            <p className="project-subtitle">{project.type}</p>
+          </div>
         </div>
       </div>
 

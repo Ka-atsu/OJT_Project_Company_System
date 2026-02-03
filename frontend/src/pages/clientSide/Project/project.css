@@ -110,10 +110,19 @@
 }
 
 .project-meta {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
+  display: flex;          
+  align-items: center;    
+  gap: 8px;              
   min-width: 0;
+}
+.project-text {
+  display: flex;          
+  flex-direction: column; 
+  min-width: 0;           
+}
+.dash-icon {
+  font-size: 2rem;       
+  flex-shrink: 0;         
 }
 
 .project-title {
