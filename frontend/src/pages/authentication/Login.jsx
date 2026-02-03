@@ -9,17 +9,17 @@ export default function Login() {
   return (
     <div className="auth">
       {/* Top logo pill */}
-      <div className="auth-brand">
-        <div className="auth-brandMark" aria-hidden="true" />
-        <div className="auth-brandText">
-          <strong>Cliberduche</strong> <span>Corporation</span>
-        </div>
-      </div>
 
       {/* Main card */}
       <div className="auth-card">
         {/* Left panel */}
         <div className="auth-left">
+          <div className="auth-brand">
+            <div className="auth-brandMark" aria-hidden="true" />
+            <div className="auth-brandText">
+              <strong>Cliberduche</strong> <span>Corporation</span>
+            </div>
+          </div>
           <h2>Welcome back</h2>
           <p className="auth-muted">
             Access your account to manage requests and projects.

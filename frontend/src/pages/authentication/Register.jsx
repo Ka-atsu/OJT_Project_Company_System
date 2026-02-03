@@ -8,12 +8,6 @@ export default function Register() {
   return (
     <div className="auth">
       {/* Top logo pill */}
-      <div className="auth-brand">
-        <div className="auth-brandMark" aria-hidden="true" />
-        <div className="auth-brandText">
-          <strong>Cliberduche</strong> <span>Corporation</span>
-        </div>
-      </div>
 
       {/* Main card (reversed layout) */}
       <div className="auth-card auth-card--reverse">
@@ -88,6 +82,13 @@ export default function Register() {
 
         {/* Right = dark panel */}
         <div className="auth-right">
+          <div className="auth-brand">
+            <div className="auth-brandMark" aria-hidden="true" />
+            <div className="auth-brandText">
+              <strong>Cliberduche</strong> <span>Corporation</span>
+            </div>
+          </div>
+
           <h2 className="auth-welcomeTitle">Welcome Back!</h2>
           <p className="auth-welcomeSub">Already have an account?</p>
 

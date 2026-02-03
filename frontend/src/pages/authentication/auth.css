@@ -1,34 +1,26 @@
 /* =====================
-   AUTH / LOGIN PAGE
+   AUTH / LOGIN + REGISTER
 ===================== */
 
 .auth {
   min-height: 100vh;
   display: flex;
-  flex-direction: column;
   align-items: center;
-  justify-content: flex-start;
-
-  padding: clamp(1.25rem, 5vh, 2.75rem) var(--pad-x);
-  gap: 1.1rem;
+  justify-content: center;
+  background: #fff;
 }
 
 /* =====================
-   BRAND PILL
+   BRAND
 ===================== */
 
 .auth-brand {
   width: min(520px, 92%);
-  background: #fff;
-  border-radius: 999px;
   padding: 12px 18px;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 12px;
-
-  border: 1px solid rgba(0, 0, 0, 0.06);
-  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.12);
 }
 
 .auth-brandMark {
@@ -44,7 +36,7 @@
 .auth-brandText {
   font-size: 1.05rem;
   letter-spacing: -0.02em;
-  color: #111;
+  color: #ffffff;
 }
 
 .auth-brandText strong {
@@ -56,55 +48,58 @@
 ===================== */
 
 .auth-card {
-  width: min(860px, 100%);
-  background: #fff;
-  border-radius: 16px;
   display: grid;
-  grid-template-columns: 1fr 1.1fr;
+  grid-template-columns: 1fr 1fr;
+  width: min(1320px, 96vw);
+  min-height: 760px;
+
+  border-radius: 18px;
   overflow: hidden;
-
-  border: 1px solid rgba(0, 0, 0, 0.06);
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.22);
-
-  min-height: 440px;
-
-  box-shadow:
-    0 12px 28px rgba(0, 0, 0, 0.14),
-    0 2px 6px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.18);
+  background: #fff;
 }
 
 /* =====================
-   LEFT PANEL
+   LEFT PANEL (Login info panel)
 ===================== */
 
 .auth-left {
-  background: #2f3a44;
   color: #fff;
-  padding: clamp(2.1rem, 4vw, 3.4rem);
+  background: radial-gradient(
+    circle at 20% 20%,
+    #1e3a8a 0%,
+    #0b2a63 55%,
+    #071f4a 100%
+  );
+  border-top-right-radius: 220px;
+  border-bottom-right-radius: 220px;
+  padding: 56px 56px;
+}
 
-  border-top-right-radius: 130px;
-  border-bottom-right-radius: 130px;
-  position: relative;
-
-  letter-spacing: -0.01em;
+.auth-left > * {
+  max-width: 420px;
 }
 
 .auth-left h2 {
+  color: #fff;
   font-size: clamp(2rem, 3vw, 2.45rem);
   font-weight: 800;
   line-height: 1.05;
   margin: 0 0 0.75rem;
 }
 
-/* your JSX now has multiple auth-muted lines
-   so we make them tighter + less repetitive */
+.auth-muted,
+.auth-why {
+  color: rgba(255, 255, 255, 0.82);
+}
+
 .auth-muted {
   opacity: 0.88;
   font-size: 0.95rem;
   margin: 0.2rem 0 0.45rem;
 }
 
-/* add breathing space only before the CTA block */
 .auth-left .auth-btnOutline {
   margin-top: 0.6rem;
 }
@@ -117,6 +112,7 @@
 }
 
 .auth-whyTitle {
+  color: #fff;
   font-weight: 800;
   margin: 0 0 0.5rem;
   letter-spacing: 0.02em;
@@ -133,15 +129,22 @@
 }
 
 /* =====================
-   RIGHT PANEL
+   RIGHT PANEL (Login form panel)
 ===================== */
 
 .auth-right {
-  padding: clamp(2rem, 4vw, 3.1rem);
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: 12px;
+  align-items: center;
+  padding: 56px 56px;
+  gap: 14px;
+}
+
+.auth-right form,
+.auth-formTitle,
+.auth-three {
+  width: min(640px, 100%);
 }
 
 /* =====================
@@ -162,18 +165,13 @@
 }
 
 .auth-input {
-  height: 40px;
-  border: 1px solid rgba(0, 0, 0, 0.18);
-  background: rgba(0, 0, 0, 0.03);
-  border-radius: 10px;
+  height: 46px;
+  border-radius: 12px;
+  background: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.14);
   padding: 0 12px;
   outline: none;
   font: inherit;
-
-  transition:
-    border-color 0.18s ease,
-    box-shadow 0.18s ease,
-    background 0.18s ease;
 }
 
 .auth-input:focus {
@@ -297,8 +295,9 @@
 
 .auth-btnSolid {
   width: 100%;
-  border: 1px solid rgba(0, 0, 0, 0.85);
-  background: #2f2f2f;
+  background: #0b2a63;
+  border: 1px solid rgba(11, 42, 99, 0.9);
+  padding: 0.95rem 1.2rem;
   color: #fff;
 }
 
@@ -308,40 +307,115 @@
 }
 
 /* =====================
-   REGISTER REVERSE CARD
+   REGISTER (REVERSE) — MATCH LOGIN
+   Left = form (white), Right = blue info panel
 ===================== */
 
 .auth-card--reverse {
-  grid-template-columns: 1.1fr 1fr;
+  grid-template-columns: 1fr 1fr;
 }
 
+/* left = white form */
 .auth-card--reverse .auth-left {
   background: #fff;
-  color: #000;
+  color: #111;
+  padding: 56px 56px;
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;
 }
 
-.auth-card--reverse .auth-right {
-  background: #2f3a44;
-  color: #fff;
-  border-top-left-radius: 160px;
-  border-bottom-left-radius: 160px;
+.auth-card--reverse .auth-left > * {
+  max-width: none; /* remove 420px clamp on form side */
 }
 
-.auth-card--reverse .auth-right .auth-btnOutline {
+.auth-card--reverse .auth-left .auth-formTitle {
+  color: #111;
+  text-align: left;
+  margin: 0 0 14px;
+  width: min(640px, 100%);
+}
+
+.auth-card--reverse .auth-left .auth-label {
+  color: rgba(0, 0, 0, 0.65);
+}
+
+.auth-card--reverse .auth-left .auth-check {
+  color: rgba(0, 0, 0, 0.75);
+}
+
+/* right = blue info panel */
+.auth-card--reverse .auth-right {
+  align-items: flex-start;
+  justify-content: flex-start;
+  padding-left: clamp(56px, 10vw, 320px);
+  gap: 14px;
+
+  background: radial-gradient(
+    circle at 20% 20%,
+    #1e3a8a 0%,
+    #0b2a63 55%,
+    #071f4a 100%
+  );
   color: #fff;
+
+  border-top-left-radius: 180px;
+  border-bottom-left-radius: 180px;
+}
+
+.auth-card--reverse .auth-right > * {
+  max-width: 420px;
+}
+
+.auth-card--reverse .auth-right .auth-brand {
+  width: 100%;
+  justify-content: flex-start;
+  margin-bottom: 22px;
+}
+
+.auth-card--reverse .auth-right .auth-brandText {
+  color: #fff;
+}
+
+/* register welcome text */
+.auth-welcomeTitle {
+  color: #fff;
+  font-size: clamp(2rem, 3vw, 2.45rem);
+  font-weight: 800;
+  line-height: 1.05;
+  margin: 8px 0 0;
+}
+
+.auth-welcomeSub {
+  margin: 6px 0 10px;
+  opacity: 0.85;
+}
+
+/* ensure why block is readable on blue */
+.auth-card--reverse .auth-right .auth-whyTitle {
+  color: #fff;
+}
+
+.auth-card--reverse .auth-right .auth-why {
+  color: rgba(255, 255, 255, 0.82);
+  margin-top: 28px;
+  font-size: 0.9rem;
+}
+
+.auth-card--reverse .auth-right .auth-why ul li {
+  margin-bottom: 10px;
+  line-height: 1.6;
 }
 
 /* =====================
-   THREE
+   THREE (Login only)
 ===================== */
 
 .auth-three {
-  width: 100%;
-  height: 220px;
-  margin: 0 auto 16px;
-  background: transparent;
+  height: 260px;
+  margin: 0 0 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .auth-three canvas {
@@ -392,6 +466,7 @@
     height: 160px;
   }
 }
+
 /* =====================
    BUTTON RESPONSIVE WRAP
 ===================== */
