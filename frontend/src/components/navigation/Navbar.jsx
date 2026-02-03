@@ -15,6 +15,7 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [hidden, setHidden] = useState(false);
   const [aboutOpen, setAboutOpen] = useState(false);
+  const [isTouch, setIsTouch] = useState(false);
 
   const navRef = useRef(null);
   const wrapRef = useRef(null);
@@ -49,6 +50,16 @@ export default function Navbar() {
     };
     window.addEventListener("mousedown", onDown);
     return () => window.removeEventListener("mousedown", onDown);
+  }, []);
+
+  // detect touch devices so hover behavior is disabled there
+  useEffect(() => {
+    try {
+      const touch = typeof window !== "undefined" && ("ontouchstart" in window || navigator.maxTouchPoints > 0);
+      setIsTouch(Boolean(touch));
+    } catch (e) {
+      setIsTouch(false);
+    }
   }, []);
 
   // scroll after we arrive at /about#...
@@ -102,20 +113,23 @@ export default function Navbar() {
       <div className="site-nav-inner">
         <NavLink to="/" className="site-brand">
           <img src={logo} alt="Cliberduche Logo" className="nav-logo" />
-          <span>CLIBERDUCHE</span>
+          <span className="brand-name"><strong>Cliberduche</strong> <span className="brand-sub">Corporation</span></span>
         </NavLink>
 
         <div className="site-links">
-          <div className="nav-dd" ref={wrapRef}>
+          <NavLink to="/" className="site-link">
+            Home
+          </NavLink>
+          <div
+            className="nav-dd"
+            ref={wrapRef}
+          >
             <button
               type="button"
               className={`site-link nav-dd-btn ${aboutOpen ? "is-open" : ""}`}
               onClick={() => {
-                if (location.pathname !== "/about") {
-                  navigate("/about");
-                } else {
-                  setAboutOpen((v) => !v);
-                }
+                navigate("/about");
+                setAboutOpen((v) => !v);
               }}
               aria-haspopup="menu"
               aria-expanded={aboutOpen}
@@ -148,9 +162,14 @@ export default function Navbar() {
           </NavLink>
         </div>
 
-        <NavLink to="/contact" className="btn btn-filled nav-btn">
-          Contact
-        </NavLink>
+        <div className="nav-actions">
+          <NavLink to="/contact" className="btn btn-filled nav-btn">
+            Contact
+          </NavLink>
+          <NavLink to="/login" className="site-link">
+            Login
+          </NavLink>
+        </div>
       </div>
     </nav>
   );

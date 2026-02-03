@@ -356,15 +356,24 @@ p {
 }
 
 .site-brand {
-  font-weight: 800;
   font-size: 0.95rem;
   letter-spacing: -0.02em;
-  color: #000;
+  color: var(--brand);
   text-decoration: none;
   display: flex;
   align-items: center;
   gap: 0.75rem;
   height: 100%;
+}
+
+.brand-name {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.brand-sub {
+  font-weight: 400;
 }
 
 .nav-logo {
@@ -380,6 +389,12 @@ p {
   gap: 2.5rem;
 }
 
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
 .site-link {
   position: relative;
   font-size: 0.72rem;
@@ -388,6 +403,9 @@ p {
   color: #000;
   text-decoration: none;
   opacity: 0.85;
+  display: inline-flex;
+  align-items: center;
+  height: 100%;
 }
 
 .site-link::after {
@@ -427,6 +445,13 @@ p {
   font-size: 0.85em;
   margin-left: 0.2rem;
   opacity: 0.75;
+  display: inline-block;
+  transition: transform 0.3s ease;
+}
+
+.nav-dd-btn.is-open .nav-dd-caret {
+  transform: rotate(180deg);
+  opacity: 1;
 }
 
 .nav-dd-menu {

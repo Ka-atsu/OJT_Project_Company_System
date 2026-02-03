@@ -5,8 +5,20 @@ import PreloaderVideo from "./preloaderVideo";
 import Home from "../landingPage/Home/Home";
 
 export default function HomeEntry() {
-  const [showIntro, setShowIntro] = useState(true);
-  const done = () => setShowIntro(false);
+  const [showIntro, setShowIntro] = useState(() => {
+    try {
+      return !localStorage.getItem("homeIntroShown");
+    } catch (e) {
+      return true;
+    }
+  });
+
+  const done = () => {
+    try {
+      localStorage.setItem("homeIntroShown", "1");
+    } catch (e) {}
+    setShowIntro(false);
+  };
 
   // lock scroll while intro is active
   useEffect(() => {
