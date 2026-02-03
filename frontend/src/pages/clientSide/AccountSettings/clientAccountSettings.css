@@ -36,7 +36,7 @@
 }
 
 .tab:hover {
-  color: rgba(0, 0, 0, 0.75);
+  color: rgba(0, 0, 0, 0.8);
 }
 
 .tab.active {
@@ -63,7 +63,7 @@
   background: #fff;
   border-radius: 12px;
   padding: 2rem;
-  border: 1px solid rgba(0, 0, 0, 0.06);
+  border: 2px solid rgba(0, 0, 0, 0.08);
 }
 
 /* =====================
@@ -92,13 +92,14 @@
 .setting-desc {
   margin-top: 0.35rem;
   font-size: 0.85rem;
-  color: rgba(0, 0, 0, 0.6);
+  color: rgba(0, 0, 0, 0.7);
 }
 
 .setting-value {
   margin-top: 0.4rem;
   font-size: 0.85rem;
-  color: rgba(0, 0, 0, 0.7);
+  font-weight: bold;
+  color: rgba(0, 0, 0, 0.75);
 }
 
 /* =====================
@@ -107,7 +108,7 @@
 
 .divider {
   height: 1px;
-  background: rgba(0, 0, 0, 0.06);
+  background: rgba(0, 0, 0, 0.1);
   margin: 2rem 0;
 }
 
@@ -117,9 +118,9 @@
 
 .account-settings .btn-outline {
   background: none;
-  outline: 1px solid #2b8cff;
+  outline: 1px solid rgba(43, 140, 255, 0.1);
   padding: 0.45rem 0.85rem;
-  border-radius: 999px;
+  border-radius: 30px;
   font-size: 0.8rem;
   cursor: pointer;
   color: #111827;
@@ -127,10 +128,20 @@
 
 .btn-danger {
   background: none;
-  border: none;
-  color: #c0392b;
+  border: 1px solid #b0b0b0; 
+  color: #d1242f;             
   font-size: 0.8rem;
+  font-weight: 500;
+  padding: 0.45rem 0.85rem;
+  border-radius: 30px;
   cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-danger:hover {
+  background: #d1242f; 
+  color: #fff;          
+  border-color: #d1242f;
 }
 
 /* =====================
@@ -148,28 +159,35 @@
 }
 
 .slider {
+  width: 42px; 
+  max-width: 100%;
   position: absolute;
   inset: 0;
-  background: rgba(0, 0, 0, 0.2);
+  background: #4d4545;
   border-radius: 999px;
+ border: 1px solid #b0b0b0;
+  transition: background 0.2s ease, border 0.2s ease;
 }
 
 .slider::before {
   content: "";
   position: absolute;
-  width: 18px;
-  height: 18px;
+  width: 16px;
+  height: 16px;
   background: #fff;
   border-radius: 50%;
-  top: 2px;
+  top: 50%;
   left: 2px;
+  transform: translateY(-50%);
   transition: transform 0.2s ease;
+  
 }
 
 .toggle input:checked + .slider {
-  background: rgba(0, 0, 0, 0.6);
+  background: #082f72;
+   border: 1px solid #082f72;
 }
 
 .toggle input:checked + .slider::before {
-  transform: translateX(20px);
+    transform: translateY(-50%) translateX(20px);
 }
