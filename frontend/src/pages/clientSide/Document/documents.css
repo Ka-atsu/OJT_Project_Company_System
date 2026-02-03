@@ -37,6 +37,9 @@
   min-width: 260px;
   flex: 1;
   max-width: 420px;
+    box-shadow:
+    0 4px 10px rgba(0, 0, 0, 0.05),
+    0 18px 40px rgba(0, 0, 0, 0.06);
 }
 
 .docs-search-icon {
@@ -90,6 +93,9 @@
   border: 1px solid rgba(0, 0, 0, 0.08);
   border-radius: 12px;
   overflow: hidden;
+    box-shadow:
+    0 4px 10px rgba(0, 0, 0, 0.05),
+    0 18px 40px rgba(0, 0, 0, 0.06);
 }
 
 .docs-list {
@@ -165,7 +171,6 @@
   gap: 0.35rem;
   align-items: center;
 }
-
 .docs-dot {
   opacity: 0.7;
 }
@@ -179,17 +184,30 @@
 }
 
 .docs-action-btn {
-  width: 36px;
+   width: 36px;
   height: 36px;
   border-radius: 10px;
   border: 1px solid rgba(0, 0, 0, 0.08);
-  background: rgba(0, 0, 0, 0.03);
+  background: #e0f2fe; /* soft sky blue background */
+  color: #0369a1; /* darker blue icon/text */
   cursor: pointer;
-  font-size: 0.95rem;
+  font-size: 1.3rem; /* slightly bigger for visibility */
+  font-weight: 300; /* bolder */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: 
+    background 0.2s ease, 
+    color 0.2s ease,
+    transform 0.15s ease,
+    box-shadow 0.2s ease;
 }
 
 .docs-action-btn:hover {
-  background: rgba(0, 0, 0, 0.06);
+  background: #0369a1; /* darker blue on hover */
+  color: #ffffff; /* icon turns white */
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(3, 105, 161, 0.3);
 }
 
 /* Empty + footer */

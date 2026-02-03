@@ -35,10 +35,14 @@
 }
 
 .appointment-tab.is-active {
-  background: rgba(0, 0, 0, 0.08);
-  font-weight: 600;
+  background: rgba(0, 0, 0, 0.1);
+  font-weight: 700;
 }
-
+.dash-surface{
+  box-shadow:
+    0 4px 10px rgba(0, 0, 0, 0.05),
+    0 18px 40px rgba(0, 0, 0, 0.06);
+}
 /* =========================
    TABLE SURFACE
    (acts like Projects list container)
@@ -80,6 +84,10 @@
 .appointment-table thead th,
 .appointment-table tbody td {
   border-right: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.appointment-table thead th{
+  font-size: 0.8rem;
 }
 
 .appointment-table thead th:last-child,

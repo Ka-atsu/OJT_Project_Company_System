@@ -25,6 +25,9 @@
   border: 1px solid rgba(0, 0, 0, 0.08);
   border-radius: 12px;
   overflow: hidden;
+    box-shadow:
+    0 4px 10px rgba(0, 0, 0, 0.05),
+    0 18px 40px rgba(0, 0, 0, 0.06);
 }
 
 .project-surface-header {
@@ -145,13 +148,13 @@
 }
 
 .project-status.in-progress {
-  background: rgba(17, 24, 39, 0.08);
-  color: #111827;
+  background: #e0e7ff; 
+  color: #4338ca;
 }
 
 .project-status.completed {
-  background: rgba(16, 185, 129, 0.14);
-  color: #065f46;
+  background: #d1fae5; 
+  color: #047857;
 }
 
 .project-status.active {
@@ -163,6 +166,23 @@
 .project-empty {
   padding: 16px;
   opacity: 0.7;
+}
+
+.project-status:hover {
+  transform: scale(1.05); 
+  transition: all 0.5s ease;
+}
+
+.project-status.in-progress:hover {
+  background: #c7d2fe;
+}
+
+.project-status.completed:hover {
+  background: #a7f3d0; 
+}
+
+.project-status.active:hover {
+  background: rgba(245, 158, 11, 0.3); 
 }
 
 /* =========================================================
