@@ -1,12 +1,21 @@
 /* =========================================================
    APPOINTMENTS PAGE — PAGE ONLY
-   Uses global dash primitives from index.css
+   Matches Projects behavior:
+   - No inner scroll containers
+   - Non-sticky table header
+   - Dashboard controls spacing
 ========================================================= */
 
+/* =========================
+   PAGE WRAPPER
+========================= */
 .appointment-page {
-  padding: 2rem;
+  padding: 0;
 }
 
+/* =========================
+   HEADER + PRIMARY ACTION
+========================= */
 .appointment-header {
   margin-bottom: 1.25rem;
 }
@@ -15,59 +24,59 @@
   margin: 0 0 1rem;
 }
 
-/* -------------------------
-   TABS
-------------------------- */
-
+/* =========================
+   TABS (FILTERS)
+========================= */
 .appointment-tabs {
   display: flex;
   gap: 0.75rem;
   margin-bottom: 1rem;
+  flex-wrap: wrap;
 }
 
-/* reuse dash-btn ghost, only add active state */
 .appointment-tab.is-active {
   background: rgba(0, 0, 0, 0.08);
   font-weight: 600;
 }
 
-/* -------------------------
-   TABLE (Scroll Area)
-------------------------- */
-
+/* =========================
+   TABLE SURFACE
+   (acts like Projects list container)
+========================= */
 .appointment-table-wrap {
   width: 100%;
-  max-height: 420px;
-  overflow: auto;
-
+  overflow: hidden;
   border: 1px solid rgba(0, 0, 0, 0.08);
   border-radius: 12px;
   background: #fff;
+  max-height: none;
 }
 
 .appointment-table {
   width: 100%;
-  min-width: 860px;
+  min-width: 0;
   border-collapse: separate;
   border-spacing: 0;
 }
 
+/* =========================
+   TABLE HEADER (NON-STICKY)
+========================= */
 .appointment-table thead th {
-  position: sticky;
-  top: 0;
-  z-index: 2;
-
+  position: static;
   text-align: left;
   font-size: 0.7rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: #6b7280;
   padding: 0.85rem 0.75rem;
-
   background: #fff;
   border-bottom: 1px solid rgba(0, 0, 0, 0.08);
 }
 
+/* =========================
+   TABLE BODY
+========================= */
 .appointment-table thead th,
 .appointment-table tbody td {
   border-right: 1px solid rgba(0, 0, 0, 0.06);
@@ -96,6 +105,9 @@
   }
 }
 
+/* =========================
+   TABLE STATES
+========================= */
 .appointment-loading {
   padding: 16px;
 }
@@ -105,15 +117,13 @@
   opacity: 0.7;
 }
 
-/* -------------------------
-   PAGINATION (Separate Bar)
-------------------------- */
-
+/* =========================
+   PAGINATION
+========================= */
 .appointment-pagination {
   margin-top: 0.75rem;
   padding-top: 0.75rem;
   border-top: 1px solid rgba(0, 0, 0, 0.08);
-
   display: flex;
   align-items: center;
   justify-content: flex-end;
@@ -124,17 +134,12 @@
   padding: 0 10px;
 }
 
-/* -------------------------
-   RESPONSIVE
-------------------------- */
-
+/* =========================
+   RESPONSIVE (PAGE)
+========================= */
 @media (max-width: 768px) {
   .appointment-page {
-    padding: 1.25rem;
-  }
-
-  .appointment-tabs {
-    flex-wrap: wrap;
+    padding: 0;
   }
 
   .appointment-actions .dash-btn.primary {
@@ -142,15 +147,18 @@
     justify-content: center;
   }
 
-  .appointment-table-wrap {
-    max-height: 320px;
+  .appointment-table tbody td {
+    white-space: normal;
   }
 }
 
 /* =========================================================
-   APPOINTMENT FLOATING FORM (Overlay)
+   APPOINTMENT FLOATING FORM (OVERLAY)
 ========================================================= */
 
+/* =========================
+   OVERLAY SHELL
+========================= */
 .appointment-overlay {
   position: fixed;
   inset: 0;
@@ -168,6 +176,9 @@
   cursor: pointer;
 }
 
+/* =========================
+   MODAL CARD
+========================= */
 .appointment-float {
   position: relative;
   z-index: 1000;
@@ -192,6 +203,9 @@
   }
 }
 
+/* =========================
+   MODAL HEADER
+========================= */
 .appointment-float-top {
   display: flex;
   align-items: center;
@@ -212,13 +226,15 @@
   height: 36px;
   border-radius: 10px;
   cursor: pointer;
-  font-size: 1rem;
 }
 
 .appointment-close:hover {
   background: rgba(0, 0, 0, 0.1);
 }
 
+/* =========================
+   FORM LAYOUT
+========================= */
 .appointment-form-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -255,6 +271,9 @@
   resize: none;
 }
 
+/* =========================
+   MODAL FOOTER
+========================= */
 .appointment-float-footer {
   margin-top: 1.5rem;
   display: flex;
@@ -263,7 +282,9 @@
   gap: 1rem;
 }
 
-/* Meeting type spacing */
+/* =========================
+   MEETING TYPE
+========================= */
 .meeting-type {
   display: flex;
   gap: 16px;
@@ -282,7 +303,9 @@
   margin-top: 8px;
 }
 
-/* responsive (overlay) */
+/* =========================
+   RESPONSIVE (MODAL)
+========================= */
 @media (max-width: 768px) {
   .appointment-form-grid {
     grid-template-columns: 1fr;
