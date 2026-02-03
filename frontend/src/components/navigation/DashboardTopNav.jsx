@@ -1,6 +1,33 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
+import { useState, useMemo } from "react";
+import { logout as logoutReq } from "../../pages/authentication/auth.service";
 
 export default function DashboardTopNav() {
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+
+  const user = useMemo(() => {
+    try {
+      return JSON.parse(localStorage.getItem("user") || "null");
+    } catch {
+      return null;
+    }
+  }, []);
+
+  const handleLogout = async () => {
+    setLoading(true);
+    try {
+      await logoutReq();
+    } catch (e) {
+      // even if backend fails, still clear local auth
+      console.error(e);
+    } finally {
+      localStorage.removeItem("user");
+      setLoading(false);
+      navigate("/login");
+    }
+  };
+
   return (
     <header className="dash-topnav">
       <div className="dash-topnav-inner">
@@ -18,10 +45,16 @@ export default function DashboardTopNav() {
             My account
           </NavLink>
 
-          <button className="dash-logout">Logout</button>
+          <button
+            className="dash-logout"
+            type="button"
+            onClick={handleLogout}
+            disabled={loading}
+          >
+            {loading ? "Logging out..." : "Logout"}
+          </button>
         </div>
       </div>
     </header>
   );
 }
-  
