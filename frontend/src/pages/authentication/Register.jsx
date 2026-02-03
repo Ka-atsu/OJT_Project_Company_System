@@ -1,34 +1,69 @@
 import { useState } from "react";
 import "./auth.css";
 import { useNavigate } from "react-router-dom";
+import { register as registerReq } from "./auth.service";
 
 export default function Register() {
   const [showPw, setShowPw] = useState(false);
   const navigate = useNavigate();
+
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [pw, setPw] = useState("");
+  const [pw2, setPw2] = useState("");
+
+  const [loading, setLoading] = useState(false);
+  const [err, setErr] = useState("");
+
   return (
     <div className="auth">
-      {/* Top logo pill */}
-
-      {/* Main card (reversed layout) */}
       <div className="auth-card auth-card--reverse">
-        {/* Left = form (light) */}
         <div className="auth-left">
           <h2 className="auth-formTitle">Signup</h2>
+          {err && <p className="auth-error">{err}</p>}
 
           <form
-            onSubmit={(e) => {
+            onSubmit={async (e) => {
               e.preventDefault();
-              // TODO: handle register
+              setErr("");
+
+              if (pw !== pw2) return setErr("Passwords do not match.");
+
+              try {
+                setLoading(true);
+                const user = await registerReq(name, email, pw, pw2);
+                localStorage.setItem("user", JSON.stringify(user));
+                navigate("/dashboard");
+              } catch (e2) {
+                setErr(
+                  e2?.response?.data?.message ||
+                    "Register failed. Check your inputs.",
+                );
+              } finally {
+                setLoading(false);
+              }
             }}
           >
             <label className="auth-field">
               <span className="auth-label">Name</span>
-              <input className="auth-input" type="text" required />
+              <input
+                className="auth-input"
+                type="text"
+                required
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+              />
             </label>
 
             <label className="auth-field">
               <span className="auth-label">E-mail address</span>
-              <input className="auth-input" type="email" required />
+              <input
+                className="auth-input"
+                type="email"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
             </label>
 
             <label className="auth-field">
@@ -38,6 +73,8 @@ export default function Register() {
                   className="auth-input"
                   type={showPw ? "text" : "password"}
                   required
+                  value={pw}
+                  onChange={(e) => setPw(e.target.value)}
                 />
                 <button
                   type="button"
@@ -66,21 +103,21 @@ export default function Register() {
                 className="auth-input"
                 type={showPw ? "text" : "password"}
                 required
+                value={pw2}
+                onChange={(e) => setPw2(e.target.value)}
               />
             </label>
 
-            <label className="auth-check">
-              <input type="checkbox" />
-              <span>Remember me</span>
-            </label>
-
-            <button className="auth-btn auth-btnSolid" type="submit">
-              Create account
+            <button
+              className="auth-btn auth-btnSolid"
+              type="submit"
+              disabled={loading}
+            >
+              {loading ? "Creating..." : "Create account"}
             </button>
           </form>
         </div>
 
-        {/* Right = dark panel */}
         <div className="auth-right">
           <div className="auth-brand">
             <div className="auth-brandMark" aria-hidden="true" />
@@ -99,14 +136,6 @@ export default function Register() {
           >
             Login
           </button>
-
-          <div className="auth-why">
-            <p className="auth-whyTitle">Why log in?</p>
-            <ul>
-              <li>Schedule on visit site</li>
-              <li>I dunno what other benefits is there???</li>
-            </ul>
-          </div>
         </div>
       </div>
     </div>
