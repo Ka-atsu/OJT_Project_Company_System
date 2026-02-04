@@ -12,6 +12,7 @@ export function useSheetCoverPin({
   heroPinDuration = "100%",
   heroFadeTo = 0.18,
   coverMultiplier = 0.5,
+  enableCoverPin = true,
 }) {
   useLayoutEffect(() => {
     if (
@@ -47,36 +48,46 @@ export function useSheetCoverPin({
       });
 
       // ===== PRIMARY → SECONDARY COVER =====
-      const getCoverPx = () => {
-        const v = getComputedStyle(document.documentElement)
-          .getPropertyValue("--sheet-cover")
-          .trim();
-        const n = parseFloat(v);
-        return Number.isFinite(n) ? n : 160;
-      };
+      if (enableCoverPin) {
+        const getCoverPx = () => {
+          const v = getComputedStyle(document.documentElement)
+            .getPropertyValue("--sheet-cover")
+            .trim();
+          const n = parseFloat(v);
+          return Number.isFinite(n) ? n : 160;
+        };
 
-      ScrollTrigger.create({
-        trigger: primaryRef.current,
-        start: () => `bottom bottom+=${getCoverPx() * coverMultiplier}`,
-        endTrigger: secondaryRef.current,
-        end: "top top",
-        pin: primaryRef.current,
-        pinSpacing: false,
-        anticipatePin: 1,
-        invalidateOnRefresh: true,
-      });
+        ScrollTrigger.create({
+          trigger: primaryRef.current,
+          start: () => {
+            const hx = ScrollTrigger.getById("primaryHX");
+            const offset = getCoverPx() * coverMultiplier;
 
-      // Optional dim as secondary approaches
-      gsap.to(primaryRef.current, {
-        opacity: 0.55,
-        ease: "none",
-        scrollTrigger: {
-          trigger: secondaryRef.current,
-          start: "top bottom",
+            // ✅ start ONLY after horizontal scroll finishes
+            if (hx?.end) return hx.end + offset;
+
+            // fallback (if hx not ready for some reason)
+            return `bottom bottom+=${offset}`;
+          },
+          endTrigger: secondaryRef.current,
           end: "top top",
-          scrub: true,
-        },
-      });
+          pin: primaryRef.current,
+          pinSpacing: false,
+          anticipatePin: 1,
+          invalidateOnRefresh: true,
+        });
+
+        gsap.to(primaryRef.current, {
+          opacity: 0.55,
+          ease: "none",
+          scrollTrigger: {
+            trigger: secondaryRef.current,
+            start: "top bottom",
+            end: "top top",
+            scrub: true,
+          },
+        });
+      }
     });
 
     return () => ctx.revert();
@@ -88,5 +99,6 @@ export function useSheetCoverPin({
     heroPinDuration,
     heroFadeTo,
     coverMultiplier,
+    enableCoverPin,
   ]);
 }
