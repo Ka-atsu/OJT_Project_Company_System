@@ -3,9 +3,10 @@ import { useRef } from "react";
 import { motion } from "framer-motion";
 import { VIEWPORT, EASE, FADE_UP } from "../../../motion/constants";
 import { useSheetCoverPin } from "../../../hooks/useSheetCoverPin";
-import { ServicesSection } from "./ServicesSection";
 import { SERVICES } from "./services.content";
 import { useServicesCardScrollFx } from "./useServicesCardScrollFx";
+import { usePrimaryHorizontalScrollFx } from "./usePrimaryHorizontalScrollFx";
+import { ServicesSection } from "./ServicesSection";
 
 export default function Services() {
   const { hero, blocks, primary, secondary } = SERVICES;
@@ -14,15 +15,17 @@ export default function Services() {
   const heroPinRef = useRef(null);
   const primaryRef = useRef(null);
   const secondaryRef = useRef(null);
-
   const pageRef = useRef(null);
+
   useServicesCardScrollFx(pageRef);
+  usePrimaryHorizontalScrollFx(primaryRef);
 
   useSheetCoverPin({
     heroStageRef,
     heroPinRef,
     primaryRef,
     secondaryRef,
+    enableCoverPin: false,
   });
 
   return (

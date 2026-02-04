@@ -17,7 +17,6 @@ export function ServiceCardItem({ i, title, desc, tags, image }) {
               className="services-image-wrap"
               style={{ "--img": `url(${image})` }}
             >
-              {/* NEW: black cover */}
               <div className="services-image-cover" aria-hidden="true" />
 
               <img src={image} alt={title} className="services-image" />
