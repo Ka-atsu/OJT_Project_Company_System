@@ -34,6 +34,8 @@ function ProjectRow({ project, onClick }) {
 
 function ProjectModal({ project, onClose }) {
   const [activeImg, setActiveImg] = useState(0);
+  const [showFull, setShowFull] = useState(false);
+  
 
   if (!project) return null;
 
@@ -111,11 +113,24 @@ function ProjectModal({ project, onClose }) {
             </div>
 
             <div className="project-modal-media-main">
-              <img
+              {/* <img
                 className="project-modal-img"
                 src={mainSrc}
                 alt={`${project.name} progress`}
-              />
+              /> */}
+
+              <button
+                type="button"
+                className="project-modal-img-btn"
+                onClick={() => setShowFull(true)}
+                aria-label="View full image"
+              >
+                <img
+                  className="project-modal-img"
+                  src={mainSrc}
+                  alt={`${project.name} progress`}
+                />
+              </button>
             </div>
 
             {images.length > 1 && (
@@ -141,7 +156,33 @@ function ProjectModal({ project, onClose }) {
             )}
           </div>
         </div>
-      </div>
+
+      </div>{showFull && (
+          <div className="image-lightbox" role="dialog" aria-modal="true">
+            <button
+              className="image-lightbox-bg"
+              type="button"
+              onClick={() => setShowFull(false)}
+              aria-label="Close image preview"
+            />
+
+            <img
+              className="image-lightbox-img"
+              src={mainSrc}
+              alt={`${project.name} full view`}
+            />
+
+            <button
+              className="image-lightbox-close"
+              type="button"
+              onClick={() => setShowFull(false)}
+              aria-label="Close"
+            >
+              ✕
+            </button>
+          </div>
+        )}
+        
     </section>
   );
 }
