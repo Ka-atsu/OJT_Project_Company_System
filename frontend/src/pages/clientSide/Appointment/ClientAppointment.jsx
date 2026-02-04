@@ -59,15 +59,6 @@ export default function ClientAppointment() {
         <p className="dash-subtitle">Manage schedule and consultations.</p>
       </header>
 
-      <div className="appointment-actions">
-        <button
-          className="dash-btn primary"
-          type="button"
-          onClick={() => setOpen(true)}
-        >
-          + Schedule New Appointment
-        </button>
-      </div>
 
       <div className="appointment-tabs">
         <button
@@ -89,6 +80,16 @@ export default function ClientAppointment() {
         >
           Past
         </button>
+
+        <div className="appointment-actions">
+        <button
+          className="dash-btn primary"
+          type="button"
+          onClick={() => setOpen(true)}
+        >
+          + Schedule New Appointment
+        </button>
+      </div>
       </div>
 
       <div className="dash-surface">

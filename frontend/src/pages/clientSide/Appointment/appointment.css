@@ -21,7 +21,8 @@
 }
 
 .appointment-actions {
-  margin: 0 0 1rem;
+  margin-left: auto;
+   margin-bottom: 1rem;
 }
 
 /* =========================
@@ -153,6 +154,7 @@
   .appointment-actions .dash-btn.primary {
     width: 100%;
     justify-content: center;
+    
   }
 
   .appointment-table tbody td {
