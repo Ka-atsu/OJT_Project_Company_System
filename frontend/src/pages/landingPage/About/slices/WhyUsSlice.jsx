@@ -1,5 +1,6 @@
+// src/.../about/slices/WhyUsSlice.jsx
 import { motion } from "framer-motion";
-import { FADE_UP, STAGGER, VIEWPORT_EARLY } from "../../../motion/constants";
+import { FADE_UP, STAGGER, VIEWPORT_EARLY } from "../../../../motion/constants";
 
 const ICONS = {
   badge: (
@@ -27,8 +28,9 @@ const ICONS = {
   ),
 };
 
-export default function WhyUsSection({
-  intro,
+export default function WhyUsSlice({
+  label,
+  body,
   eyebrowOverride = null,
   imageSrc,
   imageAlt = "Why Us",
@@ -42,15 +44,13 @@ export default function WhyUsSection({
         whileInView="visible"
         viewport={VIEWPORT_EARLY}
       >
-        {/* Eyebrow ONLY */}
         <motion.span className="eyebrow about-whyus-eyebrow" variants={FADE_UP}>
-          {eyebrowOverride ?? intro.label}
+          {eyebrowOverride ?? label}
         </motion.span>
 
         <div className="about-whyus-content">
-          {/* LEFT: Feature box */}
           <div className="about-whyus-box">
-            {intro.body.map((item, i) => (
+            {(body ?? []).map((item, i) => (
               <motion.div
                 key={i}
                 className="about-whyus-item"
@@ -66,7 +66,6 @@ export default function WhyUsSection({
             ))}
           </div>
 
-          {/* RIGHT: Image */}
           {imageSrc && (
             <motion.div className="about-whyus-media" variants={FADE_UP}>
               <img src={imageSrc} alt={imageAlt} />

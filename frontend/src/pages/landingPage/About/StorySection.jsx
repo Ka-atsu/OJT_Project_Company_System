@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import TypewriterText from "../../../motion/TypewriterText";
 import { FADE_UP, STAGGER, VIEWPORT_EARLY } from "../../../motion/constants";
 
-export default function StorySection({ founding, images = [], onImgLoad }) {
+export default function StorySection({ story, images = [], onImgLoad }) {
   const tiles = images.slice(0, 5);
 
   return (
@@ -15,7 +15,7 @@ export default function StorySection({ founding, images = [], onImgLoad }) {
       >
         {/* Eyebrow on top */}
         <motion.span className="eyebrow about-story-eyebrow" variants={FADE_UP}>
-          {founding.label}
+          {story.label}
         </motion.span>
 
         {/* Card (collage left, text right) */}
@@ -30,7 +30,7 @@ export default function StorySection({ founding, images = [], onImgLoad }) {
                 >
                   <img
                     src={src}
-                    alt={`${founding.label} image ${i + 1}`}
+                    alt={`${story.label} image ${i + 1}`}
                     onLoad={onImgLoad}
                   />
                 </div>
@@ -43,14 +43,14 @@ export default function StorySection({ founding, images = [], onImgLoad }) {
             <TypewriterText
               as={motion.h2}
               className="about-story-title"
-              text={founding.title}
+              text={story.title}
               start="inView"
               speed={14}
               inViewOptions={VIEWPORT_EARLY}
               variants={FADE_UP}
             />
 
-            {founding.body.map((p, i) => {
+            {story.body.map((p, i) => {
               const isStack = typeof p === "string" && p.includes("\n");
 
               return (
