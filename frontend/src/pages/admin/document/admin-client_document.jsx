@@ -2,44 +2,137 @@ import { useEffect, useMemo, useState } from "react";
 import Select from "react-select";
 import "./client-documents.css";
 
-// backend-ready: later replace this with service call
-const mockDocs = [
-  { id: 1, name: "Contract Agreement.pdf", type: "Contract", sharedBy: "Cliberduche Corp.", date: "Jan. 20, 2026", fileUrl: null },
-  { id: 2, name: "Purchase Order #123.pdf", type: "Purchase Order", sharedBy: "Cliberduche Corp.", date: "Jan. 20, 2026", fileUrl: null },
-  { id: 3, name: "Building Plan.pdf", type: "Contract", sharedBy: "Cliberduche Corp.", date: "Jan. 20, 2026", fileUrl: null },
-  { id: 4, name: "Project Report.pdf", type: "Report", sharedBy: "Cliberduche Corp.", date: "Jan. 20, 2026", fileUrl: null },
-];
-
-const DOC_TYPES = ["All Types", "Contract", "Purchase Order", "Report", "Plan"];
+// Document types, clients, and names for random generation
+const DOC_TYPES = ["Contract", "Purchase Order", "Report", "Plan", "Invoice"];
+const CLIENTS = ["Cliberduche Corp.", "Acme Inc.", "Globex Ltd.", "Umbrella Co.", "Wayne Enterprises"];
+const NAMES = ["Agreement", "Invoice", "Report", "Plan", "Proposal", "Budget", "Timeline", "Summary"];
 const DATE_RANGES = ["Last 3 Months", "Last 6 Months", "This Year", "All Time"];
+
+// helpers
+const random = (arr) => arr[Math.floor(Math.random() * arr.length)];
+const randomDate = () => {
+  const month = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  const m = random(month);
+  const d = Math.floor(Math.random() * 28) + 1; // 1-28
+  const y = Math.floor(Math.random() * 8) + 2018; // 2018-2026
+  return `${m}. ${d}, ${y}`;
+};
+
+// generate 50 random mock documents
+const mockDocs = Array.from({ length: 50 }, (_, i) => {
+  const type = random(DOC_TYPES);
+  const name = `${random(NAMES)}${type === "Invoice" ? ` #${Math.floor(Math.random() * 500 + 1)}` : ""}.pdf`;
+  return {
+    id: i + 1,
+    name,
+    type,
+    sharedBy: random(CLIENTS),
+    date: randomDate(),
+    fileUrl: null,
+  };
+});
+
+const DOC_TYPES_ALL = ["All Types", ...DOC_TYPES];
 const toOptions = (arr) => arr.map((v) => ({ value: v, label: v }));
 
-export default function ClientDocuments( ) {
+export default function ClientDocuments() {
   const [q, setQ] = useState("");
   const [type, setType] = useState("All Types");
-  const [dateRange, setDateRange] = useState("Last 3 Months");
+  const [dateRange, setDateRange] = useState("All Time");
   const [sort, setSort] = useState("newest");
   const [page, setPage] = useState(1);
   const limit = 6;
-
   const [docs, setDocs] = useState([]);
 
   useEffect(() => {
     setDocs(mockDocs);
+    setSort("newest");
   }, []);
 
-  const filtered = useMemo(() => {
-    let data = [...docs];
+    const filtered = useMemo(() => {
+        let data = [...docs];
 
-    if (type !== "All Types") data = data.filter((d) => d.type.toLowerCase() === type.toLowerCase());
-    if (q.trim()) data = data.filter((d) => d.name.toLowerCase().includes(q.trim().toLowerCase()));
-    if (sort === "oldest") data = [...data].reverse();
+        // Filter by type
+        if (type !== "All Types") {
+            data = data.filter((d) => d.type.toLowerCase() === type.toLowerCase());
+        }
 
-    return data;
-  }, [docs, q, type, sort]);
+        // Filter by search query
+        if (q.trim()) {
+            data = data.filter((d) => d.name.toLowerCase().includes(q.trim().toLowerCase()));
+        }
 
-  const totalPages = Math.max(1, Math.ceil(filtered.length / limit));
-  const pageDocs = useMemo(() => filtered.slice((page - 1) * limit, (page - 1) * limit + limit), [filtered, page]);
+        // Filter by date range
+        if (dateRange !== "All Time") {
+            const now = new Date();
+            data = data.filter((d) => {
+            const parts = d.date.replace(",", "").split(" "); // e.g., ["Jan.", "12", "2021"]
+            const monthMap = {
+                    "Jan.": 0,
+                    "Feb.": 1,
+                    "Mar.": 2,
+                    "Apr.": 3,
+                    "May": 4,
+                    "Jun.": 5,
+                    "Jul.": 6,
+                    "Aug.": 7,
+                    "Sep.": 8,
+                    "Oct.": 9,
+                    "Nov.": 10,
+                    "Dec.": 11
+                };
+            const docDate = new Date(parseInt(parts[2]), monthMap[parts[0]], parseInt(parts[1]));
+
+            if (dateRange === "Last 3 Months") {
+                const cutoff = new Date(now);
+                cutoff.setMonth(now.getMonth() - 3);
+                return docDate >= cutoff;
+            }
+            if (dateRange === "Last 6 Months") {
+                const cutoff = new Date(now);
+                cutoff.setMonth(now.getMonth() - 6);
+                return docDate >= cutoff;
+            }
+            if (dateRange === "This Year") {
+                return docDate.getFullYear() === now.getFullYear();
+            }
+
+            return true;
+            });
+        }
+
+        // Sorting
+        data.sort((a, b) => {
+            const parse = (str) => {
+            const parts = str.replace(",", "").split(" ");
+            const monthMap = {
+                    "Jan.": 0,
+                    "Feb.": 1,
+                    "Mar.": 2,
+                    "Apr.": 3,
+                    "May": 4,
+                    "Jun.": 5,
+                    "Jul.": 6,
+                    "Aug.": 7,
+                    "Sep.": 8,
+                    "Oct.": 9,
+                    "Nov.": 10,
+                    "Dec.": 11
+                };
+            return new Date(parseInt(parts[2]), monthMap[parts[0]], parseInt(parts[1]));
+            };
+            return sort === "newest" ? parse(b.date) - parse(a.date) : parse(a.date) - parse(b.date);
+        });
+
+        return data;
+    }, [docs, q, type, dateRange, sort]);
+
+
+    const totalPages = Math.max(1, Math.ceil(filtered.length / limit));
+  const pageDocs = useMemo(
+    () => filtered.slice((page - 1) * limit, (page - 1) * limit + limit),
+    [filtered, page]
+  );
 
   const toggleSort = () => {
     setSort((s) => (s === "newest" ? "oldest" : "newest"));
@@ -48,7 +141,7 @@ export default function ClientDocuments( ) {
 
   if (page > totalPages) setPage(totalPages);
 
-  const typeOptions = useMemo(() => toOptions(DOC_TYPES), []);
+  const typeOptions = useMemo(() => toOptions(DOC_TYPES_ALL), []);
   const dateOptions = useMemo(() => toOptions(DATE_RANGES), []);
 
   const typeValue = useMemo(() => typeOptions.find((o) => o.value === type) || typeOptions[0], [typeOptions, type]);
@@ -72,29 +165,26 @@ export default function ClientDocuments( ) {
           <input
             className="dash-input docs-search-input"
             value={q}
-            onChange={(e) => { setQ(e.target.value); setPage(1); }}
+            onChange={(e) => {
+              setQ(e.target.value);
+              setPage(1);
+            }}
             type="text"
             placeholder="Search Document"
           />
-
         </div>
 
-        
         <div className="docs-btn-group">
-           
-           <div className="docs-upload-button" onClick={() => alert("Upload Document (not implemented)")}>
-                Upload
-            </div>
-            
-                {/* Update button below the list */}
-            <div className="docs-update-wrapper">
-                <button className="docs-update-btn" type="button" onClick={handleUpdate}>
-                    Update
-                </button>
-            </div>
+          <div className="docs-upload-button" onClick={() => alert("Upload Document (not implemented)")}>
+            Upload
+          </div>
 
+          <div className="docs-update-wrapper">
+            <button className="docs-update-btn" type="button" onClick={handleUpdate}>
+              Update
+            </button>
+          </div>
         </div>
-
 
         <div className="docs-controls">
           <div className="docs-control">
@@ -104,7 +194,10 @@ export default function ClientDocuments( ) {
                 classNamePrefix="appt-select"
                 options={typeOptions}
                 value={typeValue}
-                onChange={(opt) => { setType(opt?.value ?? "All Types"); setPage(1); }}
+                onChange={(opt) => {
+                  setType(opt?.value ?? "All Types");
+                  setPage(1);
+                }}
                 isSearchable={false}
               />
             </div>
@@ -121,13 +214,14 @@ export default function ClientDocuments( ) {
                 classNamePrefix="appt-select"
                 options={dateOptions}
                 value={dateValue}
-                onChange={(opt) => { setDateRange(opt?.value ?? "Last 3 Months"); setPage(1); }}
+                onChange={(opt) => {
+                  setDateRange(opt?.value ?? "Last 3 Months");
+                  setPage(1);
+                }}
                 isSearchable={false}
               />
             </div>
           </div>
-
-      
         </div>
       </div>
 
@@ -143,35 +237,40 @@ export default function ClientDocuments( ) {
                   <div className="docs-file-meta">
                     <div className="docs-file-name">{d.name}</div>
                     <div className="docs-file-sub">
-                      <div className="doc-file-sub-categ"><span className="docs-dot">•</span>Type: {d.type}</div>
-                      <div className="doc-file-sub-categ"><span className="docs-dot">•</span>Shared by: {d.sharedBy}</div>
-                      <div className="doc-file-sub-categ"><span className="docs-dot">•</span>Date: {d.date}</div>
+                      <div className="doc-file-sub-categ">
+                        <span className="docs-dot">•</span>Type: {d.type}
+                      </div>
+                      <div className="doc-file-sub-categ">
+                        <span className="docs-dot">•</span>Shared by: {d.sharedBy}
+                      </div>
+                      <div className="doc-file-sub-categ">
+                        <span className="docs-dot">•</span>Date: {d.date}
+                      </div>
                     </div>
                   </div>
                 </div>
-                <div className="docs-actions">
-                    
-                    <button className="docs-action-btn" onClick={() => alert("View")} aria-label="View document">
-                        <a
-                            className= "docs-action-link" 
-                            href="https://drive.google.com/file/d/1P6eeeph-igHN2kz22J4ooTfXALkjd454/view?usp=sharing"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                        >
-                            👁
-                        </a>
-                            
-                    </button>
-                    <button className="docs-action-btn" onClick={() => alert("Download")} aria-label="Download document">
-                        <a
-                            className= "docs-action-link" 
-                            href="https://drive.google.com/uc?export=download&id=1P6eeeph-igHN2kz22J4ooTfXALkjd454"
-                            download="WeeklyReport.pdf"
-                        >
-                            ⤓
-                        </a>
-                    </button>
 
+                <div className="docs-actions">
+                  <button className="docs-action-btn" aria-label="View document">
+                    <a
+                      className="docs-action-link"
+                      href="https://drive.google.com/file/d/1P6eeeph-igHN2kz22J4ooTfXALkjd454/view?usp=sharing"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      👁
+                    </a>
+                  </button>
+
+                  <button className="docs-action-btn" aria-label="Download document">
+                    <a
+                      className="docs-action-link"
+                      href="https://drive.google.com/uc?export=download&id=1P6eeeph-igHN2kz22J4ooTfXALkjd454"
+                      download="WeeklyReport.pdf"
+                    >
+                      ⤓
+                    </a>
+                  </button>
                 </div>
               </div>
             ))}
@@ -182,13 +281,28 @@ export default function ClientDocuments( ) {
           <div className="dash-item-meta">Documents shared with you (Client Name) appear here</div>
 
           <div className="docs-pagination">
-            <button className="dash-btn ghost" type="button" onClick={() => setPage((p) => Math.max(1, p - 1))} disabled={page <= 1}>Prev</button>
-            <span className="dash-item-meta docs-page-meta">Page {page} of {totalPages}</span>
-            <button className="dash-btn ghost" type="button" onClick={() => setPage((p) => Math.min(totalPages, p + 1))} disabled={page >= totalPages}>Next</button>
+            <button
+              className="dash-btn ghost"
+              type="button"
+              onClick={() => setPage((p) => Math.max(1, p - 1))}
+              disabled={page <= 1}
+            >
+              Prev
+            </button>
+            <span className="dash-item-meta docs-page-meta">
+              Page {page} of {totalPages}
+            </span>
+            <button
+              className="dash-btn ghost"
+              type="button"
+              onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+              disabled={page >= totalPages}
+            >
+              Next
+            </button>
           </div>
         </div>
       </div>
-
     </section>
   );
 }
