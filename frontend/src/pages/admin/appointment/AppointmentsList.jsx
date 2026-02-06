@@ -15,10 +15,8 @@ function Field({ label, children }) {
 
 const STATUS_OPTIONS = [
   { value: "pending", label: "Pending" },
-  { value: "approved", label: "Approved" },
-  { value: "rescheduled", label: "Rescheduled" },
-  { value: "cancelled", label: "Cancelled" },
-  { value: "rejected", label: "Rejected" },
+  { value: "accepted", label: "Accepted" },
+  { value: "declined", label: "Declined" },
   { value: "all", label: "All" },
 ];
 

@@ -349,3 +349,16 @@
     grid-template-columns: 120px 1fr;
   }
 }
+
+/* backend statuses */
+.aa-badge--accepted {
+  background: rgba(136, 255, 167, 0.16);
+  border-color: rgba(136, 255, 167, 0.55);
+  color: #0b6b2b;
+}
+
+.aa-badge--declined {
+  background: rgba(255, 80, 80, 0.12);
+  border-color: rgba(255, 80, 80, 0.35);
+  color: rgb(170, 30, 30);
+}
