@@ -1,17 +1,37 @@
 import "./dashboard.page.css";
 
+function getStoredName() {
+  const raw = localStorage.getItem("user");
+  if (!raw) return "";
+
+  try {
+    const user = JSON.parse(raw);
+    const name = user?.name || user?.fullName || user?.username;
+    return name || "";
+  } catch {
+    return "";
+  }
+}
+
+const docs = ["Contract Document", "Progress Report", "Planning Files"];
+
 export default function ClientDashboard() {
+  const name = getStoredName();
+
+  let greeting = "Welcome back";
+  if (name) {
+    greeting = `Welcome back, ${name}`;
+  }
+
   return (
     <section className="dash-page dashboard">
-      {/* Header */}
       <header className="dash-page-header">
-        <h1 className="dash-title">Welcome back, Alex</h1>
+        <h1 className="dash-title">{greeting}</h1>
         <p className="dash-subtitle">
           Here’s what’s happening with your projects today.
         </p>
       </header>
 
-      {/* STATS ROW */}
       <div className="dash-stats">
         <div className="dash-surface dash-stat">
           <span className="dash-stat-label">Active Projects</span>
@@ -34,11 +54,8 @@ export default function ClientDashboard() {
         </div>
       </div>
 
-      {/* MAIN GRID */}
       <div className="dash-grid">
-        {/* LEFT COLUMN */}
         <div className="dash-col">
-          {/* NEXT APPOINTMENT */}
           <div className="dash-surface">
             <div className="dash-surface-header">
               <span>Next appointment</span>
@@ -55,12 +72,11 @@ export default function ClientDashboard() {
               <span className="dash-status success">Confirmed</span>
             </div>
 
-            <div className="dash-item-meta" style={{ marginTop: "0.75rem" }}>
+            <div className="dash-item-meta dash-meta-spacer">
               +1 upcoming appointment
             </div>
           </div>
 
-          {/* ALERTS */}
           <div className="dash-surface">
             <div className="dash-surface-header">
               <span>Alerts</span>
@@ -78,32 +94,30 @@ export default function ClientDashboard() {
           </div>
         </div>
 
-        {/* RIGHT COLUMN */}
         <div className="dash-col">
-          {/* RECENT DOCUMENTS */}
           <div className="dash-surface">
             <div className="dash-surface-header">
               <span>Recent documents</span>
             </div>
 
             <div className="dash-list">
-              {["Contract Document", "Progress Report", "Planning Files"].map(
-                (doc, i) => (
-                  <div key={i} className="dash-doc">
-                    <span>{doc}</span>
-                    <button className="dash-doc-action">Download</button>
-                  </div>
-                ),
-              )}
+              {docs.map((doc) => (
+                <div key={doc} className="dash-doc">
+                  <span>{doc}</span>
+                  <button type="button" className="dash-doc-action">
+                    Download
+                  </button>
+                </div>
+              ))}
             </div>
 
-            <div className="dash-item-meta" style={{ marginTop: "0.75rem" }}>
+            <div className="dash-item-meta dash-meta-spacer">
               View all documents →
             </div>
           </div>
         </div>
       </div>
-      {/* PROJECTS SNAPSHOT */}
+
       <div className="dash-surface">
         <div className="dash-surface-header">
           <span>Projects overview</span>
@@ -126,7 +140,7 @@ export default function ClientDashboard() {
           </div>
         </div>
 
-        <div className="dash-item-meta" style={{ marginTop: "0.75rem" }}>
+        <div className="dash-item-meta dash-meta-spacer">
           View all projects →
         </div>
       </div>

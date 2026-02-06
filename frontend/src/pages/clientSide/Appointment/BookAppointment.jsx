@@ -7,8 +7,6 @@ import { YEARS, MONTHS } from "../../../utils/dateConstants";
 
 export default function BookAppointment({ onClose, onSubmit }) {
   const [form, setForm] = useState({
-    name: "",
-    email: "",
     phone: "",
     dateTime: null,
     project: "",
@@ -17,35 +15,21 @@ export default function BookAppointment({ onClose, onSubmit }) {
     mode: "online",
   });
 
-  const update = (key) => (e) =>
-    setForm((prev) => ({ ...prev, [key]: e.target.value }));
+  const update = (key) => (e) => {
+    const value = e.target.value;
+    setForm((prev) => ({ ...prev, [key]: value }));
+  };
 
   const handleSubmit = async () => {
     if (!form.dateTime || !form.project) return;
 
     const payload = {
-      name: form.name,
-      email: form.email,
-      phone: form.phone,
+      phone: form.phone || null,
+      scheduled_at: form.dateTime.toISOString(),
       project: form.project,
       purpose: form.purpose,
-      details: form.details,
+      details: form.details || null,
       mode: form.mode,
-
-      date: form.dateTime.toLocaleDateString("en-US", {
-        month: "short",
-        day: "2-digit",
-        year: "numeric",
-      }),
-      time: form.dateTime.toLocaleTimeString("en-US", {
-        hour: "2-digit",
-        minute: "2-digit",
-      }),
-
-      status: "upcoming",
-      approvalStatus: "pending",
-      meetingLink: null,
-      location: null,
     };
 
     await onSubmit?.(payload);
@@ -80,26 +64,6 @@ export default function BookAppointment({ onClose, onSubmit }) {
           onSubmit={(e) => e.preventDefault()}
         >
           <div className="form-col">
-            <label className="form-field">
-              <span>Name</span>
-              <input
-                value={form.name}
-                onChange={update("name")}
-                type="text"
-                placeholder="Enter your name"
-              />
-            </label>
-
-            <label className="form-field">
-              <span>Email</span>
-              <input
-                value={form.email}
-                onChange={update("email")}
-                type="email"
-                placeholder="Enter your email"
-              />
-            </label>
-
             <label className="form-field">
               <span>Phone Number</span>
               <input

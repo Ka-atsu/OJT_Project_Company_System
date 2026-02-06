@@ -37,6 +37,14 @@ class AppointmentController extends Controller
 
     /**
      * POST /api/appointments
+     *
+     * Expected payload:
+     * - phone (optional)
+     * - scheduled_at (required datetime string)
+     * - project (required)
+     * - purpose (required)
+     * - details (optional)
+     * - mode (required: online|f2f)
      */
     public function store(Request $request)
     {
@@ -53,10 +61,12 @@ class AppointmentController extends Controller
             'user_id' => $request->user()->id,
             'phone' => $validated['phone'] ?? null,
             'scheduled_at' => $validated['scheduled_at'],
+
             'project' => $validated['project'],
             'purpose' => $validated['purpose'],
             'details' => $validated['details'] ?? null,
             'mode' => $validated['mode'],
+
             'approval_status' => 'pending',
             'meeting_link' => null,
             'location' => null,
@@ -67,25 +77,16 @@ class AppointmentController extends Controller
             ->setStatusCode(201);
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(string $id)
     {
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, string $id)
     {
         //
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(string $id)
     {
         //
