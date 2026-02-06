@@ -3,14 +3,10 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\User;
 
 class Appointment extends Model
 {
-    public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
-
     protected $fillable = [
         'user_id',
         'phone',
@@ -27,4 +23,9 @@ class Appointment extends Model
     protected $casts = [
         'scheduled_at' => 'datetime',
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

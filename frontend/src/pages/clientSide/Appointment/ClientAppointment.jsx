@@ -1,7 +1,51 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import BookAppointment from "./BookAppointment";
 import { listAppointments, createAppointment } from "./appointments.service";
 import "./appointment.css";
+
+function getStatusDetails(a) {
+  const approvalRaw = a.approvalStatus ?? "pending";
+  const approval = String(approvalRaw).trim().toLowerCase();
+
+  const meetingLink = a.meetingLink ?? null;
+  const location = a.location ?? null;
+
+  const needsLink = a.mode === "online" && !meetingLink;
+  const needsLocation = a.mode === "f2f" && !location;
+
+  if (approval === "pending") {
+    return "Pending — admin will confirm and send details.";
+  }
+
+  if (approval === "declined") {
+    return "Declined.";
+  }
+
+  if (approval === "accepted") {
+    if (needsLink || needsLocation) {
+      return "Approved — waiting for meeting details.";
+    }
+
+    if (a.mode === "online") {
+      return `Link: ${meetingLink}`;
+    }
+
+    return `Location: ${location}`;
+  }
+
+  return "Pending — admin will confirm and send details.";
+}
+
+function getApiErrorMessage(err, fallback = "Something went wrong.") {
+  return (
+    err?.response?.data?.message ||
+    (err?.response?.data?.errors
+      ? Object.values(err.response.data.errors).flat().join("\n")
+      : null) ||
+    err?.message ||
+    fallback
+  );
+}
 
 export default function ClientAppointment() {
   const [activeTab, setActiveTab] = useState("upcoming");
@@ -14,21 +58,32 @@ export default function ClientAppointment() {
   const [totalPages, setTotalPages] = useState(1);
   const limit = 7;
 
+  const requestIdRef = useRef(0);
+
   const load = useCallback(async () => {
+    const requestId = ++requestIdRef.current;
+
     setLoading(true);
     try {
-      const res = await listAppointments({
-        status: activeTab,
-        page,
-        limit,
-      });
+      const res = await listAppointments({ status: activeTab, page, limit });
 
-      setAppointments(res.data);
-      setTotalPages(res.totalPages || 1);
+      if (requestId !== requestIdRef.current) return;
 
-      if (page > (res.totalPages || 1)) setPage(res.totalPages || 1);
+      const nextTotalPages = res.totalPages || 1;
+
+      setAppointments(res.data || []);
+      setTotalPages(nextTotalPages);
+
+      if (page > nextTotalPages) setPage(nextTotalPages);
+    } catch (err) {
+      if (requestId !== requestIdRef.current) return;
+
+      console.error(err);
+      alert(getApiErrorMessage(err, "Failed to load appointments."));
+      setAppointments([]);
+      setTotalPages(1);
     } finally {
-      setLoading(false);
+      if (requestId === requestIdRef.current) setLoading(false);
     }
   }, [activeTab, page]);
 
@@ -47,9 +102,14 @@ export default function ClientAppointment() {
         <BookAppointment
           onClose={() => setOpen(false)}
           onSubmit={async (payload) => {
-            await createAppointment(payload);
-            setPage(1);
-            await load();
+            try {
+              await createAppointment(payload);
+              setPage(1);
+              await load();
+            } catch (err) {
+              console.error(err);
+              alert(getApiErrorMessage(err, "Failed to create appointment."));
+            }
           }}
         />
       )}
@@ -58,7 +118,6 @@ export default function ClientAppointment() {
         <h1 className="dash-title">Appointments</h1>
         <p className="dash-subtitle">Manage schedule and consultations.</p>
       </header>
-
 
       <div className="appointment-tabs">
         <button
@@ -82,14 +141,14 @@ export default function ClientAppointment() {
         </button>
 
         <div className="appointment-actions">
-        <button
-          className="dash-btn primary"
-          type="button"
-          onClick={() => setOpen(true)}
-        >
-          + Schedule New Appointment
-        </button>
-      </div>
+          <button
+            className="dash-btn primary"
+            type="button"
+            onClick={() => setOpen(true)}
+          >
+            + Schedule New Appointment
+          </button>
+        </div>
       </div>
 
       <div className="dash-surface">
@@ -131,28 +190,12 @@ export default function ClientAppointment() {
                     const typeLabel =
                       a.mode === "f2f" ? "Face-to-face" : "Online";
 
-                    let detailsText = "";
-                    if (a.approvalStatus === "pending") {
-                      detailsText =
-                        "Pending — admin will confirm and send details.";
-                    } else if (a.approvalStatus === "declined") {
-                      detailsText = "Declined.";
-                    } else {
-                      if (a.mode === "online") {
-                        detailsText = a.meetingLink
-                          ? `Link: ${a.meetingLink}`
-                          : "Accepted — meeting link to be provided.";
-                      } else {
-                        detailsText = a.location
-                          ? `Location: ${a.location}`
-                          : "Accepted — location to be provided.";
-                      }
-                    }
+                    const detailsText = getStatusDetails(a);
 
                     return (
                       <tr key={a.id}>
-                        <td>{a.date}</td>
-                        <td>{a.time}</td>
+                        <td>{a.date || ""}</td>
+                        <td>{a.time || ""}</td>
                         <td>{a.project}</td>
                         <td>{a.purpose}</td>
                         <td>{typeLabel}</td>
