@@ -1,6 +1,7 @@
 import { Link, useLocation } from "react-router-dom";
 import { ImgEarthmoving } from "../../assets/images";
 import logo from "../../assets/Images/logo.jpg";
+import { FiMapPin, FiMail, FiPhone } from "react-icons/fi";
 
 export default function Footer() {
   const location = useLocation();
@@ -52,7 +53,7 @@ export default function Footer() {
           </div>
 
           {/* QUICK LINKS */}
-          <div className="footer-col">
+          <div className="footer-col footer-links-col">
             <h4 className="footer-heading">QUICK LINKS</h4>
             <Link to="/" className="footer-link">Home</Link>
             <Link to="/about" className="footer-link">About Us</Link>
@@ -62,14 +63,20 @@ export default function Footer() {
           </div>
 
           {/* CONTACT */}
-          <div className="footer-col">
+          <div className="footer-col footer-contact-col">
             <h4 className="footer-heading">CONTACT</h4>
-            <p>
-              Lot 3739 National Highway, 3/F CBD Building Brgy. Pulo, Cabuyao City,
-              Laguna, Philippines
-            </p>
-            <p>cliberduche.corp@yahoo.com</p>
-            <p>+63 49 546-6107 / 0967-302-6643</p>
+            <div className="contact-item">
+              <FiMapPin className="contact-icon" />
+              <p>Lot 3739 National Highway, 3/F CBD Building Brgy. Pulo, Cabuyao City, Laguna, Philippines</p>
+            </div>
+            <div className="contact-item">
+              <FiMail className="contact-icon" />
+              <p><a href="mailto:cliberduche.corp@yahoo.com">cliberduche.corp@yahoo.com</a></p>
+            </div>
+            <div className="contact-item">
+              <FiPhone className="contact-icon" />
+              <p><a href="tel:+634954566107">+63 49 546-6107</a> / <a href="tel:+639673026643">0967-302-6643</a></p>
+            </div>
           </div>
         </div>
       </div>
@@ -82,127 +89,6 @@ export default function Footer() {
         </div>
       </div>
     </footer>
-
-    {/* INLINE STYLES */}
-      <style>{`
-  .site-footer-main {
-  background-color: #ffffff;
-  padding: 48px 32px;
-  border-top: 1px solid #e5e5e5;
-  font-family: Arial, sans-serif;
-  font-size: 14px;
-  color: #333;
-}
-
-/* CENTERED INNER CONTAINER */
-.site-footer-inner {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 16px;
-  column-gap: 120px; /* THIS creates left–center–right illusion */
-  align-items: start;
-}
-
-/* ---------- COLUMN ALIGNMENT ---------- */
-
-/* LEFT */
-.footer-brand {
-  text-align: left;
-   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-}
-
-/* CENTER */
-.site-footer-inner > .footer-col:nth-child(2) {
-  text-align: center;
-}
-
-/* RIGHT */
-.site-footer-inner > .footer-col:nth-child(3) {
-  text-align: left;
-}
-
-/* ---------- BRAND ---------- */
-.footer-brand img.footer-logo {
-  width: 160px;
-  height: auto;
-  margin-bottom: 16px;
-  
-}
-
-.footer-title-logo {
-  display: flex;
-  align-items: center; /* vertically center image and text */
-  gap: 12px; /* space between image and text */
-}
-
-.footer-title-logo img.footer-logo {
-  width: 60px;
-  height: auto;
-}
-
-.footer-title-logo h4.footer-heading {
-  margin: 0; /* remove extra margin */
-  font-size: 16px; /* adjust to your desired size */
-  font-weight: 700;
-}
-
-/* ---------- HEADINGS ---------- */
-.footer-heading {
-  font-weight: 700;
-  font-size: 14px;
-  margin-bottom: 14px;
-  color: #000;
-}
-
-/* ---------- LINKS ---------- */
-.footer-link {
-  display: block;
-  margin-bottom: 6px;
-  color: #333;
-  text-decoration: none;
-}
-
-.footer-link:hover {
-  color: #0b5ed7;
-}
-
-/* ---------- TEXT ---------- */
-.footer-col p {
-  margin-bottom: 8px;
-  line-height: 1.6;
-}
-
-/* ---------- FOOTER BOTTOM ---------- */
-.site-footer-bottom {
-  border-top: 1px solid #e5e5e5;
-  margin-top: 32px;
-  padding: 14px 32px;
-}
-
-.site-footer-copy {
-  text-align: center;
-  font-size: 12px;
-  color: #666;
-}
-
-/* ---------- MOBILE ---------- */
-@media (max-width: 768px) {
-  .site-footer-inner {
-    grid-template-columns: 1fr;
-    column-gap: 0;
-    text-align: center;
-  }
-
-  .footer-brand img.footer-logo {
-    margin: 0 auto 16px;
-  }
-}
-
-      `}</style>
     </>
   );
 }
