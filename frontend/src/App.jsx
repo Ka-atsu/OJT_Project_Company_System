@@ -10,8 +10,9 @@ import Contact from "./pages/landingPage/Contact/Contact";
 import Projects from "./pages/landingPage/Projects/Projects";
 import NotFound from "./pages/NotFound";
 
-import Login from "./pages/authentication/Login";
-import Register from "./pages/authentication/Register";
+//import Login from "./pages/authentication/Login";
+//import Register from "./pages/authentication/Register";
+import Auth from "./pages/authentication/Auth";
 
 import ClientDashboard from "./pages/clientSide/Dashboard/ClientDashboard";
 import ClientAccountSettings from "./pages/clientSide/AccountSettings/ClientAccountSettings";
@@ -107,8 +108,8 @@ export default function App() {
         </Route>
 
         {/* AUTH */}
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
+        <Route path="/login" element={<Auth />} />
+        <Route path="/register" element={<Auth />} />
 
         {/* FALLBACK */}
         <Route path="*" element={<NotFound />} />
