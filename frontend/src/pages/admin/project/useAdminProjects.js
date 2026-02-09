@@ -33,7 +33,7 @@ export default function useAdminProjects() {
 
   const [draft, setDraft] = useState(() => {
     const d = emptyProject();
-    return { ...d, progress: 0 };
+    return { ...d, progress: 0, photos: [] };
   });
 
   const abortRef = useRef(null);
@@ -50,7 +50,6 @@ export default function useAdminProjects() {
 
   useEffect(() => setPage(1), [status, q, sort, pageSize]);
 
-  // load clients
   useEffect(() => {
     const controller = new AbortController();
     ProjectsService.clients(controller.signal)
@@ -59,7 +58,6 @@ export default function useAdminProjects() {
     return () => controller.abort();
   }, []);
 
-  // load projects list
   useEffect(() => {
     abortRef.current?.abort?.();
     const controller = new AbortController();
@@ -76,17 +74,14 @@ export default function useAdminProjects() {
           setSelectedId(nextItems[0].id);
       })
       .catch((e) => {
-        const msg = e?.message ?? "Failed to load projects";
-        if (msg.toLowerCase().includes("canceled")) return;
         if (e?.name === "AbortError") return;
-        setErr(msg);
+        setErr(e?.message ?? "Failed to load projects");
       })
       .finally(() => setLoading(false));
 
     return () => controller.abort();
   }, [page, pageSize, status, q, sort, isCreating, selectedId]);
 
-  // load selected into draft
   useEffect(() => {
     if (!selected || isCreating) return;
 
@@ -98,6 +93,7 @@ export default function useAdminProjects() {
       ...selected,
       budget: String(selected.budget ?? ""),
       milestones,
+      photos: [], // DO NOT copy saved photos here
       progress: calcProgressFromMilestones(milestones),
     });
   }, [selected, isCreating]);
@@ -112,6 +108,7 @@ export default function useAdminProjects() {
     setDraft({
       ...d,
       milestones,
+      photos: [],
       progress: calcProgressFromMilestones(milestones),
     });
   }
@@ -138,8 +135,10 @@ export default function useAdminProjects() {
       setLoading(true);
       setErr("");
 
-      const computedProgress = calcProgressFromMilestones(draft.milestones);
-      const payloadDraft = { ...draft, progress: computedProgress };
+      const payloadDraft = {
+        ...draft,
+        progress: calcProgressFromMilestones(draft.milestones),
+      };
 
       if (isCreating) {
         const created = await ProjectsService.create(payloadDraft);
@@ -158,18 +157,6 @@ export default function useAdminProjects() {
         setItems((prev) =>
           prev.map((p) => (p.id === updated.id ? updated : p)),
         );
-
-        const milestones = Array.isArray(updated.milestones)
-          ? updated.milestones
-          : payloadDraft.milestones;
-
-        setDraft((d) => ({
-          ...d,
-          ...updated,
-          budget: String(updated.budget ?? d.budget ?? ""),
-          milestones,
-          progress: calcProgressFromMilestones(milestones),
-        }));
       }
     } catch (e) {
       setErr(e?.message ?? "Save failed");
@@ -218,9 +205,9 @@ export default function useAdminProjects() {
   }
 
   return {
-    // data
     clients,
     items,
+    setItems,
     total,
     loading,
     err,
@@ -229,7 +216,6 @@ export default function useAdminProjects() {
     selected,
     draft,
 
-    // filters / paging
     status,
     setStatus,
     q,
@@ -245,7 +231,6 @@ export default function useAdminProjects() {
     to,
     showing,
 
-    // actions
     startCreate,
     cancelCreate,
     applyClient,

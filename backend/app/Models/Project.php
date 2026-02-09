@@ -33,4 +33,9 @@ class Project extends Model
     {
         return $this->hasMany(Milestone::class);
     }
+
+    public function photos()
+    {
+        return $this->hasMany(ProjectPhoto::class);
+    }
 }
