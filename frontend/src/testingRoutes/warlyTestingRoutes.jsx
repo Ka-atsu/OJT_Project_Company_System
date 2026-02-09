@@ -3,8 +3,8 @@ import DashboardLayout from "../components/layouts/DashboardLayout";
 import ClientDashboard from "../pages/clientSide/Dashboard/ClientDashboard";
 import Contact from "../pages/landingPage/Contact/Contact";
 import ClientProject from "../pages/clientSide/Project/ClientProject";
-import AdminDocuments  from "../pages/admin/document/adminDocument";
-import ClientDocuments from "../pages/admin/document/admin-client_document";
+import AdminDocuments from "../pages/admin/document/AdminDocuments";
+import ClientDocuments from "../pages/admin/document/AdminClientDocuments";
 
 export default function warlyTestingRoutes() {
   return (
