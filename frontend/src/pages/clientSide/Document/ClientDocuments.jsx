@@ -1,109 +1,44 @@
-import { useEffect, useMemo, useState } from "react";
 import Select from "react-select";
 import "./documents.css";
-
-// backend-ready: later replace this with service call
-const mockDocs = [
-  {
-    id: 1,
-    name: "Contract Agreement.pdf",
-    type: "Contract",
-    sharedBy: "Cliberduche Corp.",
-    date: "Jan. 20, 2026",
-    fileUrl: null,
-  },
-  {
-    id: 2,
-    name: "Purchase Order #123.pdf",
-    type: "Purchase Order",
-    sharedBy: "Cliberduche Corp.",
-    date: "Jan. 20, 2026",
-    fileUrl: null,
-  },
-  {
-    id: 3,
-    name: "Building Plan.pdf",
-    type: "Contract",
-    sharedBy: "Cliberduche Corp.",
-    date: "Jan. 20, 2026",
-    fileUrl: null,
-  },
-  {
-    id: 4,
-    name: "Project Report.pdf",
-    type: "Report",
-    sharedBy: "Cliberduche Corp.",
-    date: "Jan. 20, 2026",
-    fileUrl: null,
-  },
-];
-
-const DOC_TYPES = ["All Types", "Contract", "Purchase Order", "Report", "Plan"];
-const DATE_RANGES = ["Last 3 Months", "Last 6 Months", "This Year", "All Time"];
-
-const toOptions = (arr) => arr.map((v) => ({ value: v, label: v }));
+import { useClientDocuments } from "./document.service";
 
 export default function ClientDocuments() {
-  const [q, setQ] = useState("");
-  const [type, setType] = useState("All Types");
-  const [dateRange, setDateRange] = useState("Last 3 Months");
-  const [sort, setSort] = useState("newest");
+  const {
+    docs,
+    page,
+    totalPages,
+    total,
+    q,
+    sort,
+    typeOptions,
+    dateOptions,
+    typeValue,
+    dateValue,
+    loading,
+    error,
+    onSearchChange,
+    onTypeChange,
+    onDateRangeChange,
+    toggleSort,
+    goPrev,
+    goNext,
+  } = useClientDocuments({ pageSize: 6 });
 
-  const [page, setPage] = useState(1);
-  const limit = 6;
-
-  const [docs, setDocs] = useState([]);
-
-  useEffect(() => {
-    setDocs(mockDocs);
-  }, []);
-
-  const filtered = useMemo(() => {
-    let data = [...docs];
-
-    if (type !== "All Types") {
-      data = data.filter((d) => d.type.toLowerCase() === type.toLowerCase());
-    }
-
-    if (q.trim()) {
-      const needle = q.trim().toLowerCase();
-      data = data.filter((d) => d.name.toLowerCase().includes(needle));
-    }
-
-    // dateRange is UI only for now (backend-ready hook)
-    // later: send dateRange to API
-
-    if (sort === "oldest") data = [...data].reverse();
-
-    return data;
-  }, [docs, q, type, dateRange, sort]);
-
-  const totalPages = Math.max(1, Math.ceil(filtered.length / limit));
-
-  const pageDocs = useMemo(() => {
-    const start = (page - 1) * limit;
-    return filtered.slice(start, start + limit);
-  }, [filtered, page]);
-
-  const toggleSort = () => {
-    setSort((s) => (s === "newest" ? "oldest" : "newest"));
-    setPage(1);
+  const onView = (doc) => {
+    if (!doc.fileUrl) return;
+    window.open(doc.fileUrl, "_blank", "noopener,noreferrer");
   };
 
-  if (page > totalPages) setPage(totalPages);
-
-  const typeOptions = useMemo(() => toOptions(DOC_TYPES), []);
-  const dateOptions = useMemo(() => toOptions(DATE_RANGES), []);
-
-  const typeValue = useMemo(
-    () => typeOptions.find((o) => o.value === type) || typeOptions[0],
-    [typeOptions, type],
-  );
-
-  const dateValue = useMemo(
-    () => dateOptions.find((o) => o.value === dateRange) || dateOptions[0],
-    [dateOptions, dateRange],
-  );
+  const onDownload = (doc) => {
+    if (!doc.fileUrl) return;
+    const a = document.createElement("a");
+    a.href = doc.fileUrl;
+    a.download = doc.name || "";
+    a.rel = "noopener";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+  };
 
   return (
     <section className="docs-page">
@@ -123,10 +58,7 @@ export default function ClientDocuments() {
           <input
             className="dash-input docs-search-input"
             value={q}
-            onChange={(e) => {
-              setQ(e.target.value);
-              setPage(1);
-            }}
+            onChange={(e) => onSearchChange(e.target.value)}
             type="text"
             placeholder="Search Document"
           />
@@ -140,10 +72,7 @@ export default function ClientDocuments() {
                 classNamePrefix="appt-select"
                 options={typeOptions}
                 value={typeValue}
-                onChange={(opt) => {
-                  setType(opt?.value ?? "All Types");
-                  setPage(1);
-                }}
+                onChange={(opt) => onTypeChange(opt?.value)}
                 isSearchable={false}
               />
             </div>
@@ -164,10 +93,7 @@ export default function ClientDocuments() {
                 classNamePrefix="appt-select"
                 options={dateOptions}
                 value={dateValue}
-                onChange={(opt) => {
-                  setDateRange(opt?.value ?? "Last 3 Months");
-                  setPage(1);
-                }}
+                onChange={(opt) => onDateRangeChange(opt?.value)}
                 isSearchable={false}
               />
             </div>
@@ -176,11 +102,15 @@ export default function ClientDocuments() {
       </div>
 
       <div className="docs-surface">
-        {pageDocs.length === 0 ? (
+        {error ? <div className="docs-empty">{error}</div> : null}
+
+        {loading ? (
+          <div className="docs-empty">Loading documents…</div>
+        ) : docs.length === 0 ? (
           <div className="docs-empty">No documents found.</div>
         ) : (
           <div className="docs-list">
-            {pageDocs.map((d) => (
+            {docs.map((d) => (
               <div key={d.id} className="docs-row">
                 <div className="docs-file">
                   <div className="docs-badge">PDF</div>
@@ -207,8 +137,10 @@ export default function ClientDocuments() {
                   <button
                     className="docs-action-btn"
                     type="button"
-                    onClick={() => alert("View (connect to fileUrl later)")}
+                    onClick={() => onView(d)}
                     aria-label="View document"
+                    disabled={!d.fileUrl}
+                    title={d.fileUrl ? "View" : "No file yet"}
                   >
                     👁
                   </button>
@@ -216,8 +148,10 @@ export default function ClientDocuments() {
                   <button
                     className="docs-action-btn"
                     type="button"
-                    onClick={() => alert("Download (connect to fileUrl later)")}
+                    onClick={() => onDownload(d)}
                     aria-label="Download document"
+                    disabled={!d.fileUrl}
+                    title={d.fileUrl ? "Download" : "No file yet"}
                   >
                     ⤓
                   </button>
@@ -229,15 +163,17 @@ export default function ClientDocuments() {
 
         <div className="docs-footer">
           <div className="dash-item-meta">
-            Documents shared with you will appear here
+            {total
+              ? `${total} document(s) found`
+              : "Documents shared with you will appear here"}
           </div>
 
           <div className="docs-pagination">
             <button
               className="dash-btn ghost"
               type="button"
-              onClick={() => setPage((p) => Math.max(1, p - 1))}
-              disabled={page <= 1}
+              onClick={goPrev}
+              disabled={page <= 1 || loading}
             >
               Prev
             </button>
@@ -249,8 +185,8 @@ export default function ClientDocuments() {
             <button
               className="dash-btn ghost"
               type="button"
-              onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-              disabled={page >= totalPages}
+              onClick={goNext}
+              disabled={page >= totalPages || loading}
             >
               Next
             </button>
