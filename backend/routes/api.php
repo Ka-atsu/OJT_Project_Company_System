@@ -5,19 +5,24 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\DocumentController;
+use App\Http\Controllers\ProjectController;
 
 use App\Http\Controllers\Admin\AdminAppointmentController;
 use App\Http\Controllers\Admin\AdminDocumentController;
+use App\Http\Controllers\Admin\AdminProjectController;
 
 Route::middleware('auth:sanctum')->get('/user', fn(Request $request) => $request->user());
 
 Route::middleware('auth:sanctum')->group(function () {
-    // appointments
+    // appointments (client)
     Route::get('/appointments', [AppointmentController::class, 'index']);
     Route::post('/appointments', [AppointmentController::class, 'store']);
 
     // documents (client)
     Route::get('/documents', [DocumentController::class, 'index']);
+
+    // projects (client)
+    Route::get('/projects', [ProjectController::class, 'index']);
 });
 
 Route::middleware(['auth:sanctum', 'admin'])->prefix('admin')->group(function () {
@@ -32,4 +37,11 @@ Route::middleware(['auth:sanctum', 'admin'])->prefix('admin')->group(function ()
     Route::post('/documents', [AdminDocumentController::class, 'store']);
     Route::patch('/documents/{document}', [AdminDocumentController::class, 'update']);
     Route::delete('/documents/{document}', [AdminDocumentController::class, 'destroy']);
+
+    // projects (admin)
+    Route::get('/projects', [AdminProjectController::class, 'index']);
+    Route::get('/projects/clients', [AdminProjectController::class, 'clients']); // users as clients
+    Route::post('/projects', [AdminProjectController::class, 'store']);
+    Route::patch('/projects/{project}', [AdminProjectController::class, 'update']);
+    Route::delete('/projects/{project}', [AdminProjectController::class, 'destroy']); // optional
 });
