@@ -6,7 +6,7 @@ export default function LeftSidebar() {
       <div className="dash-sidebar-inner">
         {/* Primary Nav */}
         <nav className="dash-nav">
-          <NavLink to="/dashboard" className="dash-link">
+          <NavLink to="/dashboard" end className="dash-link">
             <span className="dash-icon">🏠</span>
             <span>Dashboard</span>
           </NavLink>
