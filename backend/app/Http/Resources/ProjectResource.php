@@ -32,6 +32,11 @@ class ProjectResource extends JsonResource
                 'status' => $m->status,
             ])->values() ?? [],
 
+            'photos' => $this->photos?->map(fn($p) => [
+                'id' => (string) $p->id,
+                'url' => asset('storage/' . $p->path),
+            ])->values() ?? [],
+
             'updatedAt' => optional($this->updated_at)->toISOString(),
         ];
     }

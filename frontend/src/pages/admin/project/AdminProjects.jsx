@@ -1,6 +1,5 @@
-import React from "react";
 import "./admin-projects.css";
-import { MSTATUS } from "./projects.services";
+import { MSTATUS, ProjectsService } from "./projects.services";
 import AdminProjectsList from "./adminProjectsList";
 import { Badge, Field } from "./adminProjectsUi";
 import useAdminProjects from "./useAdminProjects";
@@ -9,6 +8,7 @@ export default function AdminProjects() {
   const {
     clients,
     items,
+    setItems,
     total,
     loading,
     err,
@@ -80,6 +80,7 @@ export default function AdminProjects() {
           onSelect={(id) => {
             setIsCreating(false);
             setSelectedId(id);
+            setDraft((d) => ({ ...d, photos: [] }));
           }}
           selectedId={selectedId}
         />
@@ -105,7 +106,7 @@ export default function AdminProjects() {
                   </h3>
 
                   <div className="ap-block__actions">
-                    {isCreating ? (
+                    {isCreating && (
                       <button
                         className="ap-btn ap-btn--ghost"
                         type="button"
@@ -114,7 +115,7 @@ export default function AdminProjects() {
                       >
                         Cancel
                       </button>
-                    ) : null}
+                    )}
 
                     <button
                       className="ap-btn ap-btn--primary"
@@ -134,7 +135,6 @@ export default function AdminProjects() {
                       onChange={(e) =>
                         setDraft((d) => ({ ...d, name: e.target.value }))
                       }
-                      placeholder="e.g., Client Portal v1"
                       disabled={loading}
                     />
                   </Field>
@@ -159,7 +159,10 @@ export default function AdminProjects() {
                       type="date"
                       value={draft.startDate || ""}
                       onChange={(e) =>
-                        setDraft((d) => ({ ...d, startDate: e.target.value }))
+                        setDraft((d) => ({
+                          ...d,
+                          startDate: e.target.value,
+                        }))
                       }
                       disabled={loading}
                     />
@@ -182,7 +185,6 @@ export default function AdminProjects() {
                       onChange={(e) =>
                         setDraft((d) => ({ ...d, budget: e.target.value }))
                       }
-                      placeholder="e.g., 120000"
                       disabled={loading}
                     />
                   </Field>
@@ -193,7 +195,6 @@ export default function AdminProjects() {
                       value={draft.progress ?? 0}
                       readOnly
                       disabled
-                      title="Progress is automatically calculated from milestones"
                     />
                   </Field>
                 </div>
@@ -203,12 +204,110 @@ export default function AdminProjects() {
                     className="ap-textarea"
                     value={draft.description}
                     onChange={(e) =>
-                      setDraft((d) => ({ ...d, description: e.target.value }))
+                      setDraft((d) => ({
+                        ...d,
+                        description: e.target.value,
+                      }))
                     }
-                    placeholder="Short summary / scope…"
                     disabled={loading}
                   />
                 </Field>
+
+                {/* Photos */}
+                <Field label="Project photos">
+                  <input
+                    type="file"
+                    multiple
+                    accept="image/*"
+                    onChange={(e) => {
+                      const files = Array.from(e.target.files);
+                      setDraft((d) => ({
+                        ...d,
+                        photos: [...(d.photos || []), ...files],
+                      }));
+                    }}
+                    disabled={loading}
+                  />
+                </Field>
+
+                {draft.photos?.length > 0 && (
+                  <div className="ap-photos">
+                    {draft.photos.map((file, i) => (
+                      <div key={i} className="ap-photoWrap">
+                        <img
+                          src={URL.createObjectURL(file)}
+                          alt=""
+                          className="ap-photo"
+                          onLoad={(e) => URL.revokeObjectURL(e.target.src)}
+                        />
+                        <button
+                          type="button"
+                          className="ap-photoDel"
+                          onClick={() =>
+                            setDraft((d) => ({
+                              ...d,
+                              photos: d.photos.filter((_, idx) => idx !== i),
+                            }))
+                          }
+                        >
+                          ✕
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {!isCreating && selected?.photos?.length > 0 && (
+                  <div className="ap-block">
+                    <div className="ap-muted ap-small">Saved photos</div>
+
+                    <div className="ap-photos">
+                      {selected.photos.map((p) => (
+                        <div key={p.id} className="ap-photoWrap">
+                          <img
+                            src={p.url}
+                            alt=""
+                            className="ap-photo"
+                            loading="lazy"
+                          />
+
+                          {/* UI delete button */}
+                          <button
+                            type="button"
+                            className="ap-photoDel"
+                            title="Delete photo"
+                            onClick={async () => {
+                              if (!window.confirm("Delete this photo?")) return;
+
+                              try {
+                                // BACKEND DELETE
+                                await ProjectsService.deletePhoto(p.id);
+
+                                // UPDATE UI AFTER SUCCESS
+                                setItems((prev) =>
+                                  prev.map((proj) =>
+                                    proj.id === selected.id
+                                      ? {
+                                          ...proj,
+                                          photos: proj.photos.filter(
+                                            (x) => x.id !== p.id,
+                                          ),
+                                        }
+                                      : proj,
+                                  ),
+                                );
+                              } catch (e) {
+                                alert(e.message || "Failed to delete photo");
+                              }
+                            }}
+                          >
+                            ✕
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
 
               {/* Client assignment */}
@@ -238,17 +337,6 @@ export default function AdminProjects() {
                     </div>
                   </div>
                 </div>
-
-                {draft.clientId ? (
-                  <div className="ap-muted ap-small">
-                    Assigned to{" "}
-                    <span className="ap-strong">{draft.clientName}</span>.
-                  </div>
-                ) : (
-                  <div className="ap-muted ap-small">
-                    No client assigned yet.
-                  </div>
-                )}
               </div>
 
               {/* Milestones */}
@@ -276,18 +364,20 @@ export default function AdminProjects() {
                             className="ap-ms__title"
                             value={m.title}
                             onChange={(e) =>
-                              updateMilestone(m.id, { title: e.target.value })
+                              updateMilestone(m.id, {
+                                title: e.target.value,
+                              })
                             }
-                            disabled={loading}
                           />
 
                           <select
                             className="ap-ms__status"
                             value={m.status}
                             onChange={(e) =>
-                              updateMilestone(m.id, { status: e.target.value })
+                              updateMilestone(m.id, {
+                                status: e.target.value,
+                              })
                             }
-                            disabled={loading}
                           >
                             <option value="todo">todo</option>
                             <option value="doing">doing</option>
@@ -298,38 +388,31 @@ export default function AdminProjects() {
                             className="ap-ms__del"
                             type="button"
                             onClick={() => removeMilestone(m.id)}
-                            title="Remove milestone"
-                            disabled={loading}
                           >
                             ✕
                           </button>
                         </div>
 
                         <div className="ap-ms__row ap-ms__row--meta">
-                          <div className="ap-muted ap-small">Due</div>
                           <input
                             type="date"
                             value={m.due || ""}
                             onChange={(e) =>
-                              updateMilestone(m.id, { due: e.target.value })
+                              updateMilestone(m.id, {
+                                due: e.target.value,
+                              })
                             }
-                            disabled={loading}
                           />
                           <Badge
                             tone={m.status === "done" ? "success" : "muted"}
                           >
-                            {MSTATUS[m.status] ?? m.status}
+                            {MSTATUS[m.status]}
                           </Badge>
                         </div>
                       </div>
                     ))}
                   </div>
                 )}
-
-                <div className="ap-muted ap-small">
-                  Tip: hit <span className="ap-mono">Save</span> after editing
-                  milestones.
-                </div>
               </div>
             </div>
           )}

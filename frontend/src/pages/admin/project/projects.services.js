@@ -28,6 +28,7 @@ export function emptyProject() {
     progress: 0,
     description: "",
     milestones: [],
+    photos: [], // 👈 REQUIRED
     updatedAt: "",
   };
 }
@@ -63,18 +64,30 @@ function normalizeClientsResponse(data) {
   return [];
 }
 
-function normalizeProjectPayload(draft) {
-  return {
-    ...draft,
-    budget: Number(draft.budget || 0),
-    progress: Number(draft.progress || 0),
-    milestones: (draft.milestones || []).map((m) => ({
-      id: m.id,
-      title: m.title,
-      due: m.due || null,
-      status: m.status,
-    })),
-  };
+// ------------------ FORM DATA ------------------
+function toFormData(draft) {
+  const fd = new FormData();
+
+  fd.append("name", draft.name);
+  fd.append("status", draft.status);
+  fd.append("clientId", draft.clientId || "");
+  fd.append("startDate", draft.startDate || "");
+  fd.append("dueDate", draft.dueDate || "");
+  fd.append("budget", draft.budget || 0);
+  fd.append("progress", draft.progress || 0);
+  fd.append("description", draft.description || "");
+
+  // milestones must be JSON when using FormData
+  fd.append("milestones", JSON.stringify(draft.milestones || []));
+
+  // ONLY append real File objects
+  (draft.photos || []).forEach((file, i) => {
+    if (file instanceof File) {
+      fd.append(`photos[${i}]`, file);
+    }
+  });
+
+  return fd;
 }
 
 // ------------------ API PATHS ------------------
@@ -83,19 +96,17 @@ const routes = {
   clients: "/api/admin/projects/clients",
 };
 
-// Provide better error messaging (helps debug)
+// ------------------ ERRORS ------------------
 function toFriendlyError(e, fallback) {
-  // Axios "Network Error" => no response (CORS, wrong host, server down, mixed content)
   if (e?.message === "Network Error") {
-    return "Network Error (API unreachable / CORS / wrong URL). Check VITE_API_URL and Request URL in DevTools Network tab.";
+    return "Network Error (API unreachable / CORS / wrong URL).";
   }
-  // If server responded with status
   if (e?.response) {
-    const msg =
+    return (
       e.response.data?.message ||
       e.response.data?.error ||
-      `${fallback} (HTTP ${e.response.status})`;
-    return msg;
+      `${fallback} (HTTP ${e.response.status})`
+    );
   }
   return e?.message ?? fallback;
 }
@@ -131,8 +142,12 @@ export const ProjectsService = {
   async create(draft) {
     try {
       await csrf();
-      const payload = normalizeProjectPayload(draft);
-      const { data } = await api.post(routes.projects, payload);
+      const fd = toFormData(draft);
+
+      const { data } = await api.post(routes.projects, fd, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+
       return data?.item ?? data?.data ?? data;
     } catch (e) {
       throw new Error(toFriendlyError(e, "Failed to create project"));
@@ -142,15 +157,25 @@ export const ProjectsService = {
   async update(id, draft) {
     try {
       await csrf();
-      const payload = normalizeProjectPayload(draft);
-      const { data } = await api.patch(
+      const fd = toFormData(draft);
+
+      // Laravel method spoofing
+      fd.append("_method", "PATCH");
+
+      const { data } = await api.post(
         `${routes.projects}/${encodeURIComponent(id)}`,
-        payload,
+        fd,
+        { headers: { "Content-Type": "multipart/form-data" } },
       );
 
       return data?.item ?? data?.data ?? data;
     } catch (e) {
       throw new Error(toFriendlyError(e, "Failed to update project"));
     }
+  },
+
+  async deletePhoto(photoId) {
+    await csrf();
+    await api.delete(`/api/admin/projects/photos/${photoId}`);
   },
 };
