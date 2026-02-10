@@ -99,7 +99,7 @@
 
 .dashboard .dash-surface-header {
   margin-bottom: 0.75rem;
-  font-size: 0.7rem;
+  font-size: 1rem;
   letter-spacing: 0.12rem;
   text-transform: uppercase;
   font-weight: bold;
@@ -157,13 +157,16 @@
     background 0.2s ease,
     color 0.2s ease,
     transform 0.15s ease;
+
+  text-decoration: none;
 }
 
 .dashboard .dash-doc-action:hover {
   background: #a0cbe2;
   color: #034d75; 
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(3, 105, 161, 0.3);
+  box-shadow: 0 4px 12px rgba(3, 105, 161, 0.5);
+  text-decoration: none;
 }
 
 .dashboard .dash-doc-action:active {
