@@ -6,9 +6,13 @@ import {
   Toggle,
 } from "./AccountSettingsComponent";
 import "./clientAccountSettings.css";
+import { useNavigate } from "react-router-dom";
+import ConfirmModal from "./confirmModal";
 
 export default function ClientAccountSettings() {
   const [activeTab, setActiveTab] = useState("My Profile");
+  const [showConfirm, setShowConfirm] = useState(false);
+  const navigate = useNavigate();
 
   return (
     <div className="account-settings">
@@ -86,8 +90,35 @@ export default function ClientAccountSettings() {
             desc="Alerts for new logins or unusual activity."
             action={<Toggle defaultChecked />}
           />
+
+          <Divider />
+
+            <SettingRow
+              title="Return to Landing Page"
+              desc="Leave the dashboard and go back to the public website."
+              action={
+                <button
+                  className="btn-outline"
+                  onClick={() => setShowConfirm(true)}
+                >
+                  Back to Landing Page
+                </button>
+              }
+            />
         </div>
       )}
+      {/* Confirmation modal for going back to the landing page */}
+      {/* Sill not verified if it also logout the account after returning */}
+      <ConfirmModal
+        open={showConfirm}
+        title="Return to Landing Page?"
+        message="You will leave the dashboard and return to the public website."
+        confirmText="Back to Landing Page"
+        cancelText="Stay Here"
+        onCancel={() => setShowConfirm(false)}
+        onConfirm={() => navigate("/")}
+      />
+
     </div>
   );
 }
