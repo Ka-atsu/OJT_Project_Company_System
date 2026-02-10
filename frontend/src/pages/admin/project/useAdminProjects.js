@@ -26,6 +26,8 @@ export default function useAdminProjects() {
   const [selectedId, setSelectedId] = useState(null);
   const [isCreating, setIsCreating] = useState(false);
 
+  const [clientQuery, setClientQuery] = useState("");
+
   const selected = useMemo(
     () => items.find((x) => x.id === selectedId) ?? null,
     [items, selectedId],
@@ -41,6 +43,17 @@ export default function useAdminProjects() {
   const pageCount = Math.max(1, Math.ceil(total / pageSize));
   const from = total === 0 ? 0 : (page - 1) * pageSize + 1;
   const to = Math.min(total, page * pageSize);
+
+  const filteredClients = useMemo(() => {
+    if (!clientQuery.trim()) return clients;
+
+    const q = clientQuery.toLowerCase();
+
+    return clients.filter(
+      (c) =>
+        c.name.toLowerCase().includes(q) || c.email?.toLowerCase().includes(q),
+    );
+  }, [clients, clientQuery]);
 
   const showing = isCreating
     ? "New project"
@@ -93,9 +106,11 @@ export default function useAdminProjects() {
       ...selected,
       budget: String(selected.budget ?? ""),
       milestones,
-      photos: [], // DO NOT copy saved photos here
+      photos: [],
       progress: calcProgressFromMilestones(milestones),
     });
+
+    setClientQuery(selected.clientName || "");
   }, [selected, isCreating]);
 
   function startCreate() {
@@ -120,12 +135,16 @@ export default function useAdminProjects() {
 
   function applyClient(clientId) {
     const c = clients.find((x) => String(x.id) === String(clientId));
+
     setDraft((d) => ({
       ...d,
       clientId,
       clientName: c?.name ?? "",
       clientEmail: c?.email ?? "",
     }));
+
+    // reflect selection in search box
+    setClientQuery(c?.name ?? "");
   }
 
   async function saveProject() {
@@ -241,5 +260,9 @@ export default function useAdminProjects() {
     setIsCreating,
     setSelectedId,
     setDraft,
+
+    clientQuery,
+    setClientQuery,
+    filteredClients,
   };
 }

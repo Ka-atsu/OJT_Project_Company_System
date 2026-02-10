@@ -1,4 +1,3 @@
-import React from "react";
 import { PSTATUS } from "./projects.services";
 
 export function Badge({ tone = "muted", children }) {
