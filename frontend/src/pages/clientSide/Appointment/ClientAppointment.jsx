@@ -1,6 +1,7 @@
 import { useEffect, useState, useCallback, useRef } from "react";
 import BookAppointment from "./BookAppointment";
 import { listAppointments, createAppointment } from "./appointments.service";
+import { useSearchParams , useNavigate } from "react-router-dom";
 import "./appointment.css";
 
 function getStatusDetails(a) {
@@ -48,6 +49,9 @@ function getApiErrorMessage(err, fallback = "Something went wrong.") {
 }
 
 export default function ClientAppointment() {
+   const [searchParams] = useSearchParams();
+   const navigate = useNavigate();
+
   const [activeTab, setActiveTab] = useState("upcoming");
   const [open, setOpen] = useState(false);
 
@@ -57,6 +61,7 @@ export default function ClientAppointment() {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const limit = 7;
+  
 
   const requestIdRef = useRef(0);
 
@@ -95,6 +100,17 @@ export default function ClientAppointment() {
     setActiveTab(tab);
     setPage(1);
   };
+
+  useEffect(() => {
+  if (searchParams.get("openModal") === "true") {
+    setOpen(true);
+
+    // Remove query param after opening modal
+    const params = new URLSearchParams(searchParams);
+    params.delete("openModal");
+    navigate({ search: params.toString() }, { replace: true });
+  }
+}, [searchParams, navigate]);
 
   return (
     <section className="appointment-page">
