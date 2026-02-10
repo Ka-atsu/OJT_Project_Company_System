@@ -1,14 +1,14 @@
-import { useMemo, useState } from "react";
+import React from "react";
 import "./project.css";
+import ProjectModal from "./ProjectModal";
 import {
-  ImgAggregates,
-  ImgBackfill,
-  ImgConstructionSite,
-  ImgEarthmoving,
-} from "../../../assets/images";
+  getStatusClass,
+  projectFilters,
+  useClientProjects,
+} from "./useClientProject";
 
 function ProjectRow({ project, onClick }) {
-  const statusClass = project.status.toLowerCase().replace(/\s+/g, "-");
+  const statusClass = getStatusClass(project.status);
 
   return (
     <button
@@ -18,8 +18,7 @@ function ProjectRow({ project, onClick }) {
     >
       <div className="project-main">
         <div className="project-meta">
-          {/* This shall be a placeholder for now, may change the icon*/}
-          <span className="dash-icon">🏠</span> 
+          <span className="dash-icon">🏠</span>
           <div className="project-text">
             <h6 className="project-title">{project.name}</h6>
             <p className="project-subtitle">{project.type}</p>
@@ -32,226 +31,20 @@ function ProjectRow({ project, onClick }) {
   );
 }
 
-function ProjectModal({ project, onClose }) {
-  const [activeImg, setActiveImg] = useState(0);
-  const [showFull, setShowFull] = useState(false);
-  
-
-  if (!project) return null;
-
-  // Backend-ready:
-  // later this should be an array of URLs from Laravel, e.g.:
-  // images: ["https://cdn.../1.jpg", "https://cdn.../2.jpg"]
-  const images =
-    Array.isArray(project.images) && project.images.length > 0
-      ? project.images
-      : [ImgConstructionSite];
-
-  const mainSrc = images[Math.min(activeImg, images.length - 1)];
-
-  return (
-    <section className="project-overlay" role="dialog" aria-modal="true">
-      <button
-        className="project-overlay-bg"
-        type="button"
-        onClick={onClose}
-        aria-label="Close overlay"
-      />
-
-      <div className="project-modal">
-        <div className="project-modal-top">
-          <div>
-            <h2 className="project-modal-title">{project.name}</h2>
-            <p className="project-modal-subtitle">{project.type}</p>
-          </div>
-
-          <button
-            className="project-modal-close"
-            type="button"
-            onClick={onClose}
-            aria-label="Close"
-          >
-            ✕
-          </button>
-        </div>
-
-        <div className="project-modal-body">
-          <div className="project-modal-grid">
-            <div className="project-modal-item">
-              <span className="project-modal-label">Project Address</span>
-              <p className="project-modal-value">
-                {project.address || "Not provided yet."}
-              </p>
-            </div>
-
-            <div className="project-modal-item">
-              <span className="project-modal-label">Starting Date</span>
-              <p className="project-modal-value">
-                {project.startDate || "Not provided yet."}
-              </p>
-            </div>
-
-            <div className="project-modal-item">
-              <span className="project-modal-label">Completed Date</span>
-              <p className="project-modal-value">
-                {project.completedDate || "Not completed yet."}
-              </p>
-            </div>
-
-            <div className="project-modal-item">
-              <span className="project-modal-label">Status</span>
-              <p className="project-modal-value">{project.status}</p>
-            </div>
-          </div>
-
-          {/* Image / progress photos */}
-          <div className="project-modal-media">
-            <div className="project-modal-media-bar">
-              <span className="project-modal-count">
-                {images.length > 1 ? `Photos (${images.length})` : "Photo"}
-              </span>
-            </div>
-
-            <div className="project-modal-media-main">
-              {/* <img
-                className="project-modal-img"
-                src={mainSrc}
-                alt={`${project.name} progress`}
-              /> */}
-
-              <button
-                type="button"
-                className="project-modal-img-btn"
-                onClick={() => setShowFull(true)}
-                aria-label="View full image"
-              >
-                <img
-                  className="project-modal-img"
-                  src={mainSrc}
-                  alt={`${project.name} progress`}
-                />
-              </button>
-            </div>
-
-            {images.length > 1 && (
-              <div className="project-modal-thumbs" role="list">
-                {images.map((src, idx) => (
-                  <button
-                    key={idx}
-                    type="button"
-                    className={`project-modal-thumb ${
-                      idx === activeImg ? "is-active" : ""
-                    }`}
-                    onClick={() => setActiveImg(idx)}
-                    aria-label={`View photo ${idx + 1}`}
-                  >
-                    <img
-                      className="project-modal-thumb-img"
-                      src={src}
-                      alt={`Thumbnail ${idx + 1}`}
-                    />
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
-        </div>
-
-      </div>{showFull && (
-          <div className="image-lightbox" role="dialog" aria-modal="true">
-            <button
-              className="image-lightbox-bg"
-              type="button"
-              onClick={() => setShowFull(false)}
-              aria-label="Close image preview"
-            />
-
-            <img
-              className="image-lightbox-img"
-              src={mainSrc}
-              alt={`${project.name} full view`}
-            />
-
-            <button
-              className="image-lightbox-close"
-              type="button"
-              onClick={() => setShowFull(false)}
-              aria-label="Close"
-            >
-              ✕
-            </button>
-          </div>
-        )}
-        
-    </section>
-  );
-}
-
-const projects = [
-  {
-    id: 1,
-    name: "Random Building Somewhere",
-    type: "Commercial Building",
-    status: "In Progress",
-    address: "Laguna, Philippines",
-    startDate: "Jan 12, 2026",
-    completedDate: null,
-    images: [ImgConstructionSite, ImgEarthmoving, ImgBackfill],
-  },
-  {
-    id: 2,
-    name: "2nd Random Building Somewhere",
-    type: "Commercial Building",
-    status: "Completed",
-    address: "Cavite, Philippines",
-    startDate: "Oct 01, 2025",
-    completedDate: "Jan 18, 2026",
-    images: [ImgAggregates, ImgConstructionSite],
-  },
-  {
-    id: 3,
-    name: "3rd Random Building Somewhere",
-    type: "Commercial Building",
-    status: "Active",
-    address: null,
-    startDate: "Feb 01, 2026",
-    completedDate: null,
-    images: [ImgEarthmoving],
-  },
-  { id: 4, name: "4th Building", type: "Residential", status: "In Progress" },
-  { id: 5, name: "5th Building", type: "Residential", status: "Completed" },
-  { id: 6, name: "6th Building", type: "Commercial", status: "Active" },
-  { id: 7, name: "7th Building", type: "Commercial", status: "In Progress" },
-];
-
 export default function ClientProject() {
-  const [activeFilter, setActiveFilter] = useState("All");
-  const [selected, setSelected] = useState(null);
-
-  const [page, setPage] = useState(1);
-  const limit = 6;
-
-  const filteredProjects = useMemo(() => {
-    return activeFilter === "All"
-      ? projects
-      : projects.filter(
-          (p) => p.status.toLowerCase() === activeFilter.toLowerCase(),
-        );
-  }, [activeFilter]);
-
-  const totalPages = Math.max(1, Math.ceil(filteredProjects.length / limit));
-
-  const pageProjects = useMemo(() => {
-    const start = (page - 1) * limit;
-    return filteredProjects.slice(start, start + limit);
-  }, [filteredProjects, page]);
-
-  const handleFilter = (filter) => {
-    setActiveFilter(filter);
-    setPage(1);
-  };
-
-  if (page > totalPages) setPage(totalPages);
+  const {
+    activeFilter,
+    page,
+    totalPages,
+    loading,
+    err,
+    pageProjects,
+    selected,
+    setSelected,
+    handleFilter,
+    prevPage,
+    nextPage,
+  } = useClientProjects({ limit: 6 });
 
   return (
     <section className="project-page">
@@ -272,7 +65,7 @@ export default function ClientProject() {
         </div>
 
         <div className="project-filters">
-          {["All", "Active", "Completed", "In Progress"].map((filter) => (
+          {projectFilters.map((filter) => (
             <button
               key={filter}
               className={`project-filter dash-btn ghost ${
@@ -287,7 +80,11 @@ export default function ClientProject() {
         </div>
 
         <div className="project-list-wrap">
-          {pageProjects.length === 0 ? (
+          {loading ? (
+            <div className="project-empty">Loading projects…</div>
+          ) : err ? (
+            <div className="project-empty">Error: {err}</div>
+          ) : pageProjects.length === 0 ? (
             <div className="project-empty">No projects found.</div>
           ) : (
             <div className="project-list">
@@ -306,8 +103,8 @@ export default function ClientProject() {
           <button
             className="dash-btn ghost"
             type="button"
-            onClick={() => setPage((p) => Math.max(1, p - 1))}
-            disabled={page <= 1}
+            onClick={prevPage}
+            disabled={page <= 1 || loading}
           >
             Prev
           </button>
@@ -319,8 +116,8 @@ export default function ClientProject() {
           <button
             className="dash-btn ghost"
             type="button"
-            onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-            disabled={page >= totalPages}
+            onClick={nextPage}
+            disabled={page >= totalPages || loading}
           >
             Next
           </button>
