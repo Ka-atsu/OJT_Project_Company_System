@@ -27,7 +27,7 @@ export default function CompanyProfileSlice({
 
           <motion.div className="about-company-profile" variants={FADE_UP}>
             <div className="company-profile-images">
-              <div className="company-profile-image">
+              <div className="company-profile-image cover-page">
                 <img src={mvImages?.page1} alt="Company profile image 1" />
               </div>
               <div className="company-profile-image">
@@ -39,7 +39,7 @@ export default function CompanyProfileSlice({
               {buttons.map((b) => (
                 <a
                   key={b.label}
-                  className="btn"
+                  className={`btn btn-${b.action}`}
                   href={b.href}
                   target={b.action === "view" ? "_blank" : undefined}
                   rel={b.action === "view" ? "noopener noreferrer" : undefined}
