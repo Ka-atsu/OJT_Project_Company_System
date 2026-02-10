@@ -1,4 +1,3 @@
-import React from "react";
 import { Field, StatusBadge } from "./adminProjectsUi";
 
 export default function AdminProjectsList({

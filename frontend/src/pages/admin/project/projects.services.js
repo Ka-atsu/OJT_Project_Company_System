@@ -28,7 +28,7 @@ export function emptyProject() {
     progress: 0,
     description: "",
     milestones: [],
-    photos: [], // 👈 REQUIRED
+    photos: [],
     updatedAt: "",
   };
 }
