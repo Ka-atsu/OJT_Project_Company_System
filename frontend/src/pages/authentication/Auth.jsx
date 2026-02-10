@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import "./authdraft.css";
 import logo from "../../assets/Images/logo.jpg";
 import { login, register } from "./auth.service";
+import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai"; // 👁 icons
 
 const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -18,7 +19,6 @@ const Auth = () => {
   };
 
   function toErrorMessage(e, fallback = "Something went wrong") {
-    // Laravel often returns { message } or { errors: {field:[...]} }
     const message = e?.response?.data?.message;
     if (message) return message;
 
@@ -48,9 +48,7 @@ const Auth = () => {
       setLoading(true);
       const user = await register(name, email, password, confirm);
       localStorage.setItem("user", JSON.stringify(user));
-
-      // optional: switch to login state after register
-      setIsLogin(true);
+      setIsLogin(true); // optional: switch to login after register
     } catch (error) {
       setErr(toErrorMessage(error, "Register failed"));
     } finally {
@@ -69,9 +67,6 @@ const Auth = () => {
       setLoading(true);
       const user = await login(email, password, remember);
       localStorage.setItem("user", JSON.stringify(user));
-
-      // optional: redirect (uncomment and change route)
-      // window.location.href = "/dashboard";
     } catch (error) {
       setErr(toErrorMessage(error, "Login failed"));
     } finally {
@@ -84,44 +79,45 @@ const Auth = () => {
       <div className="auth-card">
         {/* Forms Container */}
         <div className="forms-container">
-          {/* REGISTER FORM - LEFT */}
-          <div
-            className={`form register-form ${!isLogin ? "visible" : "hidden"}`}
-          >
-            <h2 className="auth-formTitle">SIGN UP</h2>
 
-            {err ? <div className="auth-error">{err}</div> : null}
+          {/* REGISTER FORM */}
+          <div className={`form register-form ${!isLogin ? "visible" : "hidden"}`}>
+            <h2 className="auth-formTitle">SIGN UP</h2>
+            {err && <div className="auth-error">{err}</div>}
 
             <form onSubmit={handleRegister}>
               <label className="auth-field">
-                <span className="auth-label">Name</span>
+                <span className="auth-label">Full Name</span>
                 <input
                   name="name"
                   className="auth-input"
                   type="text"
+                  placeholder="John Doe"
                   required
                   disabled={loading}
                 />
               </label>
 
               <label className="auth-field">
-                <span className="auth-label">E-mail address</span>
+                <span className="auth-label">Email Address</span>
                 <input
                   name="email"
                   className="auth-input"
                   type="email"
+                  placeholder="email@example.com"
                   required
                   disabled={loading}
                 />
               </label>
 
               <label className="auth-field">
-                <span className="auth-label">Enter password</span>
+                <span className="auth-label">Password</span>
                 <div className="auth-pwWrap">
                   <input
                     name="password"
                     className="auth-input"
                     type={showPwRegister ? "text" : "password"}
+                    placeholder="Enter your password"
                     required
                     disabled={loading}
                   />
@@ -129,50 +125,49 @@ const Auth = () => {
                     type="button"
                     className="auth-eyeBtn"
                     onClick={() => setShowPwRegister((v) => !v)}
-                    aria-label={
-                      showPwRegister ? "Hide password" : "Show password"
-                    }
+                    aria-label={showPwRegister ? "Hide password" : "Show password"}
                     disabled={loading}
                   >
-                    👁
+                    {showPwRegister ? <AiOutlineEyeInvisible size={20} /> : <AiOutlineEye size={20} />}
                   </button>
                 </div>
               </label>
 
               <label className="auth-field">
-                <span className="auth-label">Confirm password</span>
+                <span className="auth-label">Confirm Password</span>
                 <input
                   name="confirm"
                   className="auth-input"
                   type={showPwRegister ? "text" : "password"}
+                  placeholder="Re-enter your password"
                   required
                   disabled={loading}
                 />
               </label>
 
               <button
-                className="auth-btn auth-btnSolid"
+                className="auth-btnSolid"
                 type="submit"
                 disabled={loading}
               >
-                {loading ? "Creating..." : "Create Account"}
+                {loading ? "Creating..." : "Sign Up"}
               </button>
             </form>
           </div>
 
-          {/* LOGIN FORM - RIGHT */}
+          {/* LOGIN FORM */}
           <div className={`form login-form ${isLogin ? "visible" : "hidden"}`}>
-            <h2 className="auth-formTitle">LOGIN</h2>
-
-            {err ? <div className="auth-error">{err}</div> : null}
+            <h2 className="auth-formTitle">SIGN IN</h2>
+            {err && <div className="auth-error">{err}</div>}
 
             <form onSubmit={handleLogin}>
               <label className="auth-field">
-                <span className="auth-label">E-mail address</span>
+                <span className="auth-label">Email Address</span>
                 <input
                   name="email"
                   className="auth-input"
                   type="email"
+                  placeholder="email@example.com"
                   required
                   disabled={loading}
                 />
@@ -185,6 +180,7 @@ const Auth = () => {
                     name="password"
                     className="auth-input"
                     type={showPwLogin ? "text" : "password"}
+                    placeholder="Enter your password"
                     required
                     disabled={loading}
                   />
@@ -195,7 +191,7 @@ const Auth = () => {
                     aria-label={showPwLogin ? "Hide password" : "Show password"}
                     disabled={loading}
                   >
-                    👁
+                    {showPwLogin ? <AiOutlineEyeInvisible size={20} /> : <AiOutlineEye size={20} />}
                   </button>
                 </div>
               </label>
@@ -211,7 +207,7 @@ const Auth = () => {
               </label>
 
               <button
-                className="auth-btn auth-btnSolid"
+                className="auth-btnSolid"
                 type="submit"
                 disabled={loading}
               >
