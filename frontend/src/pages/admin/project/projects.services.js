@@ -133,12 +133,12 @@ export const ProjectsService = {
   async clients(signal) {
     try {
       const { data } = await api.get(routes.clients, { signal });
-      return normalizeClientsResponse(data);
+      return normalizeClientsResponse(data); // <-- no filtering here
     } catch (e) {
       throw new Error(toFriendlyError(e, "Failed to load clients"));
     }
   },
-
+  
   async create(draft) {
     try {
       await csrf();
@@ -159,7 +159,7 @@ export const ProjectsService = {
       await csrf();
       const fd = toFormData(draft);
 
-      // Laravel method spoofing
+      // Laravel method spoofing for PATCH
       fd.append("_method", "PATCH");
 
       const { data } = await api.post(

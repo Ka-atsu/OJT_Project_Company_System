@@ -45,31 +45,72 @@ export default function useAdminProjects() {
   const to = Math.min(total, page * pageSize);
 
   const filteredClients = useMemo(() => {
-    if (!clientQuery.trim()) return clients;
+    if (!clientQuery.trim()) return clients; // If no query, return all clients
 
-    const q = clientQuery.toLowerCase();
+    const q = clientQuery.trim().toLowerCase(); // Normalize the search query to lowercase
+    console.log("Client Query:", q); // Log to check the query input
 
-    return clients.filter(
-      (c) =>
-        c.name.toLowerCase().includes(q) || c.email?.toLowerCase().includes(q),
+    // Filter clients based on name or email and make sure query matches either name or email
+    const filtered = clients.filter(
+      (client) =>
+        client.name.toLowerCase().includes(q) ||
+        client.email?.toLowerCase().includes(q),
     );
+
+    console.log("Filtered Clients:", filtered); // Log filtered results to verify it's correct
+
+    return filtered;
   }, [clients, clientQuery]);
 
+  // Define the showing variable
   const showing = isCreating
     ? "New project"
     : selected
       ? selected.id
-      : "Select a project";
+      : "Select a project"; // This defines the showing variable based on isCreating and selected project
 
   useEffect(() => setPage(1), [status, q, sort, pageSize]);
 
   useEffect(() => {
-    const controller = new AbortController();
-    ProjectsService.clients(controller.signal)
-      .then(setClients)
-      .catch(() => {});
-    return () => controller.abort();
+    const controller = new AbortController(); // Create a new controller every time
+    const fetchClients = async () => {
+      try {
+        setLoading(true);
+        setErr(""); // Clear previous errors
+
+        const clientsData = await ProjectsService.clients(controller.signal); // Fetch clients
+        console.log("Fetched clients:", clientsData); // Log the data to confirm it's received
+
+        // Only update the state if the request hasn't been aborted
+        if (!controller.signal.aborted) {
+          setClients(clientsData); // Update state with fetched clients
+        }
+      } catch (err) {
+        // Handle errors gracefully
+        if (err.name !== "AbortError") {
+          console.error("Error fetching clients:", err);
+          setErr("Error fetching clients");
+        }
+      } finally {
+        setLoading(false); // Stop loading regardless of the outcome
+      }
+    };
+
+    fetchClients(); // Call the fetch function
+
+    return () => {
+      controller.abort(); // Abort the request if the component unmounts
+    };
   }, []);
+
+  // This will log the clients after state is updated
+  useEffect(() => {
+    console.log("Clients state updated:", clients); // This will be triggered after state update
+  }, [clients]); // Whenever clients state changes, it will log
+
+  useEffect(() => {
+    console.log("Client Query Updated:", clientQuery); // Log whenever clientQuery is updated
+  }, [clientQuery]);
 
   useEffect(() => {
     abortRef.current?.abort?.();
@@ -110,7 +151,7 @@ export default function useAdminProjects() {
       progress: calcProgressFromMilestones(milestones),
     });
 
-    setClientQuery(selected.clientName || "");
+    setClientQuery("");
   }, [selected, isCreating]);
 
   function startCreate() {
@@ -136,6 +177,8 @@ export default function useAdminProjects() {
   function applyClient(clientId) {
     const c = clients.find((x) => String(x.id) === String(clientId));
 
+    console.log("Selected client:", c); // Log to see if client is correctly selected
+
     setDraft((d) => ({
       ...d,
       clientId,
@@ -143,8 +186,9 @@ export default function useAdminProjects() {
       clientEmail: c?.email ?? "",
     }));
 
-    // reflect selection in search box
-    setClientQuery(c?.name ?? "");
+    // Clear the query if the client is pre-selected
+    setClientQuery(""); // Reset query after applying client
+    console.log("Updated client query:", ""); // Ensure query is cleared after client selection
   }
 
   async function saveProject() {
