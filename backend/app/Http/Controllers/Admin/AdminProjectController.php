@@ -16,8 +16,8 @@ class AdminProjectController extends Controller
     public function clients()
     {
         return response()->json(
-            User::where('is_admin', 0)
-                ->select('id', 'name', 'email')
+            User::where('is_admin', 0) // Only get non-admin users
+                ->select('id', 'name', 'email')  // Fetch only relevant data
                 ->orderBy('name')
                 ->get()
         );
@@ -31,6 +31,7 @@ class AdminProjectController extends Controller
         $qText = trim((string) $request->query('q', ''));
         $sort = (string) $request->query('sort', 'due_asc');
 
+        // As an admin, you want to see all projects, so remove the restriction on 'user_id'
         $q = Project::query()
             ->with(['user:id,name,email', 'milestones', 'photos'])
             ->when($status !== 'all', fn($qq) => $qq->where('status', $status))
@@ -63,24 +64,23 @@ class AdminProjectController extends Controller
         $data = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'status' => ['required', Rule::in(['draft', 'active', 'on_hold', 'completed'])],
-            'clientId' => ['nullable', 'exists:users,id'],
+            'clientId' => ['required', 'exists:users,id'],  // Client ID is required
             'startDate' => ['nullable', 'date'],
             'dueDate' => ['nullable', 'date'],
             'budget' => ['nullable', 'numeric', 'min:0'],
             'progress' => ['nullable', 'integer', 'min:0', 'max:100'],
             'description' => ['nullable', 'string'],
-
-            // photos only
             'photos' => ['nullable', 'array'],
             'photos.*' => ['image', 'max:5120'],
         ]);
 
-        // decode milestones JSON
+        // Decode milestones JSON
         $milestones = json_decode($request->input('milestones', '[]'), true);
         if (!is_array($milestones)) $milestones = [];
 
+        // Create a new project with the provided clientId
         $project = Project::create([
-            'user_id' => $data['clientId'] ?? $request->user()->id,
+            'user_id' => $data['clientId'],  // Assign the project to the specified client
             'name' => $data['name'],
             'status' => $data['status'],
             'start_date' => $data['startDate'] ?? null,
@@ -90,6 +90,7 @@ class AdminProjectController extends Controller
             'description' => $data['description'] ?? null,
         ]);
 
+        // Handle milestones
         foreach ($milestones as $m) {
             $project->milestones()->create([
                 'title' => $m['title'],
@@ -98,6 +99,7 @@ class AdminProjectController extends Controller
             ]);
         }
 
+        // Handle photos
         if ($request->hasFile('photos')) {
             foreach ($request->file('photos') as $photo) {
                 $project->photos()->create([

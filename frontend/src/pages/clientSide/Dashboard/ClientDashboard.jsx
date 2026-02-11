@@ -1,4 +1,5 @@
 import "./dashboard.page.css";
+import { useNavigate } from "react-router-dom";
 
 function getStoredName() {
   const raw = localStorage.getItem("user");
@@ -17,6 +18,7 @@ const docs = ["Contract Document", "Progress Report", "Planning Files"];
 
 export default function ClientDashboard() {
   const name = getStoredName();
+  const navigate = useNavigate();
 
   let greeting = "Welcome back";
   if (name) {
@@ -111,9 +113,13 @@ export default function ClientDashboard() {
               ))}
             </div>
 
-            <div className="dash-item-meta dash-meta-spacer">
+            <button
+              type="button"
+              className="dash-view-all"
+              onClick={() => navigate("/dashboard/documents")}
+            >
               View all documents →
-            </div>
+            </button>
           </div>
         </div>
       </div>

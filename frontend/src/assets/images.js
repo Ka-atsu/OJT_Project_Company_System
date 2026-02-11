@@ -10,6 +10,8 @@ import ImgExcavationSite from "./Images/excavationSite.jpg";
 import ImgCBDBuilding from "./Images/CBDBuilding.jpg";
 import ImgPlan from "./Images/plan.jpg";
 import ImgSiteInspection from "./Images/siteInspection.jpg";
+import CompanyProfilePages from "./Images/companyProfilePages.png";
+import CoverPage from "./Images/coverPage.png";
 
 export {
   ImgConstructionSite,
@@ -24,4 +26,6 @@ export {
   ImgCBDBuilding,
   ImgPlan,
   ImgSiteInspection,
+  CompanyProfilePages,
+  CoverPage,
 };

@@ -10,6 +10,9 @@ import {
 function ProjectRow({ project, onClick }) {
   const statusClass = getStatusClass(project.status);
 
+  // Log the project status to verify it's correct
+  console.log("Project Status:", project.status);
+
   return (
     <button
       type="button"
@@ -26,7 +29,9 @@ function ProjectRow({ project, onClick }) {
         </div>
       </div>
 
-      <div className={`project-status ${statusClass}`}>{project.status}</div>
+      <div className={`project-status ${statusClass}`}>
+        {project.status} {/* Log status here to check the value */}
+      </div>
     </button>
   );
 }
@@ -65,16 +70,17 @@ export default function ClientProject() {
         </div>
 
         <div className="project-filters">
-          {projectFilters.map((filter) => (
+          {/* Use the `projectFilters` for filter buttons */}
+          {projectFilters.map((status) => (
             <button
-              key={filter}
+              key={status}
               className={`project-filter dash-btn ghost ${
-                activeFilter === filter ? "is-active" : ""
+                activeFilter === status ? "is-active" : ""
               }`}
-              onClick={() => handleFilter(filter)}
+              onClick={() => handleFilter(status)}
               type="button"
             >
-              {filter}
+              {status} {/* Directly use the filter name */}
             </button>
           ))}
         </div>

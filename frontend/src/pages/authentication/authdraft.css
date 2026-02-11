@@ -280,8 +280,10 @@
 /* RIGHT PANEL MOVED */
 .right-panel.moved-left {
   transform: translateX(-100%);
-  border-top-left-radius: 80px;
-  border-bottom-left-radius: 80px;
+  border-top-right-radius: 80px;
+  border-bottom-right-radius: 80px;
+  border-top-left-radius: 0px; 
+  border-bottom-left-radius: 0px;
 }
 
 .left-panel.moved-right {

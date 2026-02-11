@@ -21,6 +21,7 @@ return [
         'login',
         'logout',
         'register',
+        '*'
     ],
 
     'allowed_methods' => ['*'],
@@ -29,8 +30,6 @@ return [
         'http://localhost:5173',
         'http://127.0.0.1:5173',
         'http://192.168.18.13:5173',
-        'http://26.103.184.34:5173',
-        'http://172.28.96.1:5173',
     ],
 
     'allowed_origins_patterns' => [],

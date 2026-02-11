@@ -1,10 +1,9 @@
+/* Layout & Page Structure */
 .ap {
   background: transparent;
   color: var(--aa-text);
-
   height: 100%;
   min-height: 0;
-
   display: grid;
   grid-template-rows: auto 1fr;
   gap: 12px;
@@ -13,11 +12,13 @@
 .ap-header {
   margin-bottom: 0;
 }
+
 .ap-title {
   margin: 6px 0 0;
   font-size: 28px;
   line-height: 1.1;
 }
+
 .ap-sub {
   margin: 6px 0 0;
   color: var(--aa-muted);
@@ -27,18 +28,21 @@
   display: grid;
   grid-template-columns: minmax(320px, 40%) minmax(420px, 60%);
   gap: 12px;
-
   align-items: stretch;
   min-height: 0;
 }
 
-/* cards */
+.ap-details {
+  flex: 1;
+  overflow-y: auto;
+}
+
+/* Cards & Containers */
 .ap-card {
   background: var(--aa-surface);
   border: 1px solid var(--aa-border);
   border-radius: var(--aa-radius);
   box-shadow: var(--aa-shadow);
-
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -59,12 +63,34 @@
   font-size: 14px;
   letter-spacing: 0.02em;
 }
+
 .ap-card__meta {
   font-size: 12px;
   color: var(--aa-muted);
 }
 
-/* toolbar */
+.ap-block {
+  display: grid;
+  gap: 10px;
+  padding: 12px;
+  border: 1px solid var(--aa-border);
+  border-radius: 14px;
+  z-index: 1;
+}
+
+.ap-block__top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+
+.ap-block__actions {
+  display: flex;
+  gap: 10px;
+}
+
+/* Toolbar, Pagination, Lists */
 .ap-toolbar {
   padding: 12px 16px;
   border-bottom: 1px solid var(--aa-border);
@@ -73,35 +99,30 @@
   gap: 10px;
 }
 
-.ap-field {
-  display: grid;
-  gap: 6px;
+.ap-pagination {
+  padding: 12px 16px;
+  border-top: 1px solid var(--aa-border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
 }
-.ap-field__label {
+
+.ap-pagination__meta {
   font-size: 12px;
   color: var(--aa-muted);
 }
 
-.ap-field select,
-.ap-field input {
-  border: 1px solid var(--aa-border);
-  background: color-mix(in oklab, var(--aa-surface), var(--aa-text) 3%);
-  color: var(--aa-text);
-  border-radius: 10px;
-  padding: 8px 10px;
-}
-
-/* list scroll */
 .ap-list {
   padding: 10px;
   display: grid;
   gap: 10px;
-
   flex: 1;
   min-height: 0;
   overflow: auto;
 }
 
+/* List Items & Progress */
 .ap-item {
   text-align: left;
   width: 100%;
@@ -129,13 +150,13 @@
   align-items: flex-start;
   gap: 10px;
 }
+
 .ap-item__bottom {
   margin-top: 10px;
   display: grid;
   gap: 4px;
 }
 
-/* progress bar */
 .ap-progress {
   margin-top: 10px;
   height: 6px;
@@ -143,65 +164,31 @@
   background: rgba(0, 0, 0, 0.06);
   overflow: hidden;
 }
+
 .ap-progress__bar {
   height: 100%;
   background: rgba(0, 0, 0, 0.35);
   border-radius: 999px;
 }
 
-/* pagination */
-.ap-pagination {
-  padding: 12px 16px;
-  border-top: 1px solid var(--aa-border);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 10px;
+/* Forms & Fields */
+.ap-field {
+  display: grid;
+  gap: 6px;
 }
 
-.ap-pagination__meta {
+.ap-field__label {
   font-size: 12px;
   color: var(--aa-muted);
 }
 
-/* details scroll */
-.ap-details {
-  padding: 16px;
-  display: grid;
-  gap: 14px;
-
-  flex: 1;
-  min-height: 0;
-  overflow: auto;
-}
-
-.ap-block {
-  display: grid;
-  gap: 10px;
-  padding: 12px;
+.ap-field select,
+.ap-field input {
   border: 1px solid var(--aa-border);
-  border-radius: 14px;
-}
-
-.ap-block__top {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 10px;
-}
-.ap-block__actions {
-  display: flex;
-  gap: 10px;
-}
-
-.ap-twoCol {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  min-width: 0;
-}
-.ap-twoCol > * {
-  min-width: 0;
+  background: color-mix(in oklab, var(--aa-surface), var(--aa-text) 3%);
+  color: var(--aa-text);
+  border-radius: 10px;
+  padding: 8px 10px;
 }
 
 .ap-textarea {
@@ -214,26 +201,53 @@
   resize: vertical;
 }
 
-/* key/value */
-.ap-kv {
+.ap-twoCol {
   display: grid;
-  grid-template-columns: 120px 1fr;
-  gap: 6px 10px;
-  align-items: baseline;
-}
-.ap-k {
-  color: var(--aa-muted);
-  font-size: 12px;
-}
-.ap-v {
-  font-size: 13px;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  min-width: 0;
 }
 
-/* milestones */
-.ap-milestones {
-  display: grid;
-  gap: 10px;
+.ap-twoCol > * {
+  min-width: 0;
 }
+
+/* Client Assignment UI */
+
+/* Client Assignment UI */
+.ap-clientAssigned {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column; /* Stack name and email vertically */
+  gap: 8px;
+}
+
+.ap-clientAssigned__detail {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ap-clientAssigned__label {
+  font-size: 12px; /* Slightly larger font for clarity */
+  padding: 4px 8px;
+  border-radius: 999px;
+  border: 1px solid var(--aa-border);
+  background: color-mix(in oklab, var(--aa-surface), var(--aa-text) 4%);
+  color: var(--aa-muted);
+  font-weight: bold; /* Add some boldness to the label for distinction */
+}
+
+.ap-clientAssigned__email {
+  font-size: 14px; /* Slightly larger font for better visibility */
+  color: var(--aa-text); /* Make the email text color a bit more prominent */
+}
+
+/* Milestones */
+.ap-milestones {
+  position: relative;
+}
+
 .ap-ms {
   border: 1px solid var(--aa-border);
   border-radius: 12px;
@@ -242,23 +256,19 @@
   gap: 8px;
   background: color-mix(in oklab, var(--aa-surface), var(--aa-text) 1%);
 }
+
 .ap-ms__row {
   display: grid;
   grid-template-columns: 1fr 140px 32px;
   gap: 10px;
   align-items: center;
 }
+
 .ap-ms__row--meta {
   grid-template-columns: 40px 1fr auto;
 }
 
-.ap-ms__title {
-  border: 1px solid var(--aa-border);
-  border-radius: 10px;
-  padding: 8px 10px;
-  background: transparent;
-  color: inherit;
-}
+.ap-ms__title,
 .ap-ms__status {
   border: 1px solid var(--aa-border);
   border-radius: 10px;
@@ -266,6 +276,7 @@
   background: transparent;
   color: inherit;
 }
+
 .ap-ms__del {
   border: 1px solid var(--aa-border);
   border-radius: 10px;
@@ -274,128 +285,7 @@
   height: 36px;
 }
 
-/* badges + buttons */
-.ap-badge {
-  font-size: 12px;
-  padding: 6px 10px;
-  border-radius: 999px;
-  border: 1px solid var(--aa-border);
-  background: color-mix(in oklab, var(--aa-surface), var(--aa-text) 3%);
-  color: var(--aa-muted);
-}
-.ap-badge--success {
-  background: rgba(136, 255, 167, 0.16);
-  border-color: rgba(136, 255, 167, 0.55);
-  color: #0b6b2b;
-}
-.ap-badge--primary {
-  background: rgba(169, 182, 255, 0.16);
-  border-color: rgba(169, 182, 255, 0.6);
-  color: #2a3aa8;
-}
-.ap-badge--warning {
-  background: rgba(255, 210, 122, 0.18);
-  border-color: rgba(255, 210, 122, 0.6);
-  color: #8a5b00;
-}
-.ap-badge--muted {
-  opacity: 0.95;
-}
-
-.ap-btn {
-  border: 1px solid var(--aa-border);
-  background: color-mix(in oklab, var(--aa-surface), var(--aa-text) 5%);
-  color: var(--aa-text);
-  padding: 9px 12px;
-  border-radius: 12px;
-  cursor: pointer;
-  white-space: nowrap;
-}
-.ap-btn:hover {
-  background: color-mix(in oklab, var(--aa-surface), var(--aa-text) 8%);
-}
-.ap-btn--ghost {
-  background: transparent;
-}
-.ap-btn--primary {
-  background: #111827;
-  border-color: #111827;
-  color: #fff;
-}
-.ap-btn--primary:hover {
-  background: #000;
-  border-color: #000;
-}
-
-.ap-empty {
-  padding: 16px;
-  color: var(--aa-muted);
-}
-
-.ap-strong {
-  font-weight: 600;
-}
-.ap-muted {
-  color: var(--aa-muted);
-}
-.ap-small {
-  font-size: 12px;
-}
-.ap-mono {
-  font-family:
-    ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
-    "Courier New", monospace;
-  font-size: 12px;
-}
-
-/* responsive */
-@media (max-width: 980px) {
-  .ap-grid {
-    grid-template-columns: 1fr;
-  }
-  .ap-twoCol {
-    grid-template-columns: 1fr;
-  }
-  .ap-ms__row {
-    grid-template-columns: 1fr;
-  }
-  .ap-ms__row--meta {
-    grid-template-columns: 1fr;
-  }
-}
-
-.ap-photos {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
-  gap: 10px;
-  margin-top: 8px;
-}
-
-.ap-photoWrap {
-  position: relative;
-}
-
-.ap-photo {
-  width: 100%;
-  height: 110px;
-  object-fit: cover;
-  border-radius: 6px;
-  border: 1px solid #e5e7eb;
-}
-
-.ap-photoDel {
-  position: absolute;
-  top: 4px;
-  right: 4px;
-  background: rgba(0, 0, 0, 0.65);
-  color: #fff;
-  border: none;
-  width: 22px;
-  height: 22px;
-  border-radius: 50%;
-  cursor: pointer;
-}
-
+/* Photos */
 .ap-photos {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
@@ -428,12 +318,112 @@
   border: none;
   background: rgba(0, 0, 0, 0.65);
   color: white;
-  font-size: 14px;
   cursor: pointer;
   opacity: 0;
-  transition: opacity 0.15s ease;
 }
 
 .ap-photoWrap:hover .ap-photoDel {
   opacity: 1;
+}
+
+/* Badges & Buttons */
+
+.ap-badge {
+  font-size: 12px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--aa-border);
+  background: color-mix(in oklab, var(--aa-surface), var(--aa-text) 3%);
+  color: var(--aa-muted);
+}
+
+.ap-badge--success {
+  background: rgba(136, 255, 167, 0.16);
+  border-color: rgba(136, 255, 167, 0.55);
+  color: #0b6b2b;
+}
+
+.ap-badge--primary {
+  background: rgba(169, 182, 255, 0.16);
+  border-color: rgba(169, 182, 255, 0.6);
+  color: #2a3aa8;
+}
+
+.ap-badge--warning {
+  background: rgba(255, 210, 122, 0.18);
+  border-color: rgba(255, 210, 122, 0.6);
+  color: #8a5b00;
+}
+
+.ap-btn {
+  border: 1px solid var(--aa-border);
+  background: color-mix(in oklab, var(--aa-surface), var(--aa-text) 5%);
+  color: var(--aa-text);
+  padding: 9px 12px;
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+.ap-btn--ghost {
+  background: transparent;
+}
+
+.ap-btn--primary {
+  background: #111827;
+  border-color: #111827;
+  color: #fff;
+}
+
+/* floating */
+.floating-card {
+  position: fixed; /* Fix the position relative to the viewport */
+  top: 50%; /* Center vertically */
+  left: 50%; /* Center horizontally */
+  transform: translate(-50%, -50%); /* Perfectly center the element */
+  width: 80%; /* Set the width */
+  max-width: 600px; /* Optional max width */
+  background-color: #fff; /* White background */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Add some shadow for floating effect */
+  border-radius: 8px; /* Optional, add rounded corners */
+  padding: 20px; /* Add some padding inside */
+  overflow-y: auto; /* Ensure scrollable if content overflows */
+}
+
+.ap-card__header {
+  font-size: 1.5rem; /* Set header font size */
+  margin-bottom: 20px; /* Add some space below the header */
+}
+
+.ap-card__title {
+  font-weight: bold;
+  text-align: center;
+}
+
+/* Optional: If you want to add a backdrop to darken the background */
+.floating-card::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(255, 255, 255, 0.5); /* Dark overlay */
+  z-index: -1; /* Keep it behind the floating card */
+}
+
+/* Responsive */
+
+@media (max-width: 980px) {
+  .ap-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .ap-twoCol {
+    grid-template-columns: 1fr;
+  }
+
+  .ap-ms__row,
+  .ap-ms__row--meta {
+    grid-template-columns: 1fr;
+  }
 }

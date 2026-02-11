@@ -12,6 +12,8 @@ import {
   ImgCBDBuilding,
   ImgBackfill,
   ImgExcavationSite,
+  CompanyProfilePages,
+  CoverPage,
 } from "../../../assets/images";
 
 import SectionRenderer from "../../../utils/SectionRenderer";
@@ -89,8 +91,8 @@ export default function About() {
         <AboutSlice
           {...slices.companyProfile}
           mvImages={{
-            page1: ImgCBDBuilding,
-            allPages: ImgBackhoe,
+            page1: CoverPage,
+            allPages: CompanyProfilePages,
           }}
         />
       ) : null,
