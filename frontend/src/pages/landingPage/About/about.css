@@ -474,59 +474,119 @@
 .about-values-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 1.5rem;
-  margin-top: 2rem;
+  gap: 2rem;
+  margin-top: 3rem;
 }
 
 /* CARD */
 .about-value-card {
-  position: relative; /* required for floating icon */
-  background: #ededed;
-  border-radius: 16px;
-  padding: 2.5rem 1.5rem 1.75rem; /* extra top padding */
+  position: relative;
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 4rem 2.25rem 2.5rem;
+  text-align: center;
+
+  box-shadow: 0 28px 55px rgba(15, 23, 42, 0.12);
 }
 
-/* optional highlight */
-.about-value-card.highlight {
-  border: 2px solid var(--brand);
+/* TOP COLOR BAR */
+.about-value-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 6px;
+  width: 100%;
+  border-radius: 20px 20px 0 0;
 }
 
 /* FLOATING ICON */
 .about-value-icon {
   position: absolute;
-  top: -22px; /* pushes icon outside */
-  left: 1.5rem;
+  top: -34px;
+  left: 50%;
+  transform: translateX(-50%);
 
-  width: 44px;
-  height: 44px;
-  border-radius: 12px;
-
+  width: 68px;
+  height: 68px;
+  border-radius: 50%;
   background: #ffffff;
-  color: #0b74ff;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+  box-shadow:
+    0 14px 32px rgba(0, 0, 0, 0.18),
+    0 0 0 10px rgba(255, 255, 255, 0.6);
 }
 
-/* SVG sizing */
+/* SVG ICON */
 .about-value-icon svg {
-  width: 22px;
-  height: 22px;
+  width: 28px;
+  height: 28px;
+  stroke-width: 2;
 }
 
-/* TEXT */
-.about-value-title {
-  font-weight: 800;
-  margin-bottom: 0.5rem;
+
+/* SUBTITLE */
+.about-values-subtitle {
+  text-align: left;
+  margin-bottom: 2rem;
 }
 
-.about-value-text {
-  font-size: 0.95rem;
-  line-height: 1.65;
-  color: rgba(0, 0, 0, 0.7);
+.about-values-subtitle .subtitle-secondary {
+  font-size: 1rem;         
+  color: #6b7280;          
+  margin: 0.25rem 0 0 0;   
+  line-height: 1.5;
+}
+
+/* =====================
+   COLOR THEMES
+===================== */
+.about-value-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px; 
+  color: currentColor; 
+}
+
+/* Quality */
+.about-value-card:nth-child(1)::before {
+  background: #3b82f6;
+}
+.about-value-icon.quality {
+  color: #3b82f6;
+}
+
+/* Safety */
+.about-value-card:nth-child(2)::before {
+  background: #22c55e;
+}
+.about-value-icon.safety {
+  color: #22c55e;
+}
+
+/* Integrity */
+.about-value-card:nth-child(3)::before {
+  background: #f59e0b;
+}
+.about-value-icon.integrity {
+  color: #f59e0b;
+}
+
+/* HOVER (subtle, professional) */
+.about-value-card {
+  transition:
+    transform 0.35s ease,
+    box-shadow 0.35s ease;
+}
+
+.about-value-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 38px 80px rgba(15, 23, 42, 0.16);
 }
 
 /* =====================
