@@ -44,8 +44,16 @@ export default function ClientAssign({
 
       {draft.clientEmail && (
         <div className="ap-clientAssigned">
-          <span className="ap-clientAssigned__label">Assigned</span>
-          <span className="ap-clientAssigned__email">{draft.clientEmail}</span>
+          <div className="ap-clientAssigned__detail">
+            <span className="ap-clientAssigned__label">Name</span>
+            <span className="ap-clientAssigned__email">{draft.clientName}</span>
+          </div>
+          <div className="ap-clientAssigned__detail">
+            <span className="ap-clientAssigned__label">Email</span>
+            <span className="ap-clientAssigned__email">
+              {draft.clientEmail}
+            </span>
+          </div>
         </div>
       )}
     </div>
