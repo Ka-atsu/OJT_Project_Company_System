@@ -72,7 +72,7 @@ export default function ProjectModal({ project, onClose }) {
             </div>
           </div>
 
-          {/* ✅ Only show media if backend provided images */}
+          {/* Only show media if backend provided images */}
           {hasImages ? (
             <div className="project-modal-media">
               <div className="project-modal-media-bar">
@@ -124,7 +124,7 @@ export default function ProjectModal({ project, onClose }) {
         </div>
       </div>
 
-      {/* ✅ Guard lightbox */}
+      {/* Guard lightbox */}
       {showFull && hasImages && (
         <div className="image-lightbox" role="dialog" aria-modal="true">
           <button

@@ -1,4 +1,5 @@
 import { Field, StatusBadge } from "./adminProjectsUi";
+import { PSTATUS } from "./projects.services";
 
 export default function AdminProjectsList({
   loading,
@@ -51,11 +52,10 @@ export default function AdminProjectsList({
             onChange={(e) => setStatus(e.target.value)}
             disabled={loading}
           >
-            <option value="active">active</option>
-            <option value="draft">draft</option>
-            <option value="on_hold">on_hold</option>
-            <option value="completed">completed</option>
-            <option value="all">all</option>
+            <option value={PSTATUS.active}>{PSTATUS.active}</option>
+            <option value={PSTATUS.draft}>{PSTATUS.draft}</option>
+            <option value={PSTATUS.on_hold}>{PSTATUS.on_hold}</option>
+            <option value={PSTATUS.completed}>{PSTATUS.completed}</option>
           </select>
         </Field>
 

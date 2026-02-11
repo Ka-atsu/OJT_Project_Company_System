@@ -1,6 +1,6 @@
 import "./admin-projects.css";
 import useAdminProjects from "./useAdminProjects"; // The hook that manages project state
-import AdminProjectsList from "./AdminProjectsList";
+import AdminProjectsList from "./adminProjectsList";
 import ProjectDetails from "./ProjectDetails";
 
 export default function AdminProjects() {
