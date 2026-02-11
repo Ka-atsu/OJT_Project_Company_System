@@ -1,11 +1,5 @@
+// frontend/src/pages/clientSide/Project/projects.service.js
 import api from "../../../api/api";
-
-const statusToApi = {
-  All: "all",
-  Active: "active",
-  Completed: "completed",
-  "In Progress": "active", // change if you actually store "in_progress"
-};
 
 function normalizeProjectsResponse(data) {
   const items = Array.isArray(data?.data)
@@ -22,13 +16,14 @@ function normalizeProjectsResponse(data) {
 }
 
 export const ClientProjectsService = {
-  async list({ status = "All", page = 1, limit = 6 } = {}, signal) {
-    const params = { page, limit };
+  async list({ status = "active", page = 1, limit = 6 } = {}, signal) {
+    const params = { page, limit, status };
 
-    const apiStatus = statusToApi[status] ?? "all";
-    if (apiStatus !== "all") params.status = apiStatus;
+    // Log the URL being used for the request
+    const url = `/api/projects?${new URLSearchParams(params).toString()}`;
+    console.log("Request URL:", url); // Log the URL here
 
-    const { data } = await api.get("/api/projects", { params, signal });
+    const { data } = await api.get(url, { signal });
     return normalizeProjectsResponse(data);
   },
 };

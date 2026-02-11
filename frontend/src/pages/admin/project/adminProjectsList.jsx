@@ -1,4 +1,5 @@
 import { Field, StatusBadge } from "./adminProjectsUi";
+import { PSTATUS } from "./projects.services";
 
 export default function AdminProjectsList({
   loading,
@@ -19,9 +20,9 @@ export default function AdminProjectsList({
   pageCount,
   onPrev,
   onNext,
-  onNew,
-  onSelect,
-  selectedId,
+  onNew, // Passed from parent (AdminProjects)
+  onSelect, // Passed from parent (AdminProjects)
+  selectedId, // Passed from parent (AdminProjects)
 }) {
   return (
     <section className="ap-card">
@@ -43,6 +44,7 @@ export default function AdminProjectsList({
         </button>
       </div>
 
+      {/* Filters and search */}
       <div className="ap-toolbar">
         <Field label="Status">
           <select
@@ -50,11 +52,10 @@ export default function AdminProjectsList({
             onChange={(e) => setStatus(e.target.value)}
             disabled={loading}
           >
-            <option value="active">active</option>
-            <option value="draft">draft</option>
-            <option value="on_hold">on_hold</option>
-            <option value="completed">completed</option>
-            <option value="all">all</option>
+            <option value={PSTATUS.active}>{PSTATUS.active}</option>
+            <option value={PSTATUS.draft}>{PSTATUS.draft}</option>
+            <option value={PSTATUS.on_hold}>{PSTATUS.on_hold}</option>
+            <option value={PSTATUS.completed}>{PSTATUS.completed}</option>
           </select>
         </Field>
 
@@ -92,8 +93,10 @@ export default function AdminProjectsList({
         </Field>
       </div>
 
+      {/* Show error if exists */}
       {err ? <div className="ap-empty">Error: {err}</div> : null}
 
+      {/* Project list rendering */}
       <div className="ap-list">
         {loading ? (
           <div className="ap-empty">Loading projects…</div>
@@ -104,7 +107,7 @@ export default function AdminProjectsList({
             <button
               key={p.id}
               className={`ap-item ${p.id === selectedId ? "is-active" : ""}`}
-              onClick={() => onSelect(p.id)}
+              onClick={() => onSelect(p.id)} // Trigger onSelect when clicked
               type="button"
             >
               <div className="ap-item__top">
@@ -133,6 +136,7 @@ export default function AdminProjectsList({
         )}
       </div>
 
+      {/* Pagination */}
       <div className="ap-pagination">
         <button
           className="ap-btn ap-btn--ghost"
