@@ -64,6 +64,7 @@ export const ABOUT = {
     coreValues: {
       type: "coreValues",
       label: "Core Values",
+      title: "What we stand for",
       bullets: [
         {
           k: "Quality",

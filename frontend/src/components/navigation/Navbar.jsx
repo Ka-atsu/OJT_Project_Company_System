@@ -3,9 +3,9 @@ import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import logo from "../../assets/Images/logo.jpg";
 
 const ABOUT_MENU = [
-  { label: "Mission and Vision", hash: "#about-missionVision" },
-  { label: "About Us", hash: "#about-whyUs" },
   { label: "Background", hash: "#about-story" },
+  { label: "About Us", hash: "#about-whyUs" },
+  { label: "Mission and Vision", hash: "#about-missionVision" },
   { label: "Core Values", hash: "#about-coreValues" },
   { label: "Our Team", hash: "#about-team" },
   { label: "Company Profile", hash: "#about-companyProfile" },
