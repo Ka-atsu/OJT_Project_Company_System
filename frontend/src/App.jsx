@@ -24,9 +24,12 @@ import AdminAppointments from "./pages/admin/appointment/AdminAppointments";
 import AdminDashboard from "./pages/admin/dashboard/AdminDashboard";
 import AdminProjects from "./pages/admin/project/AdminProjects";
 import AdminSettings from "./pages/admin/settings/AdminSettings";
+import AdminDocuments from "./pages/admin/document/AdminDocuments";
 
 import warlyTestingRoutes from "./testingRoutes/warlyTestingRoutes";
 import kentTestingRoutes from "./testingRoutes/kentTestingRoutes";
+
+import AdminRoute from "./pages/admin/AdminRoute";
 
 import { useLayoutEffect } from "react";
 import { useLocation } from "react-router-dom";
@@ -100,9 +103,17 @@ export default function App() {
         </Route>
 
         {/* ADMIN (TEMP / INTERNAL) */}
-        <Route path="/admin" element={<DashboardLayout />}>
+        <Route
+          path="/admin"
+          element={
+            <AdminRoute>
+              <DashboardLayout />
+            </AdminRoute>
+          }
+        >
           <Route index element={<AdminDashboard />} />
           <Route path="appointments" element={<AdminAppointments />} />
+          <Route path="documents" element={<AdminDocuments />} />
           <Route path="projects" element={<AdminProjects />} />
           <Route path="settings" element={<AdminSettings />} />
         </Route>

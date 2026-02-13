@@ -70,11 +70,23 @@ composer install
             DB_USERNAME=your_database_user
             DB_PASSWORD=your_database_password
 
-        Run migrations (only if migrations exist):
+        Run migrations:
             php artisan migrate
 
-        (Optional) Run seeders (only if seeders exist):
+        Run seeders:
             php artisan db:seed
+
+    Step 4.1 — Link Storage (Important for File Uploads)
+        Laravel stores uploaded files inside:
+            backend/storage/app/public
+        To make these files publicly accessible, run:
+            if on xammp
+                cd backend
+                php artisan storage:link
+            else
+                php artisan storage:link
+        This creates a symbolic link:
+            backend/public/storage → backend/storage/app/public
 
     Step 5 — Start the Backend Server
         Option A: Laravel built-in server
