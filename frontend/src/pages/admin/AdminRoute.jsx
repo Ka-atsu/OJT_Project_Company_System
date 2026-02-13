@@ -1,0 +1,16 @@
+import { Navigate } from "react-router-dom";
+import useAuthUser from "./useAuthUser";
+
+export default function AdminRoute({ children }) {
+  const { user, loading } = useAuthUser();
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (!user || !user.is_admin) {
+    return <Navigate to="/dashboard" replace />;
+  }
+
+  return children;
+}
