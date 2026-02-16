@@ -52,7 +52,9 @@ export default function Navbar() {
 
   useEffect(() => {
     try {
-      const touch = typeof window !== "undefined" && ("ontouchstart" in window || navigator.maxTouchPoints > 0);
+      const touch =
+        typeof window !== "undefined" &&
+        ("ontouchstart" in window || navigator.maxTouchPoints > 0);
       setIsTouch(Boolean(touch));
     } catch (e) {
       setIsTouch(false);
@@ -111,11 +113,16 @@ export default function Navbar() {
 
         <div className="nav-main">
           <div className="site-links">
-            <NavLink to="/" className="nav-item" end>
+            <NavLink
+              to="/"
+              state={{ fromInternal: true }}
+              className="nav-item"
+              end
+            >
               <span className="nav-item-text">Home</span>
               <span className="nav-item-underline"></span>
             </NavLink>
-            
+
             <div className="nav-dropdown" ref={wrapRef}>
               <div className="nav-dropdown-trigger">
                 <NavLink to="/about" className="nav-item nav-dropdown-link">
@@ -131,7 +138,13 @@ export default function Navbar() {
                 >
                   <span className="nav-dropdown-icon">
                     <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                      <path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                      <path
+                        d="M3 4.5L6 7.5L9 4.5"
+                        stroke="currentColor"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
                     </svg>
                   </span>
                 </button>
@@ -147,9 +160,23 @@ export default function Navbar() {
                       role="menuitem"
                       onClick={() => goToAboutSection(item.hash)}
                     >
-                      <span className="nav-dropdown-item-text">{item.label}</span>
-                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" className="nav-dropdown-item-icon">
-                        <path d="M6 12L10 8L6 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                      <span className="nav-dropdown-item-text">
+                        {item.label}
+                      </span>
+                      <svg
+                        width="16"
+                        height="16"
+                        viewBox="0 0 16 16"
+                        fill="none"
+                        className="nav-dropdown-item-icon"
+                      >
+                        <path
+                          d="M6 12L10 8L6 4"
+                          stroke="currentColor"
+                          strokeWidth="1.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
                       </svg>
                     </button>
                   ))}
@@ -161,7 +188,7 @@ export default function Navbar() {
               <span className="nav-item-text">Services</span>
               <span className="nav-item-underline"></span>
             </NavLink>
-            
+
             <NavLink to="/projects" className="nav-item">
               <span className="nav-item-text">Projects</span>
               <span className="nav-item-underline"></span>
@@ -172,8 +199,20 @@ export default function Navbar() {
         <div className="nav-actions">
           <NavLink to="/contact" className="nav-btn nav-btn-primary">
             Contact Us
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" className="nav-btn-icon">
-              <path d="M4 8H12M12 8L8.66667 5M12 8L8.66667 11" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 16 16"
+              fill="none"
+              className="nav-btn-icon"
+            >
+              <path
+                d="M4 8H12M12 8L8.66667 5M12 8L8.66667 11"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
             </svg>
           </NavLink>
           <NavLink to="/login" className="nav-login">

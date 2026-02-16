@@ -1,22 +1,23 @@
 import { useEffect, useState } from "react";
 import { AnimatePresence } from "framer-motion";
+import { useLocation } from "react-router-dom";
 
 import PreloaderVideo from "./preloaderVideo";
 import Home from "../landingPage/Home/Home";
 
 export default function HomeEntry() {
-  const [showIntro, setShowIntro] = useState(() => {
-    try {
-      return !localStorage.getItem("homeIntroShown");
-    } catch (e) {
-      return true;
+  const location = useLocation();
+  const [showIntro, setShowIntro] = useState(false);
+
+  useEffect(() => {
+    const cameFromInternalNavigation = location.state?.fromInternal;
+
+    if (!cameFromInternalNavigation) {
+      setShowIntro(true);
     }
-  });
+  }, [location.state]);
 
   const done = () => {
-    try {
-      localStorage.setItem("homeIntroShown", "1");
-    } catch (e) {}
     setShowIntro(false);
   };
 
