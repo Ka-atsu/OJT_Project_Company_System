@@ -575,18 +575,16 @@
 .services-block--primary .services-card-row {
   display: flex;
   flex-wrap: nowrap;
-  gap: 1.5rem;
   margin: 0;
+  align-items: flex-start; /* align to top instead of center */
+  min-height: 80vh;
 }
 
-.services-block--primary .services-card-image {
-  flex: 0 0 52%;
-  max-width: 52%;
-}
-
-.services-block--primary .services-card-body {
-  flex: 0 0 48%;
-  max-width: 48%;
+.services-block--primary .services-card-image img {
+  width: 100%;
+  max-height: 450px; /* adjust if needed: 450px, 550px, etc. */
+  object-fit: cover;
+  border-radius: 8px; /* optional: adds rounded corners */
 }
 
 @media (max-width: 768px) {

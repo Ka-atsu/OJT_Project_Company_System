@@ -64,12 +64,6 @@ export default function Services() {
                 <a className="btn btn-dark services-hero-btn" href="#primary">
                   View core services
                 </a>
-                <a
-                  className="btn btn-outline-dark services-hero-btn"
-                  href="/contact"
-                >
-                  Request a quote
-                </a>
               </div>
             </motion.div>
 
