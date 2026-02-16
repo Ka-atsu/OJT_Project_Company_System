@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect  } from "react";
 import AccountNav from "../../../components/navigation/AccountNav";
 import {
   SettingRow,
@@ -8,11 +8,19 @@ import {
 import "./clientAccountSettings.css";
 import { useNavigate } from "react-router-dom";
 import ConfirmModal from "./confirmModal";
+import { logout } from "../../authentication/auth.service";
 
 export default function ClientAccountSettings() {
   const [activeTab, setActiveTab] = useState("My Profile");
   const [showConfirm, setShowConfirm] = useState(false);
+  const [user, setUser] = useState(null);
   const navigate = useNavigate();
+
+  // Load user from localStorage
+  useEffect(() => {
+    const stored = localStorage.getItem("user");
+    if (stored) setUser(JSON.parse(stored));
+  }, []);
 
   return (
     <div className="account-settings">
@@ -25,7 +33,7 @@ export default function ClientAccountSettings() {
           <SettingRow
             title="Email address"
             desc="The email address associated with your account"
-            value="alex.someone@gmail.com"
+            value={user?.email || ""}
             action={<button className="btn-outline">Edit</button>}
           />
 
@@ -60,7 +68,7 @@ export default function ClientAccountSettings() {
           <SettingRow
             title="Name"
             desc="This name is used across your account."
-            value="Alex Assenmacher"
+             value={user?.name || ""}
             action={<button className="btn-outline">Edit</button>}
           />
 
@@ -69,7 +77,7 @@ export default function ClientAccountSettings() {
           <SettingRow
             title="Email"
             desc="Used for login and important notifications."
-            value="alex.someone@gmail.com"
+             value={user?.email || ""}
             action={<button className="btn-outline">Change</button>}
           />
         </div>
@@ -108,16 +116,20 @@ export default function ClientAccountSettings() {
         </div>
       )}
       {/* Confirmation modal for going back to the landing page */}
-      {/* Sill not verified if it also logout the account after returning */}
+      {/* Verified! it also logout the account after returning */}
       <ConfirmModal
-        open={showConfirm}
-        title="Return to Landing Page?"
-        message="You will leave the dashboard and return to the public website."
-        confirmText="Back to Landing Page"
-        cancelText="Stay Here"
-        onCancel={() => setShowConfirm(false)}
-        onConfirm={() => navigate("/")}
-      />
+          open={showConfirm}
+          title="Return to Landing Page?"
+          message="You will leave the dashboard and return to the public website."
+          confirmText="Back to Landing Page"
+          cancelText="Stay Here"
+          onCancel={() => setShowConfirm(false)}
+          onConfirm={async () => {
+            await logout();   // log out user
+            alert("You have been logged out successfully.");//just for confirmation can be change to a popup
+            navigate("/");    // redirect to landing page
+          }}
+/>
 
     </div>
   );
