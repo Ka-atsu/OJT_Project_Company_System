@@ -33,40 +33,20 @@
       rgba(255, 255, 255, 0.1),
       transparent 60%
     ),
-    radial-gradient(
-      900px 520px at 82% 42%,
-      rgba(255, 255, 255, 0.08),
-      transparent 55%
-    ),
     linear-gradient(
       to top,
-      rgba(0, 0, 0, 0.78) 0%,
-      rgba(0, 0, 0, 0.28) 55%,
-      rgba(0, 0, 0, 0.12) 100%
+      rgba(0, 0, 0, 0.82) 0%,
+      rgba(0, 0, 0, 0.4) 55%,
+      rgba(0, 0, 0, 0.15) 100%
     );
-}
-
-.home-hero .eyebrow {
-  color: rgba(255, 255, 255, 0.72);
-}
-
-.home-hero .hero-title {
-  margin-top: 0.35rem;
-  font-size: clamp(2.5rem, 5.2vw, 5.2rem);
-  line-height: 1.05;
-  letter-spacing: -0.04em;
-  font-weight: 800;
-  max-width: 18ch;
-}
-
-.home-hero .hero-content {
-  padding-top: calc(72px + 1.5rem);
 }
 
 .home-hero-stage {
   height: 100%;
   display: flex;
   align-items: center;
+  position: relative;
+  z-index: 1;
 }
 
 .home-hero-meta {
@@ -76,130 +56,95 @@
   display: flex;
   flex-direction: column;
   gap: 12px;
+  z-index: 2;
 }
 
-.home-hero-overlay,
-.home-hero-stage {
-  position: relative;
-  z-index: 1;
+.home-hero .hero-title {
+  margin-top: 0.35rem;
+  font-size: clamp(2.5rem, 5.2vw, 5rem);
+  line-height: 1.05;
+  letter-spacing: -0.04em;
+  font-weight: 800;
+  max-width: 18ch;
+}
+
+.home-hero .eyebrow {
+  color: rgba(255, 255, 255, 0.72);
 }
 
 /* =====================
-   HOME — SECTION WIDTH + RHYTHM
+   HOME — GLOBAL SECTION RHYTHM
 ===================== */
 
-.section.home-what {
+.section.home-about,
+.section.home-modules,
+.section.home-projects {
   padding: clamp(5rem, 8vw, 7rem) var(--pad-x);
 }
 
-.section.home-modules {
-  padding-top: clamp(4.5rem, 7vw, 6.5rem);
-  padding-bottom: clamp(4.5rem, 7vw, 6.5rem);
-}
-
-.home-editorial,
-.home-modules-inner {
+.home-about-inner,
+.home-modules-inner,
+.home-projects-inner {
   max-width: 1100px;
   margin: 0 auto;
 }
 
 /* =====================
-   HOME — EDITORIAL "WHAT WE DO" BAND
+   TYPOGRAPHY CONSISTENCY
 ===================== */
 
-.home-what {
-  background: #0b0b0b;
-  color: #fff;
-}
-
-.home-eyebrow-on-dark {
-  color: rgba(255, 255, 255, 0.7);
-}
-
-.home-editorial {
-  display: grid;
-  grid-template-columns: minmax(180px, 240px) 1fr;
-  gap: clamp(2rem, 6vw, 5rem);
-  align-items: start;
-}
-
-.home-editorial-meta {
-  position: sticky;
-  top: calc(72px + 2.25rem);
-}
-
-.home-counter {
-  margin-top: 1.25rem;
-  font-size: 0.8rem;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  opacity: 0.85;
-}
-
-.home-counter-divider {
-  margin: 0 0.5rem;
-  opacity: 0.6;
-}
-
-.home-editorial-title {
-  font-size: clamp(2rem, 4vw, 3.25rem);
+.home-about h2,
+.home-projects h2,
+.home-section-title {
+  font-size: clamp(2rem, 3.2vw, 2.6rem);
+  letter-spacing: -0.02em;
+  line-height: 1.1;
   font-weight: 700;
-  line-height: 1.05;
-  letter-spacing: -0.03em;
-  max-width: 22ch;
 }
 
-.home-editorial-lede {
+.home-about-text,
+.home-projects-text {
   margin-top: 1.25rem;
-  color: rgba(255, 255, 255, 0.75);
   max-width: 60ch;
+  color: #555;
+  line-height: 1.7;
 }
 
-.home-what .btn.btn-light {
-  border-radius: 999px;
-  padding: 0.75rem 1.15rem;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  font-weight: 800;
+/* =====================
+   HOME — ABOUT SNAPSHOT
+===================== */
+
+.home-about {
+  background: #ffffff;
 }
 
 /* =====================
    HOME — MODULES
 ===================== */
 
-.home-section-title {
-  margin-top: 0.6rem;
-  font-size: clamp(1.8rem, 3vw, 2.6rem);
-  letter-spacing: -0.02em;
-  line-height: 1.05;
-  font-weight: 700;
+.home-modules {
+  background: #ffffff;
 }
 
 .home-modules-grid {
-  margin-top: clamp(1.75rem, 3vw, 2.5rem);
+  margin-top: clamp(2rem, 4vw, 3rem);
   display: grid;
-  grid-template-columns: repeat(
-    auto-fill,
-    minmax(320px, 1fr)
-  );
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
   gap: clamp(1.5rem, 4vw, 3rem);
 }
 
 .home-module {
-  border-top: 1px solid rgba(0, 0, 0, 0.18);
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
   padding-top: 1.25rem;
-  will-change: opacity;
   background-color: #fff;
-  border-radius: 8px;
-  box-shadow: none;
-  transition: none;
+  border-radius: 10px;
 }
 
 .home-module-num {
-  font-size: 1rem;
+  font-size: 0.9rem;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  opacity: 0.8;
+  opacity: 0.6;
   margin-bottom: 0.8rem;
   color: #444;
 }
@@ -227,21 +172,40 @@
 .home-module p {
   margin: 0;
   color: #555;
-  max-width: none;
-}
-
-.home-what .home-module {
-  border-top-color: rgba(255, 255, 255, 0.14);
+  line-height: 1.6;
 }
 
 /* =====================
-   HOME — MODULES GRID (Responsive Adjustments)
+   HOME — PROJECTS SNAPSHOT
 ===================== */
+
+.home-projects {
+  background: #f7f7f7;
+}
+
+.home-projects .btn {
+  margin-top: 2rem;
+}
+
+.home-projects .btn.btn-outline {
+  color: #111; /* dark text */
+}
+
+.home-projects .btn.btn-outline:hover {
+  color: #fff;
+}
+
+/* =====================
+   RESPONSIVE
+===================== */
+
 @media (max-width: 768px) {
   .home-modules-grid {
-    grid-template-columns: 1fr; /* Stacked layout on smaller screens */
+    grid-template-columns: 1fr;
   }
-  .home-section-title {
-    font-size: clamp(2rem, 5vw, 2.5rem);
+
+  .home-about-text,
+  .home-projects-text {
+    max-width: 100%;
   }
 }

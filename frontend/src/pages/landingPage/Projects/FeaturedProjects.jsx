@@ -69,12 +69,6 @@ export default function FeaturedProjects({ featured }) {
           <FeaturedCard key={p.title} project={p} />
         ))}
       </div>
-
-      <div className="projects-featured-cta">
-        <button type="button" className="projects-cta-btn">
-          View All Projects
-        </button>
-      </div>
     </section>
   );
 }

@@ -12,7 +12,7 @@ import { EASE, VIEWPORT, VIEWPORT_CARDS } from "../../../motion/constants";
 import "./home.css";
 
 export default function Home() {
-  const { heroScroll, modules } = HOME;
+  const { heroScroll, modules, overview } = HOME;
 
   const wrapRef = useRef(null);
   const pinRef = useRef(null);
@@ -35,7 +35,7 @@ export default function Home() {
 
   return (
     <>
-      {/* HERO */}
+      {/* ================= HERO ================= */}
       <section ref={wrapRef} className="hero-scroll">
         <section ref={pinRef} className="hero full-bleed home-hero">
           <div className="home-hero-bg" aria-hidden="true">
@@ -103,25 +103,7 @@ export default function Home() {
                 )}
 
                 {slide.showActions && (
-                  <motion.div
-                    className="hero-actions"
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{
-                      duration: 0.35,
-                      delay: 0.16,
-                      ease: EASE,
-                    }}
-                  >
-                    {/* PRIMARY CTA */}
-                    <Link
-                      to={heroScroll.primaryCta.to}
-                      className="btn btn-filled"
-                    >
-                      {heroScroll.primaryCta.label}
-                    </Link>
-
-                    {/* SECONDARY CTA */}
+                  <motion.div className="hero-actions">
                     <Link
                       to={heroScroll.getStarted.to}
                       className="btn btn-outline"
@@ -136,7 +118,30 @@ export default function Home() {
         </section>
       </section>
 
-      {/* MODULES */}
+      {/* ================= ABOUT SNAPSHOT ================= */}
+      <section className="section home-about">
+        <div className="container">
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={VIEWPORT}
+            variants={revealStagger}
+            className="home-about-inner"
+          >
+            <motion.span className="eyebrow" variants={fadeUpItem}>
+              {overview.about.eyebrow}
+            </motion.span>
+
+            <motion.h2 variants={fadeUpItem}>{overview.about.title}</motion.h2>
+
+            <motion.p variants={fadeUpItem} className="home-about-text">
+              {overview.about.desc}
+            </motion.p>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* ================= CORE CAPABILITIES ================= */}
       <section className="section section--tight home-modules">
         <div className="home-modules-inner">
           <motion.div
@@ -165,24 +170,46 @@ export default function Home() {
                   key={item.num}
                   className="home-module"
                   variants={fadeUpItem}
-                  transition={{ duration: 0.25, ease: "easeOut" }}
                 >
                   <div className="home-module-num">{item.num}</div>
-
-                  <motion.div
-                    className="home-module-media"
-                    initial={{ scale: 1.02 }}
-                    whileInView={{ scale: 1 }}
-                    viewport={VIEWPORT_CARDS}
-                    transition={{ duration: 0.8, ease: EASE }}
-                  >
+                  <div className="home-module-media">
                     <img src={item.img} alt={item.alt} />
-                  </motion.div>
-
+                  </div>
                   <h3>{item.title}</h3>
                   <p>{item.desc}</p>
                 </motion.article>
               ))}
+            </motion.div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* ================= PROJECTS SNAPSHOT ================= */}
+      <section className="section home-projects">
+        <div className="container">
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={VIEWPORT}
+            variants={revealStagger}
+            className="home-projects-inner"
+          >
+            <motion.span className="eyebrow" variants={fadeUpItem}>
+              {overview.projects.eyebrow}
+            </motion.span>
+
+            <motion.h2 variants={fadeUpItem}>
+              {overview.projects.title}
+            </motion.h2>
+
+            <motion.p variants={fadeUpItem} className="home-projects-text">
+              {overview.projects.desc}
+            </motion.p>
+
+            <motion.div variants={fadeUpItem}>
+              <Link to={overview.projects.cta.to} className="btn btn-outline">
+                {overview.projects.cta.label}
+              </Link>
             </motion.div>
           </motion.div>
         </div>
