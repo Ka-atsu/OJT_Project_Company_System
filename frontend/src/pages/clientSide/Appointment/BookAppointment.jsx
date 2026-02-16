@@ -16,16 +16,50 @@ export default function BookAppointment({ onClose, onSubmit }) {
   });
 
   const update = (key) => (e) => {
-    const value = e.target.value;
+    let value = e.target.value;
+
+    if (key === "phone") {
+      // Remove everything except numbers and '+'
+      value = value.replace(/[^\d+]/g, "");
+
+      // Limit length depending on prefix
+      if (value.startsWith("09")) {
+        value = value.slice(0, 11); // 09XXXXXXXXX
+      } else if (value.startsWith("+63")) {
+        value = value.slice(0, 13); // +63XXXXXXXXX
+      } else if (value.length > 0 && !value.startsWith("+") && !value.startsWith("0")) {
+        // Allow starting '0' or '+' only, else reset
+        value = "";
+      }
+    }
+
     setForm((prev) => ({ ...prev, [key]: value }));
   };
+
 
   const handleSubmit = async () => {
     if (!form.dateTime || !form.project) return;
 
+    console.log("Submitting appointment with data:", form);
+    console.log("Formatted dateTime:", form.dateTime.toISOString());
+
+    function FormatDate(date) {
+      return new Date(
+        Date.UTC(
+          date.getFullYear(),
+          date.getMonth(),
+          date.getDate(),
+          date.getHours(),
+          date.getMinutes(),
+          date.getSeconds()
+        )
+      ).toISOString();
+    }
+
     const payload = {
       phone: form.phone || null,
-      scheduled_at: form.dateTime.toISOString(),
+      // scheduled_at: form.dateTime.toISOString(),
+      scheduled_at: FormatDate(form.dateTime),
       project: form.project,
       purpose: form.purpose,
       details: form.details || null,
@@ -70,7 +104,8 @@ export default function BookAppointment({ onClose, onSubmit }) {
                 value={form.phone}
                 onChange={update("phone")}
                 type="tel"
-                placeholder="Enter phone number"
+                inputMode="tel"
+                placeholder="Enter phone number (09XXXXXXXXX or +63XXXXXXXXX)"
               />
             </label>
 
