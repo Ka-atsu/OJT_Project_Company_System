@@ -144,6 +144,10 @@
   color: #fff;          
   border-color: #d1242f;
 }
+.setting-row .btn-outline,
+.setting-row .btn-danger {
+  margin-top: 1rem; 
+}
 
 /* =====================
    TOGGLE
