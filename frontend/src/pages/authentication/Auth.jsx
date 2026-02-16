@@ -2,9 +2,12 @@ import React, { useState } from "react";
 import "./authdraft.css";
 import logo from "../../assets/Images/logo.jpg";
 import { login, register } from "./auth.service";
-import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai"; // 👁 icons
+import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
+import { useNavigate } from "react-router-dom";
 
 const Auth = () => {
+  const navigate = useNavigate();
+
   const [isLogin, setIsLogin] = useState(true);
   const [showPwLogin, setShowPwLogin] = useState(false);
   const [showPwRegister, setShowPwRegister] = useState(false);
@@ -47,8 +50,15 @@ const Auth = () => {
     try {
       setLoading(true);
       const user = await register(name, email, password, confirm);
+
+      // optional: save user
       localStorage.setItem("user", JSON.stringify(user));
-      setIsLogin(true); // optional: switch to login after register
+
+      // OPTIONAL: redirect right after register
+      // navigate(user.redirectTo, { replace: true });
+
+      // or keep your old behavior: go back to login form
+      setIsLogin(true);
     } catch (error) {
       setErr(toErrorMessage(error, "Register failed"));
     } finally {
@@ -66,7 +76,13 @@ const Auth = () => {
     try {
       setLoading(true);
       const user = await login(email, password, remember);
+
+      // save user
       localStorage.setItem("user", JSON.stringify(user));
+
+      // ✅ Redirect depending on admin
+      navigate(user.redirectTo, { replace: true });
+      // or: navigate(user.isAdmin ? "/admin" : "/dashboard", { replace: true });
     } catch (error) {
       setErr(toErrorMessage(error, "Login failed"));
     } finally {
@@ -77,11 +93,11 @@ const Auth = () => {
   return (
     <div className="auth">
       <div className="auth-card">
-        {/* Forms Container */}
         <div className="forms-container">
-
           {/* REGISTER FORM */}
-          <div className={`form register-form ${!isLogin ? "visible" : "hidden"}`}>
+          <div
+            className={`form register-form ${!isLogin ? "visible" : "hidden"}`}
+          >
             <h2 className="auth-formTitle">SIGN UP</h2>
             {err && <div className="auth-error">{err}</div>}
 
@@ -125,10 +141,16 @@ const Auth = () => {
                     type="button"
                     className="auth-eyeBtn"
                     onClick={() => setShowPwRegister((v) => !v)}
-                    aria-label={showPwRegister ? "Hide password" : "Show password"}
+                    aria-label={
+                      showPwRegister ? "Hide password" : "Show password"
+                    }
                     disabled={loading}
                   >
-                    {showPwRegister ? <AiOutlineEyeInvisible size={20} /> : <AiOutlineEye size={20} />}
+                    {showPwRegister ? (
+                      <AiOutlineEyeInvisible size={20} />
+                    ) : (
+                      <AiOutlineEye size={20} />
+                    )}
                   </button>
                 </div>
               </label>
@@ -191,7 +213,11 @@ const Auth = () => {
                     aria-label={showPwLogin ? "Hide password" : "Show password"}
                     disabled={loading}
                   >
-                    {showPwLogin ? <AiOutlineEyeInvisible size={20} /> : <AiOutlineEye size={20} />}
+                    {showPwLogin ? (
+                      <AiOutlineEyeInvisible size={20} />
+                    ) : (
+                      <AiOutlineEye size={20} />
+                    )}
                   </button>
                 </div>
               </label>
@@ -227,11 +253,7 @@ const Auth = () => {
             <div className="panel-content">
               <div className="auth-brand">
                 <div className="auth-brandMark">
-                  <img
-                    src={logo}
-                    alt="Logo"
-                    style={{ width: "100%", height: "100%" }}
-                  />
+                  <img src={logo} alt="Logo" className="auth-logo" />
                 </div>
                 <div className="auth-brandText">
                   <strong>Cliberduche</strong> <span>Corporation</span>
