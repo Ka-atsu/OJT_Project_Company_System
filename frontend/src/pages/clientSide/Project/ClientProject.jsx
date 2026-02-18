@@ -7,6 +7,16 @@ import {
   useClientProjects,
 } from "./useClientProject";
 
+function capitalize(str) {
+  if (!str) return "";
+
+  // Handle special cases
+  if (str.toLowerCase() === "on_hold") return "On Hold";
+
+  // Default behavior: capitalize first letter
+  return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+}
+
 function ProjectRow({ project, onClick }) {
   const statusClass = getStatusClass(project.status);
 
@@ -30,7 +40,7 @@ function ProjectRow({ project, onClick }) {
       </div>
 
       <div className={`project-status ${statusClass}`}>
-        {project.status} {/* Log status here to check the value */}
+        {capitalize(project.status)} {/* Capitalizes "on_hold" -> "On Hold" */}
       </div>
     </button>
   );

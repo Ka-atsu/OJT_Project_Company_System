@@ -233,7 +233,7 @@
 }
 
 /* -------------------------
-   STATUS PILLS
+   STATUS PILLS FOR APPOINTMENT
 ------------------------- */
 
 .dashboard .dash-status {
@@ -255,6 +255,29 @@
 .dashboard .dash-status.muted {
   background: #fee2e2;
   color: #b91c1c;
+}
+
+/* -------------------------
+   STATUS PILLS FOR PROJECTS
+------------------------- */
+.dashboard .dash-status.active {
+  background: #e0e7ff; 
+  color: #4338ca;
+}
+
+.dashboard .dash-status.completed {
+  background: #d1fae5; 
+  color: #047857;
+}
+
+.dashboard .dash-status.on_hold {
+  background: #fee2e2; 
+  color: #b91c1c;
+}
+
+.dashboard .dash-status.draft {
+  background: #f3f4f6; 
+  color: #4a4e57;
 }
 
 /* =========================================================

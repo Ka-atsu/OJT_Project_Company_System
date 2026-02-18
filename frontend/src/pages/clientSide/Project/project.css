@@ -156,7 +156,7 @@
   border: 1px solid rgba(0, 0, 0, 0.08);
 }
 
-.project-status.in-progress {
+.project-status.active {
   background: #e0e7ff; 
   color: #4338ca;
 }
@@ -166,9 +166,14 @@
   color: #047857;
 }
 
-.project-status.active {
-  background: rgba(245, 158, 11, 0.18);
-  color: #92400e;
+.project-status.on_hold {
+   background: #fee2e2;
+  color: #b91c1c;
+}
+
+.project-status.draft {
+   background: #f3f4f6;
+  color: #4a4e57;
 }
 
 /* Empty state */
@@ -182,7 +187,7 @@
   transition: all 0.5s ease;
 }
 
-.project-status.in-progress:hover {
+.project-status.active:hover {
   background: #c7d2fe;
 }
 
@@ -190,8 +195,12 @@
   background: #a7f3d0; 
 }
 
-.project-status.active:hover {
-  background: rgba(245, 158, 11, 0.3); 
+.project-status.on_hold:hover {
+  background: #fecaca;
+}
+
+.project-status.draft:hover {
+  background: #e5e7eb;
 }
 
 /* =========================================================

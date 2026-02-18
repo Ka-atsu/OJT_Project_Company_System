@@ -3,7 +3,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { ClientProjectsService } from "./projects.service"; // Import the service for API calls
 
 // Frontend-to-backend status mapping for filters (from the service)
-export const projectFilters = ["All", "Active", "Completed", "On hold"];
+export const projectFilters = ["All", "Active", "Completed", "On Hold"];
 
 export function useClientProjects({ limit = 6 } = {}) {
   const [activeFilter, setActiveFilter] = useState("All");
@@ -72,7 +72,7 @@ export function useClientProjects({ limit = 6 } = {}) {
      All: "all",
      Active: "active",
      Completed: "completed",
-     "On hold": "on_hold", // Fixed the issue by matching frontend filter
+     "On Hold": "on_hold", // Fixed the issue by matching frontend filter
    };
    const apiStatus = statusMapping[status] || "all"; // Default to "all" if no match
    console.log(`Active Filter: ${status} -> API Status: ${apiStatus}`); // Log activeFilter mapping
