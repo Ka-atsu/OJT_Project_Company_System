@@ -12,12 +12,13 @@ class AdminAppointmentController extends Controller
     // GET /api/admin/appointments?status=pending|accepted|declined|all&page=1&limit=12&q=
     public function index(Request $request)
     {
-        $status = $request->query('status', 'pending'); // pending|accepted|declined|all
+        $status = $request->query('status', 'pending');
         $limit  = (int) $request->query('limit', 12);
         $qText  = trim((string) $request->query('q', ''));
+        $sort   = $request->query('sort', 'scheduled_at_asc');
 
         $q = Appointment::query()
-            ->with('user'); // STEP 1: load user for AppointmentResource
+            ->with('user');
 
         if ($status !== 'all') {
             $q->where('approval_status', $status);
@@ -25,13 +26,32 @@ class AdminAppointmentController extends Controller
 
         if ($qText !== '') {
             $q->where(function ($sub) use ($qText) {
+
                 $sub->where('project', 'like', "%{$qText}%")
                     ->orWhere('purpose', 'like', "%{$qText}%")
-                    ->orWhere('id', $qText);
+                    ->orWhere('id', $qText)
+
+                    ->orWhereHas('user', function ($u) use ($qText) {
+                        $u->where('name', 'like', "%{$qText}%")
+                            ->orWhere('email', 'like', "%{$qText}%");
+                    });
             });
         }
 
-        $q->orderByDesc('scheduled_at');
+        // REPLACE HARD-CODED SORT WITH THIS
+        switch ($sort) {
+            case 'scheduled_at_desc':
+                $q->orderBy('scheduled_at', 'desc');
+                break;
+
+            case 'created_at_desc':
+                $q->orderBy('created_at', 'desc');
+                break;
+
+            default:
+                $q->orderBy('scheduled_at', 'asc');
+                break;
+        }
 
         $p = $q->paginate($limit);
 
@@ -41,5 +61,17 @@ class AdminAppointmentController extends Controller
             'totalPages' => $p->lastPage(),
             'total' => $p->total(),
         ]);
+    }
+
+    public function update(Request $request, Appointment $appointment)
+    {
+        $appointment->update($request->only([
+            'approval_status',
+            'meeting_link',
+            'location',
+            'scheduled_at'
+        ]));
+
+        return new AppointmentResource($appointment->fresh('user'));
     }
 }

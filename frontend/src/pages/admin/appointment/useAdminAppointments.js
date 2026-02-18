@@ -1,3 +1,4 @@
+// useAdminAppointments.js
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
   adminListAppointments,
@@ -13,7 +14,7 @@ function mapApiItemToUi(a) {
   return {
     id: a.id,
     client:
-    a.client ?? (a.phone ? `Client (${a.phone})` : `Appointment #${a.id}`),
+      a.client ?? (a.phone ? `Client (${a.phone})` : `Appointment #${a.id}`),
     email: a.email ?? "",
     type: a.purpose,
     status,
