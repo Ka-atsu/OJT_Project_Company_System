@@ -32,6 +32,8 @@ class AppointmentResource extends JsonResource
             'approvalStatus' => $this->approval_status,
             'meetingLink' => $this->meeting_link,
             'location' => $this->location,
+            'admin_note' => $this->admin_note,
+            'meeting_notes' => $this->meeting_notes,
         ];
     }
 }

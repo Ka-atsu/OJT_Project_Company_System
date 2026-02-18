@@ -235,32 +235,79 @@
   letter-spacing: 0.02em;
 }
 
+.aa-note {
+  font-size: 12px;
+  color: var(--aa-muted);
+  margin-bottom: 8px;
+}
+
 .aa-actions {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
 }
 
+/* Base button */
 .aa-btn {
-  border: 1px solid var(--aa-border);
-  background: color-mix(in oklab, var(--aa-surface), var(--aa-text) 5%);
-  color: var(--aa-text);
-  padding: 9px 12px;
+  border: none;
+  padding: 10px 14px;
   border-radius: 12px;
+  font-weight: 600;
+  font-size: 13px;
   cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
 }
 
-.aa-btn:hover {
-  background: color-mix(in oklab, var(--aa-surface), var(--aa-text) 8%);
+/* Approve (Primary) */
+.aa-btn:not(.aa-btn--ghost):not(.aa-btn--danger) {
+  background: linear-gradient(135deg, #1db954, #159943);
+  color: white;
+  box-shadow: 0 4px 12px rgba(29, 185, 84, 0.25);
 }
 
+.aa-btn:not(.aa-btn--ghost):not(.aa-btn--danger):hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(29, 185, 84, 0.35);
+}
+
+/* Ghost buttons (Reschedule / Cancel) */
 .aa-btn--ghost {
-  background: transparent;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--aa-border);
+  color: var(--aa-text);
 }
 
+.aa-btn--ghost:hover {
+  background: rgba(255, 255, 255, 0.08);
+  transform: translateY(-2px);
+}
+
+/* Danger button (Reject) */
 .aa-btn--danger {
-  border-color: rgba(255, 80, 80, 0.35);
-  color: rgb(170, 30, 30);
+  background: linear-gradient(135deg, #e53935, #b71c1c);
+  color: white;
+  box-shadow: 0 4px 12px rgba(229, 57, 53, 0.25);
+}
+
+.aa-btn--danger:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(229, 57, 53, 0.35);
+}
+
+/* Active press effect */
+.aa-btn:active {
+  transform: scale(0.96);
+}
+
+.aa-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
 }
 
 .aa-empty {

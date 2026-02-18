@@ -29,7 +29,6 @@ export default function AppointmentDetails({
   setNewDateTime,
   approve,
   reject,
-  cancel,
   reschedule,
 }) {
   if (!selected) {
@@ -163,15 +162,25 @@ export default function AppointmentDetails({
             />
           </Field>
 
+          <p className="aa-note">
+            Any changes made above will be saved when you click Approve, Reject,
+            or Reschedule.
+          </p>
+
           <div className="aa-actions">
-            <button className="aa-btn" onClick={approve}>
+            <button
+              className="aa-btn"
+              onClick={approve}
+              disabled={
+                selected.mode === "online"
+                  ? !meetingLink.trim()
+                  : !meetingLocation.trim()
+              }
+            >
               Approve
             </button>
             <button className="aa-btn aa-btn--ghost" onClick={reschedule}>
               Reschedule
-            </button>
-            <button className="aa-btn aa-btn--ghost" onClick={cancel}>
-              Cancel
             </button>
             <button className="aa-btn aa-btn--danger" onClick={reject}>
               Reject

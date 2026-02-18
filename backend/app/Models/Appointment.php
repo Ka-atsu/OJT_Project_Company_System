@@ -18,6 +18,9 @@ class Appointment extends Model
         'approval_status',
         'meeting_link',
         'location',
+        'scheduled_at',
+        'admin_note',
+        'meeting_notes',
     ];
 
     protected $casts = [

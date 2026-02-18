@@ -31,6 +31,9 @@ return new class extends Migration
             $table->string('meeting_link')->nullable();
             $table->string('location')->nullable();
 
+            $table->text('admin_note')->nullable();
+            $table->text('meeting_notes')->nullable();
+
             $table->timestamps();
         });
     }

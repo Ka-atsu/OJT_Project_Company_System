@@ -69,9 +69,13 @@ class AdminAppointmentController extends Controller
             'approval_status',
             'meeting_link',
             'location',
-            'scheduled_at'
+            'scheduled_at',
+            'admin_note',
+            'meeting_notes',
         ]));
 
-        return new AppointmentResource($appointment->fresh('user'));
+        return response()->json(
+            (new AppointmentResource($appointment->fresh('user')))->resolve()
+        );
     }
 }

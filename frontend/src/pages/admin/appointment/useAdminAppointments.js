@@ -23,10 +23,19 @@ function mapApiItemToUi(a) {
     meeting: {
       link: a.meetingLink ?? a.meeting_link ?? "",
       location: a.location ?? "",
-      notes: "",
+      notes: a.meeting_notes ?? "",
     },
     raw: a,
   };
+}
+
+function isValidUrl(value) {
+  try {
+    const url = new URL(value);
+    return url.protocol === "http:" || url.protocol === "https:";
+  } catch {
+    return false;
+  }
 }
 
 export function useAdminAppointments() {
@@ -98,7 +107,7 @@ export function useAdminAppointments() {
   useEffect(() => {
     if (!selected) return;
 
-    setActionNote("");
+    setActionNote(selected.raw?.admin_note ?? "");
     setMeetingLink(selected.meeting?.link ?? "");
     setMeetingLocation(selected.meeting?.location ?? "");
     setMeetingNotes(selected.meeting?.notes ?? "");
@@ -134,22 +143,43 @@ export function useAdminAppointments() {
   }
 
   async function approve() {
+    if (!selected) return;
+
+    if (selected.mode === "online") {
+      if (!meetingLink.trim()) {
+        alert("Meeting link is required for online appointments.");
+        return;
+      }
+
+      if (!isValidUrl(meetingLink.trim())) {
+        alert(
+          "Please enter a valid meeting URL (must start with http:// or https://).",
+        );
+        return;
+      }
+    }
+
+    if (selected.mode === "f2f" && !meetingLocation.trim()) {
+      alert("Location is required for face-to-face appointments.");
+      return;
+    }
+
     await patchSelected({
       approval_status: "accepted",
       ...buildMeetingPayload(),
-      // notes not in DB unless you add it
+      admin_note: actionNote || null,
+      meeting_notes: meetingNotes || null,
     });
   }
 
   async function reject() {
-    await patchSelected({ approval_status: "declined" });
-  }
+    if (!selected) return;
 
-  async function cancel() {
-    // you don't have "cancelled" in DB right now.
-    // If you want cancel, add a new enum value or new column.
-    // For now: treat cancel as declined (or add to DB)
-    await patchSelected({ approval_status: "declined" });
+    await patchSelected({
+      approval_status: "declined",
+      admin_note: actionNote || null,
+      meeting_notes: meetingNotes || null,
+    });
   }
 
   async function reschedule() {
@@ -191,7 +221,6 @@ export function useAdminAppointments() {
     setNewDateTime,
     approve,
     reject,
-    cancel,
     reschedule,
     refresh,
   };
