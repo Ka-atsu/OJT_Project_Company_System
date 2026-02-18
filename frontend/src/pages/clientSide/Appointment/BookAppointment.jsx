@@ -6,6 +6,7 @@ import Select from "react-select";
 import { YEARS, MONTHS } from "../../../utils/dateConstants";
 
 export default function BookAppointment({ onClose, onSubmit }) {
+  const [success, setSuccess] = useState(false);
   const [form, setForm] = useState({
     phone: "",
     dateTime: null,
@@ -27,7 +28,11 @@ export default function BookAppointment({ onClose, onSubmit }) {
         value = value.slice(0, 11); // 09XXXXXXXXX
       } else if (value.startsWith("+63")) {
         value = value.slice(0, 13); // +63XXXXXXXXX
-      } else if (value.length > 0 && !value.startsWith("+") && !value.startsWith("0")) {
+      } else if (
+        value.length > 0 &&
+        !value.startsWith("+") &&
+        !value.startsWith("0")
+      ) {
         // Allow starting '0' or '+' only, else reset
         value = "";
       }
@@ -36,12 +41,36 @@ export default function BookAppointment({ onClose, onSubmit }) {
     setForm((prev) => ({ ...prev, [key]: value }));
   };
 
+  const isPhoneValid = () => {
+    if (!form.phone) return false;
+
+    // Must match exactly:
+    // 09XXXXXXXXX  (11 digits)
+    // OR
+    // +63XXXXXXXXX (13 characters total)
+
+    const localRegex = /^09\d{9}$/;
+    const intlRegex = /^\+63\d{10}$/;
+
+    return localRegex.test(form.phone) || intlRegex.test(form.phone);
+  };
+
+  const isDetailsValid = () => {
+    if (!form.details.trim()) return true; // optional
+
+    const wordCount = form.details.trim().split(/\s+/).length;
+
+    return wordCount <= 100;
+  };
+
+  const isFormValid =
+    form.dateTime &&
+    form.project.trim().length > 0 &&
+    isPhoneValid() &&
+    isDetailsValid();
 
   const handleSubmit = async () => {
-    if (!form.dateTime || !form.project) return;
-
-    console.log("Submitting appointment with data:", form);
-    console.log("Formatted dateTime:", form.dateTime.toISOString());
+    if (!isFormValid) return;
 
     function FormatDate(date) {
       return new Date(
@@ -51,14 +80,13 @@ export default function BookAppointment({ onClose, onSubmit }) {
           date.getDate(),
           date.getHours(),
           date.getMinutes(),
-          date.getSeconds()
-        )
+          date.getSeconds(),
+        ),
       ).toISOString();
     }
 
     const payload = {
-      phone: form.phone || null,
-      // scheduled_at: form.dateTime.toISOString(),
+      phone: form.phone,
       scheduled_at: FormatDate(form.dateTime),
       project: form.project,
       purpose: form.purpose,
@@ -67,194 +95,214 @@ export default function BookAppointment({ onClose, onSubmit }) {
     };
 
     await onSubmit?.(payload);
-    onClose();
+
+    setSuccess(true);
+
+    setTimeout(() => {
+      onClose();
+    }, 2000);
   };
 
   return (
     <section className="appointment-overlay" role="dialog" aria-modal="true">
-      <button
-        className="appointment-overlay-bg"
-        type="button"
-        onClick={onClose}
-        aria-label="Close overlay"
-      />
-
       <div className="appointment-float dash-surface">
-        <div className="appointment-float-top">
-          <h2 className="appointment-float-title">Book an Appointment</h2>
+        {success ? (
+          <div className="appointment-success">
+            <h2>Appointment Submitted 🎉</h2>
+            <p>
+              Your request has been sent successfully. We will respond within
+              24–48 hours.
+            </p>
+          </div>
+        ) : (
+          <>
+            <div className="appointment-float-top">
+              <h2 className="appointment-float-title">Book an Appointment</h2>
 
-          <button
-            className="appointment-close"
-            type="button"
-            onClick={onClose}
-            aria-label="Close"
-          >
-            ✕
-          </button>
-        </div>
+              <button
+                className="appointment-close"
+                type="button"
+                onClick={onClose}
+                aria-label="Close"
+              >
+                ✕
+              </button>
+            </div>
 
-        <form
-          className="appointment-form-grid"
-          onSubmit={(e) => e.preventDefault()}
-        >
-          <div className="form-col">
-            <label className="form-field">
-              <span>Phone Number</span>
-              <input
-                value={form.phone}
-                onChange={update("phone")}
-                type="tel"
-                inputMode="tel"
-                placeholder="Enter phone number (09XXXXXXXXX or +63XXXXXXXXX)"
-              />
-            </label>
+            <form
+              className="appointment-form-grid"
+              onSubmit={(e) => e.preventDefault()}
+            >
+              <div className="form-col">
+                <label className="form-field">
+                  <span>Phone Number</span>
+                  <input
+                    value={form.phone}
+                    onChange={update("phone")}
+                    type="tel"
+                    inputMode="tel"
+                    placeholder="Enter phone number (09XXXXXXXXX or +63XXXXXXXXX)"
+                  />
+                </label>
 
-            <label className="form-field">
-              <span>Date & Time</span>
+                <label className="form-field">
+                  <span>Date & Time</span>
 
-              <DatePicker
-                selected={form.dateTime}
-                onChange={(d) => setForm((p) => ({ ...p, dateTime: d }))}
-                showTimeSelect
-                timeIntervals={15}
-                minDate={new Date()}
-                dateFormat="MMM dd, yyyy h:mm aa"
-                placeholderText="Select date and time"
-                className="dash-input"
-                calendarClassName="appt-dp"
-                popperClassName="appt-dp-popper"
-                showPopperArrow={false}
-                timeCaption="Time"
-                renderCustomHeader={({
-                  date,
-                  changeYear,
-                  changeMonth,
-                  decreaseMonth,
-                  increaseMonth,
-                }) => (
-                  <div className="appt-dp-header">
-                    <button type="button" onClick={decreaseMonth}>
-                      ‹
-                    </button>
+                  <DatePicker
+                    selected={form.dateTime}
+                    onChange={(d) => setForm((p) => ({ ...p, dateTime: d }))}
+                    showTimeSelect
+                    timeIntervals={15}
+                    minDate={new Date()}
+                    dateFormat="MMM dd, yyyy h:mm aa"
+                    placeholderText="Select date and time"
+                    className="dash-input"
+                    calendarClassName="appt-dp"
+                    popperClassName="appt-dp-popper"
+                    showPopperArrow={false}
+                    timeCaption="Time"
+                    renderCustomHeader={({
+                      date,
+                      changeYear,
+                      changeMonth,
+                      decreaseMonth,
+                      increaseMonth,
+                    }) => (
+                      <div className="appt-dp-header">
+                        <button type="button" onClick={decreaseMonth}>
+                          ‹
+                        </button>
 
-                    <select
-                      value={date.getFullYear()}
-                      onChange={(e) => changeYear(Number(e.target.value))}
-                    >
-                      {YEARS(new Date().getFullYear(), 10).map((y) => (
-                        <option key={y} value={y}>
-                          {y}
-                        </option>
-                      ))}
-                    </select>
+                        <select
+                          value={date.getFullYear()}
+                          onChange={(e) => changeYear(Number(e.target.value))}
+                        >
+                          {YEARS(new Date().getFullYear(), 10).map((y) => (
+                            <option key={y} value={y}>
+                              {y}
+                            </option>
+                          ))}
+                        </select>
 
-                    <select
-                      value={date.getMonth()}
-                      onChange={(e) => changeMonth(Number(e.target.value))}
-                    >
-                      {MONTHS.map((m, i) => (
-                        <option key={m} value={i}>
-                          {m}
-                        </option>
-                      ))}
-                    </select>
+                        <select
+                          value={date.getMonth()}
+                          onChange={(e) => changeMonth(Number(e.target.value))}
+                        >
+                          {MONTHS.map((m, i) => (
+                            <option key={m} value={i}>
+                              {m}
+                            </option>
+                          ))}
+                        </select>
 
-                    <button type="button" onClick={increaseMonth}>
-                      ›
-                    </button>
+                        <button type="button" onClick={increaseMonth}>
+                          ›
+                        </button>
+                      </div>
+                    )}
+                  />
+                </label>
+
+                <div className="form-field">
+                  <span>Meeting Type</span>
+
+                  <div className="meeting-type">
+                    <label className="radio-pill">
+                      <input
+                        type="radio"
+                        name="mode"
+                        value="online"
+                        checked={form.mode === "online"}
+                        onChange={update("mode")}
+                      />
+                      Online
+                    </label>
+
+                    <label className="radio-pill">
+                      <input
+                        type="radio"
+                        name="mode"
+                        value="f2f"
+                        checked={form.mode === "f2f"}
+                        onChange={update("mode")}
+                      />
+                      Face-to-face
+                    </label>
                   </div>
-                )}
-              />
-            </label>
 
-            <div className="form-field">
-              <span>Meeting Type</span>
-
-              <div className="meeting-type">
-                <label className="radio-pill">
-                  <input
-                    type="radio"
-                    name="mode"
-                    value="online"
-                    checked={form.mode === "online"}
-                    onChange={update("mode")}
-                  />
-                  Online
-                </label>
-
-                <label className="radio-pill">
-                  <input
-                    type="radio"
-                    name="mode"
-                    value="f2f"
-                    checked={form.mode === "f2f"}
-                    onChange={update("mode")}
-                  />
-                  Face-to-face
-                </label>
+                  <small className="dash-item-meta meeting-hint">
+                    If accepted, admin will send the meeting link or location.
+                  </small>
+                </div>
               </div>
 
-              <small className="dash-item-meta meeting-hint">
-                If accepted, admin will send the meeting link or location.
-              </small>
+              <div className="form-col">
+                <label className="form-field">
+                  <span>Project</span>
+                  <input
+                    value={form.project}
+                    onChange={update("project")}
+                    type="text"
+                    placeholder="Enter project name"
+                  />
+                </label>
+
+                <label className="form-field">
+                  <span>Purpose</span>
+
+                  <Select
+                    classNamePrefix="appt-select"
+                    value={{ value: form.purpose, label: form.purpose }}
+                    onChange={(opt) =>
+                      setForm((p) => ({ ...p, purpose: opt.value }))
+                    }
+                    options={[
+                      { value: "Consultation", label: "Consultation" },
+                      { value: "Contract", label: "Contract" },
+                      { value: "Documents", label: "Documents" },
+                      { value: "Planning", label: "Planning" },
+                    ]}
+                    isSearchable={false}
+                  />
+                </label>
+
+                <label className="form-field">
+                  <span>Additional Details</span>
+                  <textarea
+                    value={form.details}
+                    onChange={update("details")}
+                    rows="6"
+                    placeholder="Describe your request"
+                    className={!isDetailsValid() ? "invalid" : ""}
+                  />
+                  <small
+                    className={`word-count ${!isDetailsValid() ? "error" : ""}`}
+                  >
+                    {form.details.trim()
+                      ? form.details.trim().split(/\s+/).length
+                      : 0}{" "}
+                    / 100 words
+                  </small>
+                </label>
+              </div>
+            </form>
+
+            <div className="appointment-float-footer">
+              <p className="dash-item-meta">
+                We typically respond within 24–48 hours.
+              </p>
+
+              <button
+                className="dash-btn primary"
+                type="button"
+                onClick={handleSubmit}
+                disabled={!isFormValid}
+              >
+                Submit
+              </button>
             </div>
-          </div>
-
-          <div className="form-col">
-            <label className="form-field">
-              <span>Project</span>
-              <input
-                value={form.project}
-                onChange={update("project")}
-                type="text"
-                placeholder="Enter project name"
-              />
-            </label>
-
-            <label className="form-field">
-              <span>Purpose</span>
-
-              <Select
-                classNamePrefix="appt-select"
-                value={{ value: form.purpose, label: form.purpose }}
-                onChange={(opt) =>
-                  setForm((p) => ({ ...p, purpose: opt.value }))
-                }
-                options={[
-                  { value: "Consultation", label: "Consultation" },
-                  { value: "Contract", label: "Contract" },
-                  { value: "Documents", label: "Documents" },
-                  { value: "Planning", label: "Planning" },
-                ]}
-                isSearchable={false}
-              />
-            </label>
-
-            <label className="form-field">
-              <span>Additional Details</span>
-              <textarea
-                value={form.details}
-                onChange={update("details")}
-                rows="6"
-                placeholder="Describe your request"
-              />
-            </label>
-          </div>
-        </form>
-
-        <div className="appointment-float-footer">
-          <p className="dash-item-meta">
-            We typically respond within 24–48 hours.
-          </p>
-
-          <button
-            className="dash-btn primary"
-            type="button"
-            onClick={handleSubmit}
-          >
-            Submit
-          </button>
-        </div>
+          </>
+        )}
       </div>
     </section>
   );

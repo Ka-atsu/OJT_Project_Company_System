@@ -22,7 +22,7 @@
 
 .appointment-actions {
   margin-left: auto;
-   margin-bottom: 1rem;
+  margin-bottom: 1rem;
 }
 
 /* =========================
@@ -39,7 +39,7 @@
   background: rgba(0, 0, 0, 0.1);
   font-weight: 700;
 }
-.dash-surface{
+.dash-surface {
   box-shadow:
     0 4px 10px rgba(0, 0, 0, 0.05),
     0 18px 40px rgba(0, 0, 0, 0.06);
@@ -87,7 +87,7 @@
   border-right: 1px solid rgba(0, 0, 0, 0.06);
 }
 
-.appointment-table thead th{
+.appointment-table thead th {
   font-size: 0.8rem;
 }
 
@@ -154,7 +154,6 @@
   .appointment-actions .dash-btn.primary {
     width: 100%;
     justify-content: center;
-    
   }
 
   .appointment-table tbody td {
@@ -311,6 +310,62 @@
 .meeting-hint {
   display: block;
   margin-top: 8px;
+}
+
+/* =========================
+   DISABLED BUTTON STATE
+========================= */
+
+.dash-btn {
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    opacity 0.2s ease,
+    transform 0.05s ease;
+}
+
+.dash-btn.primary:disabled {
+  background-color: #d1d5db; /* soft gray */
+  border-color: #d1d5db;
+  color: #6b7280;
+  cursor: not-allowed;
+  opacity: 0.8;
+  box-shadow: none;
+  transform: none;
+}
+
+.dash-btn.primary:disabled:hover {
+  background-color: #d1d5db;
+}
+
+.form-field textarea.invalid {
+  border: 1px solid #ef4444;
+  background: #fef2f2;
+}
+
+.word-count {
+  font-size: 0.75rem;
+  color: #6b7280;
+  text-align: right;
+}
+
+.word-count.error {
+  color: #ef4444;
+}
+
+.appointment-success {
+  text-align: center;
+  padding: 2rem 1rem;
+}
+
+.appointment-success h2 {
+  font-size: 1.4rem;
+  margin-bottom: 0.75rem;
+  color: #111827;
+}
+
+.appointment-success p {
+  color: #4b5563;
 }
 
 /* =========================
