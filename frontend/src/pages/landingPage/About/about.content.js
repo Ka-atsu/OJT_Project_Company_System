@@ -32,14 +32,14 @@ export const ABOUT = {
   },
 
   record: {
-    label: "Our Record",
-    items: [
-      { value: "14M+", label: "Cubic meters available" },
-      { value: "2018", label: "Year established" },
-      { value: "Laguna & Cavite", label: "Operational sites" },
-      { value: "CALABARZON+", label: "Service coverage" },
-    ],
-  },
+  label: "Our Record",
+  items: [
+    { value: "14M+", label: "Cubic meters available", icon: "layers" },
+    { value: "2018", label: "Year established", icon: "calendar" },
+    { value: "Laguna & Cavite", label: "Operational sites", icon: "map" },
+    { value: "CALABARZON+", label: "Service coverage", icon: "globe" },
+  ],
+},
 
   team: {
     label: "Our Team",
