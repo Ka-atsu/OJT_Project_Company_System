@@ -93,6 +93,14 @@ export default function useAdminProjects() {
     return filtered;
   }, [clients, clientQuery]);
 
+  const onNext = () => {
+    setPage((p) => Math.min(pageCount, p + 1));
+  };
+
+  const onPrev = () => {
+    setPage((p) => Math.max(1, p - 1));
+  };
+
   // Define the "showing" variable for the UI, based on whether we're creating a new project or selecting one
   const showing = isCreating
     ? "New project"
@@ -103,7 +111,11 @@ export default function useAdminProjects() {
   // ------------------ EFFECT HOOKS ------------------
 
   // Reset the page when any of the filter settings change
-  useEffect(() => setPage(1), [status, q, sort, pageSize]);
+  useEffect(() => {
+    if (page !== 1) {
+      setPage(1);
+    }
+  }, [status, q, sort, pageSize]);
 
   // Fetch the list of clients when the component is mounted
   useEffect(() => {
@@ -158,7 +170,10 @@ export default function useAdminProjects() {
     setErr("");
 
     // Fetch the project list
-    ProjectsService.list({ page, pageSize, status, q, sort }, controller.signal)
+    ProjectsService.list(
+      { page, limit: pageSize, status, q, sort },
+      controller.signal,
+    )
       .then(({ items: nextItems, total: nextTotal }) => {
         setItems(nextItems); // Update project list
         setTotal(nextTotal); // Update total project count
@@ -168,13 +183,20 @@ export default function useAdminProjects() {
           setSelectedId(nextItems[0].id);
       })
       .catch((e) => {
-        if (e?.name === "AbortError") return; // Ignore abort errors
-        setErr(e?.message ?? "Failed to load projects"); // Set error message
+        if (
+          e?.name === "AbortError" ||
+          e?.message === "canceled" ||
+          e?.code === "ERR_CANCELED"
+        ) {
+          return; // ignore canceled requests
+        }
+
+        setErr(e?.message ?? "Failed to load projects");
       })
       .finally(() => setLoading(false)); // Stop loading after the request
 
     return () => controller.abort(); // Abort the request on cleanup
-  }, [page, pageSize, status, q, sort, isCreating, selectedId]);
+  }, [page, pageSize, status, q, sort, isCreating]);
 
   // Update the draft state when the selected project changes
   useEffect(() => {
@@ -230,6 +252,7 @@ export default function useAdminProjects() {
   // Save the current project (create or update)
   async function saveProject() {
     if (!draft.name.trim()) return alert("Project name is required."); // Validate project name
+    console.log("SENDING TO BACKEND:", draft);
 
     try {
       setLoading(true);
@@ -345,6 +368,9 @@ export default function useAdminProjects() {
     setIsCreating,
     setSelectedId,
     setDraft,
+
+    onNext,
+    onPrev,
 
     clientQuery,
     setClientQuery,

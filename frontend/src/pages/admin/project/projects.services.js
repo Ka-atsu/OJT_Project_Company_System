@@ -62,6 +62,8 @@ function toFormData(draft) {
   fd.append("budget", draft.budget || 0);
   fd.append("progress", draft.progress || 0);
   fd.append("description", draft.description || "");
+  fd.append("address", draft.address || "");
+  fd.append("completedDate", draft.completedDate || "");
 
   // Milestones must be serialized as JSON
   fd.append("milestones", JSON.stringify(draft.milestones || []));

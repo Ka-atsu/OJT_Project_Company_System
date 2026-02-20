@@ -22,6 +22,7 @@ class Project extends Model
     protected $casts = [
         'start_date' => 'date',
         'due_date' => 'date',
+        'completed_date' => 'date',
         'budget' => 'int',
         'progress' => 'int',
     ];

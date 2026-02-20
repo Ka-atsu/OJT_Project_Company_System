@@ -88,7 +88,6 @@ export default function AdminProjectsList({
             value={q}
             onChange={(e) => setQ(e.target.value)}
             placeholder="Name, ID, client…"
-            disabled={loading}
           />
         </Field>
       </div>

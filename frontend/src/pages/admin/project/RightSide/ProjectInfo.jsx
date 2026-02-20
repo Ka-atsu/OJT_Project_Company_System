@@ -9,6 +9,10 @@ export default function ProjectInfo({
   onSave,
   setDraft,
 }) {
+  const isInvalidDate =
+    draft.startDate && draft.dueDate && draft.dueDate < draft.startDate;
+  const isFormInvalid =
+    !draft.name?.trim() || !draft.startDate || !draft.dueDate || isInvalidDate;
   return (
     <div className="ap-block">
       <div className="ap-block__top">
@@ -29,7 +33,7 @@ export default function ProjectInfo({
           <button
             className="ap-btn ap-btn--primary"
             onClick={onSave}
-            disabled={loading}
+            disabled={loading || isFormInvalid}
           >
             {isCreating ? "Create" : "Save"}
           </button>
