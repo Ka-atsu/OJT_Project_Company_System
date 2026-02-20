@@ -1,6 +1,7 @@
 /* Layout & Page Structure */
 .ap {
-  background: transparent;
+  background: #f8fafc;
+  padding: 5px;
   color: var(--aa-text);
   height: 100%;
   min-height: 0;
@@ -33,20 +34,30 @@
 }
 
 .ap-details {
-  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 32px; /* was none */
+  padding: 24px 28px;
   overflow-y: auto;
 }
 
 /* Cards & Containers */
 .ap-card {
-  background: var(--aa-surface);
-  border: 1px solid var(--aa-border);
-  border-radius: var(--aa-radius);
-  box-shadow: var(--aa-shadow);
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  border-radius: 18px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
   overflow: hidden;
   display: flex;
   flex-direction: column;
   min-height: 0;
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.ap-card:hover {
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.08);
 }
 
 .ap-card__header {
@@ -71,11 +82,11 @@
 
 .ap-block {
   display: grid;
-  gap: 10px;
-  padding: 12px;
-  border: 1px solid var(--aa-border);
-  border-radius: 14px;
-  z-index: 1;
+  gap: 18px; /* more spacing inside */
+  padding: 20px; /* more breathing room */
+  border-radius: 18px;
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.05);
 }
 
 .ap-block__top {
@@ -157,12 +168,17 @@
   gap: 4px;
 }
 
-.ap-progress {
-  margin-top: 10px;
-  height: 6px;
-  border-radius: 999px;
-  background: rgba(0, 0, 0, 0.06);
-  overflow: hidden;
+.ap-ms {
+  border-radius: 14px;
+  padding: 14px;
+  background: #ffffff;
+  border: 1px solid #f1f1f1;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+  transition: transform 0.15s ease;
+}
+
+.ap-ms:hover {
+  transform: translateY(-2px);
 }
 
 .ap-progress__bar {
@@ -182,23 +198,23 @@
   color: var(--aa-muted);
 }
 
+.ap-field input,
 .ap-field select,
-.ap-field input {
-  border: 1px solid var(--aa-border);
-  background: color-mix(in oklab, var(--aa-surface), var(--aa-text) 3%);
-  color: var(--aa-text);
-  border-radius: 10px;
-  padding: 8px 10px;
+.ap-textarea {
+  border: 1px solid #e5e7eb;
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 10px 12px;
+  font-size: 14px;
+  transition: all 0.2s ease;
 }
 
-.ap-textarea {
-  border: 1px solid var(--aa-border);
-  background: color-mix(in oklab, var(--aa-surface), var(--aa-text) 3%);
-  color: var(--aa-text);
-  border-radius: 10px;
-  padding: 10px;
-  min-height: 84px;
-  resize: vertical;
+.ap-field input:focus,
+.ap-field select:focus,
+.ap-textarea:focus {
+  outline: none;
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
 }
 
 .ap-twoCol {
@@ -249,12 +265,16 @@
 }
 
 .ap-ms {
-  border: 1px solid var(--aa-border);
-  border-radius: 12px;
-  padding: 10px;
-  display: grid;
-  gap: 8px;
-  background: color-mix(in oklab, var(--aa-surface), var(--aa-text) 1%);
+  border-radius: 14px;
+  padding: 14px;
+  background: #ffffff;
+  border: 1px solid #f1f1f1;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+  transition: transform 0.15s ease;
+}
+
+.ap-ms:hover {
+  transform: translateY(-2px);
 }
 
 .ap-ms__row {
@@ -376,17 +396,18 @@
 
 /* floating */
 .floating-card {
-  position: fixed; /* Fix the position relative to the viewport */
-  top: 50%; /* Center vertically */
-  left: 50%; /* Center horizontally */
-  transform: translate(-50%, -50%); /* Perfectly center the element */
-  width: 80%; /* Set the width */
-  max-width: 600px; /* Optional max width */
-  background-color: #fff; /* White background */
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Add some shadow for floating effect */
-  border-radius: 8px; /* Optional, add rounded corners */
-  padding: 20px; /* Add some padding inside */
-  overflow-y: auto; /* Ensure scrollable if content overflows */
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 90%;
+  max-width: 720px;
+  max-height: 85vh;
+  background: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.15);
+  padding: 24px;
+  overflow-y: auto;
 }
 
 .ap-card__header {

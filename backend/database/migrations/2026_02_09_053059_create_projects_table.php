@@ -14,17 +14,22 @@ return new class extends Migration
         Schema::create('projects', function (Blueprint $table) {
             $table->id();
 
-            // client is a user
-            $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
+            $table->foreignId('user_id')
+                ->constrained('users')
+                ->cascadeOnDelete();
 
             $table->string('name');
-            $table->enum('status', ['draft', 'active', 'on_hold', 'completed'])->default('draft');
+            $table->string('address')->nullable();
+
+            $table->enum('status', ['draft', 'active', 'on_hold', 'completed'])
+                ->default('draft');
 
             $table->date('start_date')->nullable();
             $table->date('due_date')->nullable();
+            $table->date('completed_date')->nullable();
 
-            $table->unsignedInteger('budget')->default(0);        // integer pesos (simple)
-            $table->unsignedTinyInteger('progress')->default(0);  // 0-100
+            $table->unsignedInteger('budget')->default(0);
+            $table->unsignedTinyInteger('progress')->default(0);
 
             $table->text('description')->nullable();
             $table->timestamps();

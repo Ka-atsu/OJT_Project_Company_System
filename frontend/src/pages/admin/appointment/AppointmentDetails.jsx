@@ -30,6 +30,7 @@ export default function AppointmentDetails({
   approve,
   reject,
   reschedule,
+  successMessage,
 }) {
   if (!selected) {
     return (
@@ -167,6 +168,8 @@ export default function AppointmentDetails({
             or Reschedule.
           </p>
 
+          {successMessage && <div className="aa-success">{successMessage}</div>}
+
           <div className="aa-actions">
             <button
               className="aa-btn"
@@ -179,7 +182,11 @@ export default function AppointmentDetails({
             >
               Approve
             </button>
-            <button className="aa-btn aa-btn--ghost" onClick={reschedule}>
+            <button
+              className="aa-btn aa-btn--ghost"
+              onClick={reschedule}
+              disabled={!newDateTime}
+            >
               Reschedule
             </button>
             <button className="aa-btn aa-btn--danger" onClick={reject}>

@@ -9,9 +9,11 @@ class Project extends Model
     protected $fillable = [
         'user_id',
         'name',
+        'address',
         'status',
         'start_date',
         'due_date',
+        'completed_date',
         'budget',
         'progress',
         'description',

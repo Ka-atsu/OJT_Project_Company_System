@@ -38,6 +38,9 @@ class ProjectResource extends JsonResource
             ])->values() ?? [],
 
             'updatedAt' => optional($this->updated_at)->toISOString(),
+
+            'address' => $this->address ?? '',
+            'completedDate' => optional($this->completed_date)->format('Y-m-d') ?? '',
         ];
     }
 }

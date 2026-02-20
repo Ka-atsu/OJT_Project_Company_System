@@ -5,7 +5,10 @@ export default function ProjectModal({ project, onClose }) {
   const [showFull, setShowFull] = useState(false);
 
   const images = useMemo(() => {
-    return Array.isArray(project?.images) ? project.images : [];
+    if (!Array.isArray(project?.photos)) return [];
+
+    // Extract only the url field
+    return project.photos.map((p) => p.url);
   }, [project]);
 
   const hasImages = images.length > 0;
