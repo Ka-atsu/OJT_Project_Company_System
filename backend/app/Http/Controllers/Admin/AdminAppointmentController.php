@@ -65,6 +65,15 @@ class AdminAppointmentController extends Controller
 
     public function update(Request $request, Appointment $appointment)
     {
+        $request->validate([
+            'scheduled_at' => 'nullable|date',
+            'approval_status' => 'nullable|in:pending,accepted,declined',
+            'meeting_link' => 'nullable|url',
+            'location' => 'nullable|string|max:255',
+            'admin_note' => 'nullable|string',
+            'meeting_notes' => 'nullable|string',
+        ]);
+
         $appointment->update($request->only([
             'approval_status',
             'meeting_link',

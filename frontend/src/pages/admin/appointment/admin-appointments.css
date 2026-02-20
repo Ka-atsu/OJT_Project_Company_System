@@ -303,9 +303,17 @@
   transform: scale(0.96);
 }
 
-.aa-btn:disabled {
+/* Disable hover effect when button is disabled */
+.aa-btn:disabled,
+.aa-btn[disabled] {
   opacity: 0.5;
   cursor: not-allowed;
+  pointer-events: none; /* 🔥 prevents hover */
+  transform: none; /* stops lift animation */
+}
+
+/* Prevent hover styles */
+.aa-btn:disabled:hover {
   transform: none;
   box-shadow: none;
 }
@@ -408,4 +416,14 @@
   background: rgba(255, 80, 80, 0.12);
   border-color: rgba(255, 80, 80, 0.35);
   color: rgb(170, 30, 30);
+}
+
+.aa-success {
+  background: #e6f9ed;
+  color: #1e7d4f;
+  padding: 10px 14px;
+  border-radius: 6px;
+  margin-bottom: 12px;
+  font-weight: 500;
+  border: 1px solid #b7e4c7;
 }

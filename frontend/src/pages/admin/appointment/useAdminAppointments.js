@@ -9,7 +9,7 @@ const STATUS_OPTIONS = ["all", "pending", "accepted", "declined"];
 
 function mapApiItemToUi(a) {
   const statusRaw = a.approvalStatus ?? a.approval_status ?? "pending";
-  const status = String(statusRaw).trim().toLowerCase(); // pending|accepted|declined
+  const status = String(statusRaw).trim().toLowerCase();
 
   return {
     id: a.id,
@@ -19,7 +19,13 @@ function mapApiItemToUi(a) {
     type: a.purpose,
     status,
     mode: a.mode,
-    requestedFor: `${a.date ?? ""} ${a.time ?? ""}`.trim(),
+
+    requestedFor: a.scheduled_at
+      ? new Date(a.scheduled_at).toLocaleString()
+      : `${a.date ?? ""} ${a.time ?? ""}`.trim(),
+
+    scheduledAt: a.scheduled_at ?? null,
+
     meeting: {
       link: a.meetingLink ?? a.meeting_link ?? "",
       location: a.location ?? "",
@@ -61,6 +67,7 @@ export function useAdminAppointments() {
   const [meetingLocation, setMeetingLocation] = useState("");
   const [meetingNotes, setMeetingNotes] = useState("");
   const [newDateTime, setNewDateTime] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
 
   const pageCount = Math.max(1, Math.ceil(total / pageSize));
   const requestIdRef = useRef(0);
@@ -111,11 +118,9 @@ export function useAdminAppointments() {
     setMeetingLink(selected.meeting?.link ?? "");
     setMeetingLocation(selected.meeting?.location ?? "");
     setMeetingNotes(selected.meeting?.notes ?? "");
-
-    // since your backend uses scheduled_at, easiest is: don't reschedule until you add scheduled_at in API
-    // If you add scheduled_at to AppointmentResource, set:
-    // setNewDateTime(selected.raw.scheduled_at?.slice(0, 16) ?? "")
-    setNewDateTime("");
+    setNewDateTime(
+      selected.raw?.scheduled_at ? selected.raw.scheduled_at.slice(0, 16) : "",
+    );
   }, [selectedId]);
 
   async function refresh() {
@@ -131,8 +136,14 @@ export function useAdminAppointments() {
     setItems((prev) =>
       prev.map((x) => (x.id === selected.id ? mapApiItemToUi(updated) : x)),
     );
-  }
 
+    setSuccessMessage("Saved successfully.");
+
+    // auto-hide after 3 seconds
+    setTimeout(() => {
+      setSuccessMessage("");
+    }, 3000);
+  }
   function buildMeetingPayload() {
     if (!selected) return {};
 
@@ -183,11 +194,27 @@ export function useAdminAppointments() {
   }
 
   async function reschedule() {
-    // requires backend to accept scheduled_at updates
-    // and frontend must have scheduled_at available. If you add scheduled_at to resource:
-    // await patchSelected({ scheduled_at: new Date(newDateTime).toISOString(), ...buildMeetingPayload() });
+    if (!selected) return;
 
-    alert("Reschedule needs scheduled_at support in the admin API first.");
+    if (!newDateTime) {
+      alert("Please select a new date and time.");
+      return;
+    }
+
+    // prevent past dates but in the callendart UI itself you cant schedule past date, this is just a fail safe
+    if (new Date(newDateTime) < new Date()) {
+      alert("You cannot reschedule to a past date.");
+      return;
+    }
+
+    await patchSelected({
+      scheduled_at: new Date(newDateTime).toISOString(),
+      ...buildMeetingPayload(),
+      admin_note: actionNote || null,
+      meeting_notes: meetingNotes || null,
+    });
+
+    alert("Appointment rescheduled successfully.");
   }
 
   return {
@@ -223,5 +250,6 @@ export function useAdminAppointments() {
     reject,
     reschedule,
     refresh,
+    successMessage,
   };
 }

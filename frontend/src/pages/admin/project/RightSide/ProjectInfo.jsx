@@ -86,6 +86,37 @@ export default function ProjectInfo({
             disabled={loading} // Disable if loading
           />
         </Field>
+
+        <Field label="Address">
+          <input
+            value={draft.address || ""}
+            onChange={(e) =>
+              setDraft((d) => ({ ...d, address: e.target.value }))
+            }
+            disabled={loading}
+          />
+        </Field>
+
+        <Field label="Budget">
+          <input
+            type="number"
+            value={draft.budget || ""}
+            onChange={(e) =>
+              setDraft((d) => ({ ...d, budget: e.target.value }))
+            }
+            disabled={loading}
+          />
+        </Field>
+
+        <Field label="Description">
+          <textarea
+            value={draft.description || ""}
+            onChange={(e) =>
+              setDraft((d) => ({ ...d, description: e.target.value }))
+            }
+            disabled={loading}
+          />
+        </Field>
       </div>
     </div>
   );
