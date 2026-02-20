@@ -105,6 +105,7 @@
 .home-about-text,
 .home-projects-text {
   margin-top: 1.25rem;
+  margin-bottom: 1rem;
   max-width: 60ch;
   color: #555;
   line-height: 1.7;
@@ -114,10 +115,42 @@
    HOME — ABOUT SNAPSHOT
 ===================== */
 
-.home-about {
-  background: #ffffff;
+.home-about-grid {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 3rem;
 }
 
+/* Text takes majority width */
+.home-about-text-wrapper {
+  flex: 2;
+}
+
+/* Logo smaller and on the right */
+.home-about-logo {
+  flex: 1;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.home-about-logo img {
+  max-width: 400px;
+  height: auto;
+}
+
+/* Responsive for tablet / mobile */
+@media (max-width: 768px) {
+  .home-about-grid {
+    flex-direction: column-reverse; /* Text above logo */
+    text-align: center;
+    gap: 1.5rem;
+  }
+
+  .home-about-logo {
+    justify-content: center;
+  }
+}
 /* =====================
    HOME — MODULES
 ===================== */
@@ -187,12 +220,164 @@
   margin-top: 2rem;
 }
 
-.home-projects .btn.btn-outline {
-  color: #111; /* dark text */
+.home-modules-cta .btn-outline-blue,
+.home-about-cta .btn-outline-blue,
+.home-projects .btn-outline-blue {
+  color: #2563eb;               
+  border: 1px solid #cbd5e1;   
+  background-color: #ffffff;    
+  font-weight: 700;
+  transition: all 0.3s ease;
+  text-decoration: none;
 }
 
-.home-projects .btn.btn-outline:hover {
-  color: #fff;
+.home-modules-cta .btn-outline-blue:hover,
+.home-about-cta .btn-outline-blue:hover,
+.home-projects .btn-outline-blue:hover {
+  background-color: #2563eb;   
+  color: #ffffff;              
+  border-color: transparent;    
+}
+
+.home-modules-cta {
+  display: flex;
+  justify-content: center; /* Center the button horizontally */
+  margin-top: 2.5rem;     /* Space above the button */
+}
+
+/* =====================
+   HOME — METRICS
+===================== */
+
+.home-metrics {
+  background: linear-gradient(
+    to bottom,
+    #eef2f6 0%,
+    #eef2f6 65%,
+    #ffffff 100%
+  );
+  padding: 2rem 2rem 4rem;
+  overflow: hidden;
+}
+
+.home-metrics-inner {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 2.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+/* Each metric card */
+.home-metric {
+  background: linear-gradient(180deg, #ffffff, #f8fafc);
+  border-radius: 20px;
+  padding: 2.25rem 1.75rem 2rem;
+  min-height: 180px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+
+  box-shadow: 0 16px 36px rgba(15, 23, 42, 0.12);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.home-metric:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 26px 55px rgba(15, 23, 42, 0.16);
+}
+
+.home-metric-value {
+  font-size: clamp(1.8rem, 2.6vw, 2.2rem);
+  font-weight: 900;
+  letter-spacing: -0.025em;
+  color: #0f172a;
+}
+
+.home-metric-label {
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: rgba(15, 23, 42, 0.65);
+  line-height: 1.4;
+}
+
+.home-metric-sub {
+  margin-top: 0.75rem;
+  font-size: 0.85rem;
+  font-weight: 400;
+  color: rgba(15, 23, 42, 0.55);
+  line-height: 1.5;
+  max-width: 18ch; /* keep text nicely constrained */
+}
+
+.home-metrics-title {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.home-metrics-title h2 {
+  font-size: clamp(2rem, 3vw, 2.5rem);
+  font-weight: 800;
+  color: #0f172a;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+/* =====================
+   RESPONSIVE
+===================== */
+
+@media (max-width: 1024px) {
+  .home-metrics-inner {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .home-metrics-inner {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .home-metric {
+    min-height: auto;
+    padding: 2rem 1.5rem 1.75rem;
+  }
+}
+/* =====================
+   HOME — WHY SECTION
+===================== */
+
+.home-why {
+  background: #ffffff;
+}
+
+.home-why-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.home-why-grid {
+  margin-top: 2.5rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 2rem;
+}
+
+.home-why-item h4 {
+  margin-bottom: 0.75rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.home-why-item p {
+  color: #555;
+  line-height: 1.6;
 }
 
 /* =====================
@@ -208,4 +393,56 @@
   .home-projects-text {
     max-width: 100%;
   }
+}
+
+
+/* PROJECT CARD */
+.home-projects-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); 
+  gap: 1.5rem;
+}
+
+.home-project-card {
+  position: relative;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 6px 15px rgba(0,0,0,0.08);
+  height: 300px; /* fixed card height */
+}
+
+.home-project-media {
+  width: 100%;
+  height: 100%; 
+}
+
+.home-project-media img {
+  width: 100%;
+  height: 100%; 
+  object-fit: fill; 
+  display: block;
+}
+
+.home-project-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 0.75rem;
+  background: linear-gradient(to top, rgba(0,0,0,0.6), transparent);
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.home-project-title {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.home-project-location {
+  font-size: 0.8rem;
+  opacity: 0.85;
 }
