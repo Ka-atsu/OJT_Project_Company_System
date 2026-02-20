@@ -379,8 +379,9 @@
   border: 1px solid var(--aa-border);
   background: color-mix(in oklab, var(--aa-surface), var(--aa-text) 5%);
   color: var(--aa-text);
-  padding: 9px 12px;
-  border-radius: 12px;
+  padding: 6px 12px; /* smaller vertical padding */
+  border-radius: 8px; /* less rounded */
+  font-size: 14px; /* slightly smaller text */
   cursor: pointer;
 }
 
@@ -392,6 +393,12 @@
   background: #111827;
   border-color: #111827;
   color: #fff;
+}
+
+.ap-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
 }
 
 /* floating */

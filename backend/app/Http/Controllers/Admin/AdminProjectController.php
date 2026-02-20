@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use App\Models\ProjectPhoto;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
 
 class AdminProjectController extends Controller
 {
@@ -64,23 +65,23 @@ class AdminProjectController extends Controller
         $data = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'status' => ['required', Rule::in(['draft', 'active', 'on_hold', 'completed'])],
-            'clientId' => ['required', 'exists:users,id'],  // Client ID is required
+            'clientId' => ['required', 'exists:users,id'],
             'startDate' => ['nullable', 'date'],
-            'dueDate' => ['nullable', 'date'],
+            'dueDate' => ['nullable', 'date', 'after_or_equal:startDate'],
             'budget' => ['nullable', 'numeric', 'min:0'],
             'progress' => ['nullable', 'integer', 'min:0', 'max:100'],
             'description' => ['nullable', 'string'],
+            'address' => ['nullable', 'string', 'max:255'],
+            'completedDate' => ['nullable', 'date'],
             'photos' => ['nullable', 'array'],
             'photos.*' => ['image', 'max:5120'],
         ]);
 
-        // Decode milestones JSON
         $milestones = json_decode($request->input('milestones', '[]'), true);
         if (!is_array($milestones)) $milestones = [];
 
-        // Create a new project with the provided clientId
         $project = Project::create([
-            'user_id' => $data['clientId'],  // Assign the project to the specified client
+            'user_id' => $data['clientId'],
             'name' => $data['name'],
             'status' => $data['status'],
             'start_date' => $data['startDate'] ?? null,
@@ -88,24 +89,16 @@ class AdminProjectController extends Controller
             'budget' => (int) ($data['budget'] ?? 0),
             'progress' => (int) ($data['progress'] ?? 0),
             'description' => $data['description'] ?? null,
+            'address' => $data['address'] ?? null,
+            'completed_date' => $data['completedDate'] ?? null,
         ]);
 
-        // Handle milestones
         foreach ($milestones as $m) {
             $project->milestones()->create([
                 'title' => $m['title'],
                 'due' => $m['due'] ?? null,
                 'status' => $m['status'],
             ]);
-        }
-
-        // Handle photos
-        if ($request->hasFile('photos')) {
-            foreach ($request->file('photos') as $photo) {
-                $project->photos()->create([
-                    'path' => $photo->store('projects', 'public'),
-                ]);
-            }
         }
 
         return (new ProjectResource(
@@ -115,16 +108,19 @@ class AdminProjectController extends Controller
 
     public function update(Request $request, Project $project)
     {
+        // Log::info('RAW REQUEST DATA:', $request->all());
+
         $data = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'status' => ['required', Rule::in(['draft', 'active', 'on_hold', 'completed'])],
             'clientId' => ['nullable', 'exists:users,id'],
             'startDate' => ['nullable', 'date'],
-            'dueDate' => ['nullable', 'date'],
+            'dueDate' => ['nullable', 'date', 'after_or_equal:startDate'],
             'budget' => ['nullable', 'numeric', 'min:0'],
             'progress' => ['nullable', 'integer', 'min:0', 'max:100'],
             'description' => ['nullable', 'string'],
-
+            'address' => ['nullable', 'string', 'max:255'],
+            'completedDate' => ['nullable', 'date'],
             'photos' => ['nullable', 'array'],
             'photos.*' => ['image', 'max:5120'],
         ]);
@@ -141,6 +137,10 @@ class AdminProjectController extends Controller
             'budget' => (int) ($data['budget'] ?? 0),
             'progress' => (int) ($data['progress'] ?? 0),
             'description' => $data['description'] ?? null,
+            'address' => $data['address'] ?? null,
+            'completed_date' => $data['status'] === 'completed'
+                ? ($data['completedDate'] ?? now())
+                : null,
         ]);
 
         $project->milestones()->delete();
@@ -150,14 +150,6 @@ class AdminProjectController extends Controller
                 'due' => $m['due'] ?? null,
                 'status' => $m['status'],
             ]);
-        }
-
-        if ($request->hasFile('photos')) {
-            foreach ($request->file('photos') as $photo) {
-                $project->photos()->create([
-                    'path' => $photo->store('projects', 'public'),
-                ]);
-            }
         }
 
         return new ProjectResource(
