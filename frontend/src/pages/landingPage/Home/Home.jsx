@@ -6,8 +6,11 @@ import { ImgConstructionSite } from "../../../assets/images";
 import { HOME } from "./home.content";
 import { useHomeHeroScroll } from "./useHomeHeroScroll";
 
-import { revealStagger, fadeUpItem, heroSwap } from "./home.motion";
+import { revealStagger, fadeUpItem, heroSwap, fadeInRight } from "./home.motion";
 import { EASE, VIEWPORT, VIEWPORT_CARDS } from "../../../motion/constants";
+import logo from "../../../assets/Images/logo.jpg";
+
+import HomeProjectsSnapshot from "./HomeProjectsSnapshot";
 
 import "./home.css";
 
@@ -122,21 +125,83 @@ export default function Home() {
       <section className="section home-about">
         <div className="container">
           <motion.div
+            className="home-about-grid"
             initial="hidden"
             whileInView="visible"
             viewport={VIEWPORT}
             variants={revealStagger}
-            className="home-about-inner"
           >
-            <motion.span className="eyebrow" variants={fadeUpItem}>
-              {overview.about.eyebrow}
-            </motion.span>
+            {/* About Us Text */}
+            <motion.div className="home-about-text-wrapper" variants={fadeUpItem}>
+              <motion.span className="eyebrow" variants={fadeUpItem}>
+                {overview.about.eyebrow}
+              </motion.span>
 
-            <motion.h2 variants={fadeUpItem}>{overview.about.title}</motion.h2>
+              <motion.h2 variants={fadeUpItem}>
+                {overview.about.title}
+              </motion.h2>
 
-            <motion.p variants={fadeUpItem} className="home-about-text">
-              {overview.about.desc}
-            </motion.p>
+              <motion.p className="home-about-text" variants={fadeUpItem}>
+                {overview.about.desc}
+              </motion.p>
+
+               <motion.div className="home-about-cta" variants={fadeUpItem}>
+              <Link to="/about" className="btn btn-outline-blue">
+                Learn More →
+              </Link>
+            </motion.div>
+            </motion.div>
+
+            {/* Logo / Image */}
+            <motion.div className="home-about-logo" variants={fadeInRight}>
+              <img src={logo} alt="Company Logo" />
+            </motion.div>
+          </motion.div>
+        </div>
+      </section>
+
+      
+        {/* ================= METRICS ================= */}
+      <section className="home-metrics">
+        <div className="container">
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={VIEWPORT}
+            variants={revealStagger}
+            className="home-metrics-inner"
+          >
+            <motion.div className="home-metric" variants={fadeUpItem}>
+              <div className="home-metric-value">8+</div>
+              <div className="home-metric-label">Years of Operational Experience</div>
+              <div className="home-metric-sub">
+                Established expertise in materials supply and site operations
+              </div>
+            </motion.div>
+
+            <motion.div className="home-metric" variants={fadeUpItem}>
+              <div className="home-metric-value">150+</div>
+              <div className="home-metric-label">Projects Completed</div>
+              <div className="home-metric-sub">
+                Delivered across residential, commercial, and infrastructure sites
+              </div>
+            </motion.div>
+
+            <motion.div className="home-metric" variants={fadeUpItem}>
+              <div className="home-metric-value">100%</div>
+              <div className="home-metric-label">Regulatory Compliance</div>
+              <div className="home-metric-sub">
+                Fully aligned with DENR and local government requirements
+              </div>
+            </motion.div>
+
+            <motion.div className="home-metric home-metric--text" variants={fadeUpItem}>
+              <div className="home-metric-value">CALABARZON</div>
+              <div className="home-metric-label">Service Coverage Area</div>
+              <div className="home-metric-sub">
+                Strategically positioned supply sources across the region
+              </div>
+            </motion.div>
           </motion.div>
         </div>
       </section>
@@ -180,9 +245,59 @@ export default function Home() {
                 </motion.article>
               ))}
             </motion.div>
+           {/* ================= VIEW ALL SERVICES BUTTON ================= */}
+            <motion.div
+              className="home-modules-cta"
+              variants={fadeUpItem}
+            >
+              <Link to="/services" className="btn btn-outline-blue">
+                View All Services
+              </Link>
+            </motion.div>
           </motion.div>
         </div>
       </section>
+
+      {/* ================= WHY CHOOSE US ================= */}
+        <section className="section home-why">
+        <div className="container home-why-inner">
+          <motion.span className="eyebrow" variants={fadeUpItem}>
+            Why Clients Choose Us
+          </motion.span>
+          <motion.h2 variants={fadeUpItem}>
+            Built for reliability, compliance, and consistency.
+          </motion.h2>
+
+          <motion.div
+            className="home-why-grid"
+            variants={revealStagger}
+            initial="hidden"
+            whileInView="visible"
+            viewport={VIEWPORT_CARDS}
+          >
+            <motion.div className="home-why-item" variants={fadeUpItem}>
+              <h4>DENR Compliant Operations</h4>
+              <p>Strict adherence to environmental and regulatory standards across all projects.</p>
+            </motion.div>
+
+            <motion.div className="home-why-item" variants={fadeUpItem}>
+              <h4>Quality-Controlled Materials</h4>
+              <p>Engineered sourcing from controlled development areas to ensure consistency.</p>
+            </motion.div>
+
+            <motion.div className="home-why-item" variants={fadeUpItem}>
+              <h4>On-Time Delivery</h4>
+              <p>Coordinated hauling and logistics planning to avoid delays.</p>
+            </motion.div>
+
+            <motion.div className="home-why-item" variants={fadeUpItem}>
+              <h4>Local Supply Network</h4>
+              <p>Strategically positioned sources serving projects across CALABARZON.</p>
+            </motion.div>
+          </motion.div>
+        </div>
+      </section>
+
 
       {/* ================= PROJECTS SNAPSHOT ================= */}
       <section className="section home-projects">
@@ -206,8 +321,10 @@ export default function Home() {
               {overview.projects.desc}
             </motion.p>
 
+            <HomeProjectsSnapshot />
+
             <motion.div variants={fadeUpItem}>
-              <Link to={overview.projects.cta.to} className="btn btn-outline">
+              <Link to={overview.projects.cta.to} className="btn btn-outline-blue">
                 {overview.projects.cta.label}
               </Link>
             </motion.div>

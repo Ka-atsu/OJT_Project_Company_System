@@ -31,3 +31,12 @@ export const heroSwap = {
     transition: { duration: 0.25, ease: "easeIn" },
   },
 };
+
+export const fadeInRight = {
+  hidden: { opacity: 0, x: 40 },  
+  visible: {
+    opacity: 1,
+    x: 0,
+    transition: { duration: 3, ease: EASE },
+  },
+};
