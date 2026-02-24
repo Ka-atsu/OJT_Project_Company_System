@@ -4,6 +4,8 @@
 
 .docs-page {
   padding: 2rem;
+  /* background: red; */
+  padding-top: 0;
 }
 
 .docs-header {
@@ -292,4 +294,73 @@
   background-color: #94a3b8;
   cursor: not-allowed;
   box-shadow: none;
+}
+
+
+/* for upload modal */
+.upload-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+.upload-modal {
+  background: #fff;
+  padding: 24px;
+  border-radius: 8px;
+  width: 400px;
+  max-width: 90%;
+}
+
+.upload-field {
+  margin-bottom: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.upload-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.btn-back {
+  background: none;
+  border: none;
+  color: #2563eb; /* nice blue */
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 8px;
+  transition: all 0.2s ease;
+}
+
+.btn-back .arrow {
+  font-size: 18px;
+  transition: transform 0.2s ease;
+}
+
+.btn-back:hover {
+  color: #1d4ed8;
+  transform: translateX(-3px);
+}
+
+.btn-back:hover .arrow {
+  transform: translateX(-4px);
+}
+
+.btn-back:active {
+  transform: scale(0.95);
+}
+
+.btn-back:focus {
+  outline: none;
 }
