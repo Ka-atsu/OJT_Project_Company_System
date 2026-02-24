@@ -30,3 +30,19 @@ export const VIEWPORT_EARLY = {
   amount: 0.1,
   margin: "0px 0px -20% 0px",
 };
+export const FLIP_IN = {
+  hidden: {
+    opacity: 0,
+    rotateY: -90,
+    transformPerspective: 1000,
+  },
+  visible: {
+    opacity: 1,
+    rotateY: 0,
+    transformPerspective: 1000,
+    transition: {
+      duration: 0.6,
+      ease: [0.22, 1, 0.36, 1],
+    },
+  },
+};

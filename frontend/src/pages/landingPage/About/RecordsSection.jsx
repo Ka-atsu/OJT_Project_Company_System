@@ -1,9 +1,12 @@
+import { motion } from "framer-motion";
 import {
   FaLayerGroup,
   FaCalendarAlt,
   FaMapMarkedAlt,
   FaGlobeAsia,
 } from "react-icons/fa";
+
+import { STAGGER, VIEWPORT_EARLY, FLIP_IN} from "../../../motion/constants";
 
 const ICONS = {
   layers: FaLayerGroup,
@@ -16,21 +19,38 @@ export default function RecordsSection({ data }) {
   return (
     <section className="record-section">
       <div className="record-cards">
-        <div className="record-inner">
+        <motion.div
+          className="record-inner"
+          variants={STAGGER}
+          initial="hidden"
+          whileInView="visible"
+          viewport={VIEWPORT_EARLY}
+        >
           {data.items.map((item, i) => {
             const Icon = ICONS[item.icon];
+
             return (
-              <div key={i} className="record-card">
+              <motion.div
+                key={i}
+                className="record-card"
+                variants={FLIP_IN}
+                style={{ transformStyle: "preserve-3d" }}
+              >
                 <div className={`record-icon icon-${item.icon}`}>
                   <Icon />
                 </div>
 
-                <div className="record-value">{item.value}</div>
-                <div className="record-label">{item.label}</div>
-              </div>
+                <div className="record-value">
+                  {item.value}
+                </div>
+
+                <div className="record-label">
+                  {item.label}
+                </div>
+              </motion.div>
             );
           })}
-        </div>
+        </motion.div>
       </div>
     </section>
   );
