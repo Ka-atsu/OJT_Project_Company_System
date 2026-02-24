@@ -144,10 +144,6 @@ export default function AdminClientDocuments() {
     }
   };
 
-  // const handlePickFile = () => {
-  //   document.getElementById("doc-upload-input")?.click();
-  // };
-
   const handleFileChange = (e) => {
     const file = e.target.files?.[0];
     if (!file) {

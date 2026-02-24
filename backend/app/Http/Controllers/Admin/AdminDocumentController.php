@@ -78,8 +78,22 @@ class AdminDocumentController extends Controller
             $q->where('name', 'like', "%{$qText}%");
         }
 
-        // dateRange hook (optional for now)
-        // $dateRange = (string) $request->query('dateRange', 'All Time');
+        // ✅ Filter by dateRange
+        $dateRange = (string) $request->query('dateRange', 'All Time');
+        switch ($dateRange) {
+            case 'Last 3 Months':
+                $q->where('document_date', '>=', now()->subMonths(3));
+                break;
+            case 'Last 6 Months':
+                $q->where('document_date', '>=', now()->subMonths(6));
+                break;
+            case 'This Year':
+                $q->whereYear('document_date', now()->year);
+                break;
+            case 'All Time':
+            default:
+                break;
+        }
 
         if ($sort === 'oldest') {
             $q->orderBy('document_date');
