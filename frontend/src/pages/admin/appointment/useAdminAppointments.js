@@ -1,5 +1,5 @@
-// useAdminAppointments.js
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, useCallback } from "react";
+import axios from "axios";
 import {
   adminListAppointments,
   adminUpdateAppointment,
@@ -19,13 +19,10 @@ function mapApiItemToUi(a) {
     type: a.purpose,
     status,
     mode: a.mode,
-
     requestedFor: a.scheduled_at
       ? new Date(a.scheduled_at).toLocaleString()
       : `${a.date ?? ""} ${a.time ?? ""}`.trim(),
-
     scheduledAt: a.scheduled_at ?? null,
-
     meeting: {
       link: a.meetingLink ?? a.meeting_link ?? "",
       location: a.location ?? "",
@@ -57,11 +54,6 @@ export function useAdminAppointments() {
   const [err, setErr] = useState("");
 
   const [selectedId, setSelectedId] = useState(null);
-  const selected = useMemo(
-    () => items.find((x) => x.id === selectedId) ?? null,
-    [items, selectedId],
-  );
-
   const [actionNote, setActionNote] = useState("");
   const [meetingLink, setMeetingLink] = useState("");
   const [meetingLocation, setMeetingLocation] = useState("");
@@ -69,11 +61,21 @@ export function useAdminAppointments() {
   const [newDateTime, setNewDateTime] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
 
-  const pageCount = Math.max(1, Math.ceil(total / pageSize));
   const requestIdRef = useRef(0);
 
-  useEffect(() => setPage(1), [status, q, sort, pageSize]);
+  const selected = useMemo(
+    () => items.find((x) => x.id === selectedId) ?? null,
+    [items, selectedId],
+  );
 
+  const pageCount = Math.max(1, Math.ceil(total / pageSize));
+
+  // Reset to first page when filters change
+  useEffect(() => {
+    setPage(1);
+  }, [status, q, sort, pageSize]);
+
+  // Fetch appointments
   useEffect(() => {
     const requestId = ++requestIdRef.current;
     setLoading(true);
@@ -96,21 +98,40 @@ export function useAdminAppointments() {
       .then((data) => {
         if (requestId !== requestIdRef.current) return;
 
-        const mapped = (data.data || []).map(mapApiItemToUi);
+        const mapped = (data?.data ?? []).map(mapApiItemToUi);
         setItems(mapped);
-        setTotal(data.total || 0);
+        setTotal(data?.total ?? 0);
 
-        if (!selectedId && mapped[0]) setSelectedId(mapped[0].id);
+        if (!selectedId && mapped.length > 0) {
+          setSelectedId(mapped[0].id);
+        }
       })
       .catch((e) => {
+        // ✅ Ignore canceled requests
+        if (
+          axios.isCancel?.(e) ||
+          e.code === "ERR_CANCELED" ||
+          e.message === "canceled"
+        ) {
+          return;
+        }
+
         if (requestId !== requestIdRef.current) return;
-        setErr(e?.response?.data?.message || e?.message || "Failed to load");
+
+        setErr(
+          e?.response?.data?.message ||
+            e?.message ||
+            "Failed to load appointments",
+        );
       })
       .finally(() => {
-        if (requestId === requestIdRef.current) setLoading(false);
+        if (requestId === requestIdRef.current) {
+          setLoading(false);
+        }
       });
-  }, [page, pageSize, status, q, sort]);
+  }, [page, pageSize, status, q, sort, selectedId]);
 
+  // Sync selected details
   useEffect(() => {
     if (!selected) return;
 
@@ -121,12 +142,11 @@ export function useAdminAppointments() {
     setNewDateTime(
       selected.raw?.scheduled_at ? selected.raw.scheduled_at.slice(0, 16) : "",
     );
-  }, [selectedId]);
+  }, [selected]);
 
-  async function refresh() {
-    // simplest: just re-trigger the effect by setting page to same value (or call list directly)
-    setPage((p) => p);
-  }
+  const refresh = useCallback(() => {
+    setPage((prev) => prev); // trigger effect
+  }, []);
 
   async function patchSelected(payload) {
     if (!selected) return;
@@ -138,41 +158,29 @@ export function useAdminAppointments() {
     );
 
     setSuccessMessage("Saved successfully.");
-
-    // auto-hide after 3 seconds
-    setTimeout(() => {
-      setSuccessMessage("");
-    }, 3000);
+    setTimeout(() => setSuccessMessage(""), 3000);
   }
+
   function buildMeetingPayload() {
     if (!selected) return {};
 
-    if (selected.mode === "online") {
-      return { meeting_link: meetingLink || null, location: null };
-    }
-    return { meeting_link: null, location: meetingLocation || null };
+    return selected.mode === "online"
+      ? { meeting_link: meetingLink || null, location: null }
+      : { meeting_link: null, location: meetingLocation || null };
   }
 
   async function approve() {
     if (!selected) return;
 
     if (selected.mode === "online") {
-      if (!meetingLink.trim()) {
-        alert("Meeting link is required for online appointments.");
-        return;
-      }
+      if (!meetingLink.trim()) return alert("Meeting link is required.");
 
-      if (!isValidUrl(meetingLink.trim())) {
-        alert(
-          "Please enter a valid meeting URL (must start with http:// or https://).",
-        );
-        return;
-      }
+      if (!isValidUrl(meetingLink.trim()))
+        return alert("Enter a valid http/https URL.");
     }
 
     if (selected.mode === "f2f" && !meetingLocation.trim()) {
-      alert("Location is required for face-to-face appointments.");
-      return;
+      return alert("Location is required.");
     }
 
     await patchSelected({
@@ -196,15 +204,10 @@ export function useAdminAppointments() {
   async function reschedule() {
     if (!selected) return;
 
-    if (!newDateTime) {
-      alert("Please select a new date and time.");
-      return;
-    }
+    if (!newDateTime) return alert("Select a new date and time.");
 
-    // prevent past dates but in the callendart UI itself you cant schedule past date, this is just a fail safe
     if (new Date(newDateTime) < new Date()) {
-      alert("You cannot reschedule to a past date.");
-      return;
+      return alert("Cannot reschedule to past date.");
     }
 
     await patchSelected({
@@ -214,7 +217,7 @@ export function useAdminAppointments() {
       meeting_notes: meetingNotes || null,
     });
 
-    alert("Appointment rescheduled successfully.");
+    alert("Appointment rescheduled.");
   }
 
   return {

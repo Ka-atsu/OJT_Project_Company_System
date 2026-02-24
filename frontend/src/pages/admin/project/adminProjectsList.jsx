@@ -52,10 +52,13 @@ export default function AdminProjectsList({
             onChange={(e) => setStatus(e.target.value)}
             disabled={loading}
           >
-            <option value={PSTATUS.active}>{PSTATUS.active}</option>
-            <option value={PSTATUS.draft}>{PSTATUS.draft}</option>
-            <option value={PSTATUS.on_hold}>{PSTATUS.on_hold}</option>
-            <option value={PSTATUS.completed}>{PSTATUS.completed}</option>
+            <option value="all">All</option>
+
+            {Object.entries(PSTATUS).map(([value, label]) => (
+              <option key={value} value={value}>
+                {label}
+              </option>
+            ))}
           </select>
         </Field>
 
@@ -91,9 +94,6 @@ export default function AdminProjectsList({
           />
         </Field>
       </div>
-
-      {/* Show error if exists */}
-      {err ? <div className="ap-empty">Error: {err}</div> : null}
 
       {/* Project list rendering */}
       <div className="ap-list">

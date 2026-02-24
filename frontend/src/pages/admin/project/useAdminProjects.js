@@ -1,346 +1,282 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, useCallback } from "react";
 import { ProjectsService } from "./projects.services";
 
-// ------------------ UTILITY FUNCTIONS ------------------
+/* =========================
+   Helpers
+========================= */
 
-// Calculate progress from milestones
-function calcProgressFromMilestones(milestones) {
-  const list = Array.isArray(milestones) ? milestones : [];
-  const total = list.length; // Total number of milestones
-  if (total === 0) return 0; // No milestones, so return 0 progress
-  const done = list.filter((m) => m.status === "done").length; // Count the "done" milestones
-  return Math.round((done / total) * 100); // Calculate progress percentage
+function calcProgress(milestones = []) {
+  if (!milestones.length) return 0;
+  const done = milestones.filter((m) => m.status === "done").length;
+  return Math.round((done / milestones.length) * 100);
 }
 
-// ------------------ EMPTY PROJECT ------------------
-// Function to return an empty draft project with default values
 export function emptyProject() {
   return {
     name: "",
+    clientId: "",
     clientName: "",
     startDate: "",
     dueDate: "",
-    status: "active", // Default status is "active"
-    milestones: [], // Empty array of milestones
-    photos: [], // Empty array of photos
+    status: "active",
+    milestones: [],
+    photos: [],
+    progress: 0,
   };
 }
 
+/* =========================
+   Hook
+========================= */
+
 export default function useAdminProjects() {
-  // ------------------ STATE MANAGEMENT ------------------
+  /* ---------- State ---------- */
 
-  // State to store the list of clients
   const [clients, setClients] = useState([]);
-
-  // State for filters and pagination
-  const [status, setStatus] = useState("active");
-  const [q, setQ] = useState("");
-  const [sort, setSort] = useState("due_asc");
-  const [pageSize, setPageSize] = useState(12);
-  const [page, setPage] = useState(1);
-
-  // State for storing fetched projects and total count
   const [items, setItems] = useState([]);
   const [total, setTotal] = useState(0);
 
-  // Loading and error states
+  const [status, setStatus] = useState("active");
+  const [q, setQ] = useState("");
+  const [sort, setSort] = useState("due_asc");
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(12);
+
   const [loading, setLoading] = useState(false);
   const [err, setErr] = useState("");
 
-  // State for tracking the selected project
   const [selectedId, setSelectedId] = useState(null);
-
-  // State to track if we are creating a new project
   const [isCreating, setIsCreating] = useState(false);
+  const [draft, setDraft] = useState(emptyProject());
 
-  // State for client search query
   const [clientQuery, setClientQuery] = useState("");
 
-  // Memoized value to get the selected project based on its ID
+  const abortRef = useRef(null);
+
+  /* ---------- Derived State ---------- */
+
   const selected = useMemo(
     () => items.find((x) => x.id === selectedId) ?? null,
     [items, selectedId],
   );
 
-  // State for the project draft (used when creating or editing a project)
-  const [draft, setDraft] = useState(emptyProject());
+  const pageCount = Math.max(1, Math.ceil(total / pageSize));
+  const from = total ? (page - 1) * pageSize + 1 : 0;
+  const to = Math.min(total, page * pageSize);
 
-  // Reference to cancel the API request if needed (abort controller)
-  const abortRef = useRef(null);
-
-  // Pagination calculation
-  const pageCount = Math.max(1, Math.ceil(total / pageSize)); // Total page count
-  const from = total === 0 ? 0 : (page - 1) * pageSize + 1; // From which item number is being shown
-  const to = Math.min(total, page * pageSize); // To which item number is being shown
-
-  // ------------------ CLIENT SEARCH ------------------
-  // Memoized list of clients based on the search query
   const filteredClients = useMemo(() => {
-    if (!clientQuery.trim()) return clients; // If no query, return all clients
-
-    const q = clientQuery.trim().toLowerCase(); // Normalize search query to lowercase
-    console.log("Client Query:", q); // Log the query
-
-    // Filter clients based on name or email
-    const filtered = clients.filter(
-      (client) =>
-        client.name.toLowerCase().includes(q) ||
-        client.email?.toLowerCase().includes(q),
+    if (!clientQuery.trim()) return clients;
+    const query = clientQuery.toLowerCase();
+    return clients.filter(
+      (c) =>
+        c.name?.toLowerCase().includes(query) ||
+        c.email?.toLowerCase().includes(query),
     );
-
-    console.log("Filtered Clients:", filtered); // Log filtered results for debugging
-
-    return filtered;
   }, [clients, clientQuery]);
 
-  const onNext = () => {
-    setPage((p) => Math.min(pageCount, p + 1));
-  };
+  /* =========================
+     Effects
+  ========================= */
 
-  const onPrev = () => {
-    setPage((p) => Math.max(1, p - 1));
-  };
-
-  // Define the "showing" variable for the UI, based on whether we're creating a new project or selecting one
-  const showing = isCreating
-    ? "New project"
-    : selected
-      ? selected.id
-      : "Select a project";
-
-  // ------------------ EFFECT HOOKS ------------------
-
-  // Reset the page when any of the filter settings change
+  // Reset page on filter change
   useEffect(() => {
-    if (page !== 1) {
-      setPage(1);
-    }
+    setPage(1);
   }, [status, q, sort, pageSize]);
 
-  // Fetch the list of clients when the component is mounted
+  // Fetch Clients (Single Responsibility)
   useEffect(() => {
     const controller = new AbortController();
-    const fetchClients = async () => {
+
+    async function loadClients() {
       try {
-        setLoading(true);
-        setErr(""); // Clear previous errors
-
-        const clientsData = await ProjectsService.clients(controller.signal); // Fetch clients
-        console.log("Fetched clients:", clientsData); // Log fetched clients for debugging
-
-        // Only update the state if the request hasn't been aborted
-        if (!controller.signal.aborted) {
-          setClients(clientsData); // Update clients state
+        const data = await ProjectsService.clients(controller.signal);
+        setClients(data);
+      } catch (e) {
+        if (e.name !== "AbortError") {
+          setErr("Failed to load clients");
         }
-      } catch (err) {
-        // Handle errors
-        if (err.name !== "AbortError") {
-          console.error("Error fetching clients:", err);
-          setErr("Error fetching clients");
-        }
-      } finally {
-        setLoading(false); // Stop loading
       }
-    };
+    }
 
-    fetchClients(); // Call the function to fetch clients
-
-    return () => {
-      controller.abort(); // Abort request if component unmounts
-    };
+    loadClients();
+    return () => controller.abort();
   }, []);
 
-  // This effect logs when the clients state is updated
+  // Fetch Projects
   useEffect(() => {
-    console.log("Clients state updated:", clients);
-  }, [clients]);
-
-  // This effect logs when the client query is updated
-  useEffect(() => {
-    console.log("Client Query Updated:", clientQuery);
-  }, [clientQuery]);
-
-  // Fetch the list of projects based on filters and pagination
-  useEffect(() => {
-    abortRef.current?.abort?.(); // Cancel previous requests
+    abortRef.current?.abort?.();
     const controller = new AbortController();
     abortRef.current = controller;
 
     setLoading(true);
     setErr("");
 
-    // Fetch the project list
     ProjectsService.list(
       { page, limit: pageSize, status, q, sort },
       controller.signal,
     )
       .then(({ items: nextItems, total: nextTotal }) => {
-        setItems(nextItems); // Update project list
-        setTotal(nextTotal); // Update total project count
+        setItems(nextItems);
+        setTotal(nextTotal);
 
-        // If no project is selected and a new project is created, select the first project
-        if (!isCreating && !selectedId && nextItems[0])
+        if (!isCreating && !selectedId && nextItems[0]) {
           setSelectedId(nextItems[0].id);
+        }
       })
       .catch((e) => {
         if (
-          e?.name === "AbortError" ||
-          e?.message === "canceled" ||
-          e?.code === "ERR_CANCELED"
+          e.name === "AbortError" ||
+          e.message === "canceled" ||
+          e.code === "ERR_CANCELED"
         ) {
-          return; // ignore canceled requests
+          return;
         }
 
-        setErr(e?.message ?? "Failed to load projects");
+        setErr("Failed to load projects");
       })
-      .finally(() => setLoading(false)); // Stop loading after the request
+      .finally(() => setLoading(false));
 
-    return () => controller.abort(); // Abort the request on cleanup
+    return () => controller.abort();
   }, [page, pageSize, status, q, sort, isCreating]);
 
-  // Update the draft state when the selected project changes
+  // Sync Draft when selecting project
   useEffect(() => {
-    if (!selected || isCreating) return; // Only update if not creating a new project
+    if (!selected || isCreating) return;
 
-    const milestones = Array.isArray(selected.milestones)
-      ? selected.milestones
-      : []; // Extract milestones
+    const milestones = selected.milestones ?? [];
 
     setDraft({
       ...selected,
       budget: String(selected.budget ?? ""),
       milestones,
-      photos: [], // Clear photos when editing
-      progress: calcProgressFromMilestones(milestones), // Recalculate progress based on milestones
+      progress: calcProgress(milestones),
+      photos: [],
     });
 
-    setClientQuery(""); // Clear the client search query after selecting a project
+    setClientQuery("");
   }, [selected, isCreating]);
 
-  // ------------------ HANDLERS ------------------
+  /* =========================
+     Handlers
+  ========================= */
 
-  // Start the creation of a new project
   const startCreate = () => {
     setIsCreating(true);
-    setSelectedId(null); // Deselect any selected project
-    setDraft(emptyProject()); // Reset the draft to empty project
+    setSelectedId(null);
+    setDraft(emptyProject());
   };
 
-  // Cancel project creation and re-select the first project
-  function cancelCreate() {
+  const cancelCreate = () => {
     setIsCreating(false);
-    if (items[0]) setSelectedId(items[0].id); // Select the first project if available
-  }
+    if (items[0]) setSelectedId(items[0].id);
+  };
 
-  // Apply the selected client to the draft
-  function applyClient(clientId) {
-    const c = clients.find((x) => String(x.id) === String(clientId));
-
-    console.log("Selected client:", c); // Log selected client
+  const applyClient = (clientId) => {
+    const client = clients.find((c) => String(c.id) === String(clientId));
 
     setDraft((d) => ({
       ...d,
       clientId,
-      clientName: c?.name ?? "",
-      clientEmail: c?.email ?? "",
+      clientName: client?.name ?? "",
+      clientEmail: client?.email ?? "",
     }));
 
-    setClientQuery(""); // Reset client search query after applying
-    console.log("Updated client query:", ""); // Log the query reset
-  }
+    setClientQuery("");
+  };
 
-  // Save the current project (create or update)
   async function saveProject() {
-    if (!draft.name.trim()) return alert("Project name is required."); // Validate project name
-    console.log("SENDING TO BACKEND:", draft);
+    if (!draft.name.trim()) {
+      alert("Project name is required.");
+      return;
+    }
 
     try {
       setLoading(true);
       setErr("");
 
-      const payloadDraft = {
+      const payload = {
         ...draft,
-        progress: calcProgressFromMilestones(draft.milestones), // Recalculate progress
+        progress: calcProgress(draft.milestones),
       };
 
       if (isCreating) {
-        const created = await ProjectsService.create(payloadDraft); // Create project
+        const created = await ProjectsService.create(payload);
         setIsCreating(false);
         setPage(1);
-        if (created?.id) setSelectedId(created.id); // Select the newly created project
+        if (created?.id) setSelectedId(created.id);
         return;
       }
 
-      const updated = await ProjectsService.update(
-        payloadDraft.id,
-        payloadDraft,
-      ); // Update project
+      const updated = await ProjectsService.update(payload.id, payload);
 
-      if (updated?.id) {
-        setItems(
-          (prev) => prev.map((p) => (p.id === updated.id ? updated : p)), // Update project in the list
-        );
-      }
-    } catch (e) {
-      setErr(e?.message ?? "Save failed");
+      setItems((prev) => prev.map((p) => (p.id === updated.id ? updated : p)));
+    } catch {
+      setErr("Save failed");
     } finally {
-      setLoading(false); // Stop loading
+      setLoading(false);
     }
   }
 
-  // Add a new milestone to the project
-  function addMilestone() {
-    const id = `MS-${Date.now()}`; // Unique ID for the new milestone
+  async function deleteProject(id) {
+    if (!id) return;
+
+    try {
+      setLoading(true);
+      await ProjectsService.remove(id);
+
+      setItems((prev) => prev.filter((p) => p.id !== id));
+      setSelectedId(null);
+    } catch {
+      setErr("Delete failed");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  const updateMilestones = (updater) => {
     setDraft((d) => {
-      const milestones = [
-        ...(d.milestones || []),
-        { id, title: "New milestone", due: "", status: "todo" },
-      ];
+      const milestones = updater(d.milestones || []);
       return {
         ...d,
         milestones,
-        progress: calcProgressFromMilestones(milestones), // Recalculate progress
+        progress: calcProgress(milestones),
       };
     });
-  }
+  };
 
-  // Update an existing milestone in the project
-  function updateMilestone(msId, patch) {
-    setDraft((d) => {
-      const milestones = (d.milestones || []).map(
-        (m) => (m.id === msId ? { ...m, ...patch } : m), // Update milestone with patch
-      );
-      return {
-        ...d,
-        milestones,
-        progress: calcProgressFromMilestones(milestones), // Recalculate progress
-      };
-    });
-  }
+  const addMilestone = () =>
+    updateMilestones((list) => [
+      ...list,
+      {
+        id: `MS-${Date.now()}`,
+        title: "New milestone",
+        due: "",
+        status: "todo",
+      },
+    ]);
 
-  // Remove a milestone from the project
-  function removeMilestone(msId) {
-    setDraft((d) => {
-      const milestones = (d.milestones || []).filter((m) => m.id !== msId); // Filter out the milestone to remove
-      return {
-        ...d,
-        milestones,
-        progress: calcProgressFromMilestones(milestones), // Recalculate progress
-      };
-    });
-  }
+  const updateMilestone = (id, patch) =>
+    updateMilestones((list) =>
+      list.map((m) => (m.id === id ? { ...m, ...patch } : m)),
+    );
 
-  // ------------------ RETURN VALUES ------------------
+  const removeMilestone = (id) =>
+    updateMilestones((list) => list.filter((m) => m.id !== id));
+
+  /* =========================
+     Return
+  ========================= */
+
   return {
     clients,
     items,
-    setItems,
     total,
     loading,
     err,
+
+    selected,
     selectedId,
     isCreating,
-    selected,
     draft,
 
     status,
@@ -349,28 +285,26 @@ export default function useAdminProjects() {
     setQ,
     sort,
     setSort,
-    pageSize,
-    setPageSize,
     page,
     setPage,
+    pageSize,
+    setPageSize,
     pageCount,
     from,
     to,
-    showing,
 
     startCreate,
     cancelCreate,
     applyClient,
     saveProject,
+    deleteProject,
     addMilestone,
     updateMilestone,
     removeMilestone,
-    setIsCreating,
+
     setSelectedId,
     setDraft,
-
-    onNext,
-    onPrev,
+    setIsCreating,
 
     clientQuery,
     setClientQuery,

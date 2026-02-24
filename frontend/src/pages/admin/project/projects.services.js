@@ -1,23 +1,36 @@
 import api, { csrf } from "../../../api/api";
 
-// ------------------ CONSTANTS ------------------
-// Define the possible statuses for projects and milestones
+/* =========================
+   Status Constants
+========================= */
+
 export const PSTATUS = {
-  draft: "Draft", // The project is in the draft state
-  active: "Active", // The project is actively being worked on
-  on_hold: "On hold", // The project is temporarily paused
-  completed: "Completed", // The project has been finished
+  draft: "Draft",
+  active: "Active",
+  on_hold: "On hold",
+  completed: "Completed",
 };
 
 export const MSTATUS = {
-  todo: "To do", // The milestone is yet to start
-  doing: "In progress", // The milestone is currently being worked on
-  done: "Done", // The milestone is finished
+  todo: "To do",
+  doing: "In progress",
+  done: "Done",
 };
 
-// ------------------ NORMALIZERS ------------------
-// Normalize the list of projects and total count
-function normalizeListResponse(data) {
+/* =========================
+   Routes
+========================= */
+
+const routes = {
+  projects: "/api/admin/projects",
+  clients: "/api/admin/projects/clients",
+};
+
+/* =========================
+   Helpers
+========================= */
+
+function normalizeList(data) {
   if (!data) return { items: [], total: 0 };
 
   if (Array.isArray(data.items)) {
@@ -34,13 +47,14 @@ function normalizeListResponse(data) {
     };
   }
 
-  if (Array.isArray(data)) return { items: data, total: data.length };
+  if (Array.isArray(data)) {
+    return { items: data, total: data.length };
+  }
 
   return { items: [], total: 0 };
 }
 
-// Normalize the response containing client data
-function normalizeClientsResponse(data) {
+function normalizeArray(data) {
   if (!data) return [];
   if (Array.isArray(data)) return data;
   if (Array.isArray(data.items)) return data.items;
@@ -48,28 +62,29 @@ function normalizeClientsResponse(data) {
   return [];
 }
 
-// ------------------ FORM DATA ------------------
-// Convert draft project data into FormData for submission
-function toFormData(draft) {
+function toFormData(draft = {}) {
   const fd = new FormData();
 
-  // Append basic project data
-  fd.append("name", draft.name);
-  fd.append("status", draft.status);
-  fd.append("clientId", draft.clientId || "");
-  fd.append("startDate", draft.startDate || "");
-  fd.append("dueDate", draft.dueDate || "");
-  fd.append("budget", draft.budget || 0);
-  fd.append("progress", draft.progress || 0);
-  fd.append("description", draft.description || "");
-  fd.append("address", draft.address || "");
-  fd.append("completedDate", draft.completedDate || "");
+  const fields = {
+    name: draft.name,
+    status: draft.status,
+    clientId: draft.clientId,
+    startDate: draft.startDate,
+    dueDate: draft.dueDate,
+    budget: draft.budget ?? 0,
+    progress: draft.progress ?? 0,
+    description: draft.description,
+    address: draft.address,
+    completedDate: draft.completedDate,
+  };
 
-  // Milestones must be serialized as JSON
-  fd.append("milestones", JSON.stringify(draft.milestones || []));
+  Object.entries(fields).forEach(([key, value]) => {
+    fd.append(key, value ?? "");
+  });
 
-  // Only append real File objects for photos
-  (draft.photos || []).forEach((file, i) => {
+  fd.append("milestones", JSON.stringify(draft.milestones ?? []));
+
+  (draft.photos ?? []).forEach((file, i) => {
     if (file instanceof File) {
       fd.append(`photos[${i}]`, file);
     }
@@ -78,19 +93,11 @@ function toFormData(draft) {
   return fd;
 }
 
-// ------------------ API PATHS ------------------
-// Define API routes for projects and clients
-const routes = {
-  projects: "/api/admin/projects", // Path to manage projects
-  clients: "/api/admin/projects/clients", // Path to fetch client data
-};
-
-// ------------------ ERRORS ------------------
-// Convert API errors to user-friendly messages
-function toFriendlyError(e, fallback) {
+function friendlyError(e, fallback) {
   if (e?.message === "Network Error") {
-    return "Network Error (API unreachable / CORS / wrong URL).";
+    return "Network error. Check API / CORS configuration.";
   }
+
   if (e?.response) {
     return (
       e.response.data?.message ||
@@ -98,63 +105,64 @@ function toFriendlyError(e, fallback) {
       `${fallback} (HTTP ${e.response.status})`
     );
   }
+
   return e?.message ?? fallback;
 }
 
-// ------------------ SERVICE ------------------
-// Service object to interact with the backend API for projects
+/* =========================
+   Service
+========================= */
+
 export const ProjectsService = {
-  // Fetch a list of projects with optional filters, sorting, and pagination
-  async list({ page, pageSize, status, q, sort } = {}, signal) {
+  async list(params = {}, signal) {
     try {
-      const params = {
+      const { page, pageSize, status, q, sort } = params;
+
+      const query = {
         page,
         pageSize,
-        ...(status && status !== "all" ? { status } : {}),
-        ...(q && q.trim() ? { q: q.trim() } : {}),
-        ...(sort ? { sort } : {}),
+        ...(status && status !== "all" && { status }),
+        ...(q?.trim() && { q: q.trim() }),
+        ...(sort && { sort }),
       };
 
-      const { data } = await api.get(routes.projects, { params, signal });
-      return normalizeListResponse(data); // Normalize the API response
+      const { data } = await api.get(routes.projects, {
+        params: query,
+        signal,
+      });
+
+      return normalizeList(data);
     } catch (e) {
-      throw new Error(toFriendlyError(e, "Failed to load projects"));
+      throw new Error(friendlyError(e, "Failed to load projects"));
     }
   },
 
-  // Fetch the list of clients
   async clients(signal) {
     try {
       const { data } = await api.get(routes.clients, { signal });
-      return normalizeClientsResponse(data); // Normalize client data response
+      return normalizeArray(data);
     } catch (e) {
-      throw new Error(toFriendlyError(e, "Failed to load clients"));
+      throw new Error(friendlyError(e, "Failed to load clients"));
     }
   },
 
-  // Create a new project by sending FormData
   async create(draft) {
     try {
-      await csrf(); // Ensure CSRF protection
-      const fd = toFormData(draft); // Convert project draft to FormData
-
-      const { data } = await api.post(routes.projects, fd, {
+      await csrf();
+      const { data } = await api.post(routes.projects, toFormData(draft), {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
-      return data?.item ?? data?.data ?? data; // Return the created project data
+      return data?.item ?? data?.data ?? data;
     } catch (e) {
-      throw new Error(toFriendlyError(e, "Failed to create project"));
+      throw new Error(friendlyError(e, "Failed to create project"));
     }
   },
 
-  // Update an existing project by sending FormData
   async update(id, draft) {
     try {
-      await csrf(); // Ensure CSRF protection
-      const fd = toFormData(draft); // Convert project draft to FormData
-
-      // Laravel method spoofing for PATCH
+      await csrf();
+      const fd = toFormData(draft);
       fd.append("_method", "PATCH");
 
       const { data } = await api.post(
@@ -163,15 +171,29 @@ export const ProjectsService = {
         { headers: { "Content-Type": "multipart/form-data" } },
       );
 
-      return data?.item ?? data?.data ?? data; // Return the updated project data
+      return data?.item ?? data?.data ?? data;
     } catch (e) {
-      throw new Error(toFriendlyError(e, "Failed to update project"));
+      throw new Error(friendlyError(e, "Failed to update project"));
     }
   },
 
-  // Delete a photo associated with a project
+  async remove(id) {
+    try {
+      await csrf();
+      await api.delete(`${routes.projects}/${encodeURIComponent(id)}`);
+      return true;
+    } catch (e) {
+      throw new Error(friendlyError(e, "Failed to delete project"));
+    }
+  },
+
   async deletePhoto(photoId) {
-    await csrf(); // Ensure CSRF protection
-    await api.delete(`/api/admin/projects/photos/${photoId}`); // Send DELETE request
+    try {
+      await csrf();
+      await api.delete(`/api/admin/projects/photos/${photoId}`);
+      return true;
+    } catch (e) {
+      throw new Error(friendlyError(e, "Failed to delete photo"));
+    }
   },
 };

@@ -8,9 +8,9 @@ export default function ProjectDetails({
   selected,
   draft,
   loading,
-  showing,
   cancelCreate,
   saveProject,
+  deleteProject,
   clientQuery,
   setClientQuery,
   filteredClients,
@@ -21,25 +21,42 @@ export default function ProjectDetails({
   setDraft,
   setItems,
 }) {
-  // When in create new project mode, show the new project form
-  if (isCreating) {
+  // If nothing selected and not creating
+  if (!isCreating && !selected) {
     return (
-      <section className="ap-card floating-card">
+      <section className="ap-card">
         <div className="ap-card__header">
-          <h2 className="ap-card__title">Create New Project</h2>
+          <h2 className="ap-card__title">Details</h2>
         </div>
+        <div className="ap-empty">
+          Select a project on the left, or click “New”.
+        </div>
+      </section>
+    );
+  }
 
-        {/* Project Info Section */}
+  const title = isCreating ? "Create New Project" : "Project Details";
+  const cardClass = isCreating ? "ap-card floating-card" : "ap-card";
+
+  return (
+    <section className={cardClass}>
+      <div className="ap-card__header">
+        <h2 className="ap-card__title">{title}</h2>
+      </div>
+
+      <div className="ap-details">
+        {/* Project Info */}
         <ProjectInfo
           draft={draft}
           isCreating={isCreating}
           loading={loading}
           onCancel={cancelCreate}
           onSave={saveProject}
+          onDelete={deleteProject}
           setDraft={setDraft}
         />
 
-        {/* Client Assign Section */}
+        {/* Client Assign */}
         <ClientAssign
           draft={draft}
           loading={loading}
@@ -49,16 +66,17 @@ export default function ProjectDetails({
           applyClient={applyClient}
         />
 
-        {/* Project Photos Section */}
+        {/* Photos */}
         <ProjectPhotos
           draft={draft}
+          selected={selected}
           isCreating={isCreating}
           loading={loading}
           setDraft={setDraft}
           setItems={setItems}
         />
 
-        {/* Milestones Section */}
+        {/* Milestones */}
         <Milestones
           milestones={draft.milestones || []}
           loading={loading}
@@ -66,70 +84,6 @@ export default function ProjectDetails({
           onUpdate={updateMilestone}
           onRemove={removeMilestone}
         />
-      </section>
-    );
-  }
-
-  // If not creating, show the selected project's details
-  if (selected) {
-    return (
-      <section className="ap-card">
-        <div className="ap-card__header">
-          <h2 className="ap-card__title">Project Details</h2>
-        </div>
-
-        <div className="ap-details">
-          {/* Project Info Section */}
-          <ProjectInfo
-            draft={draft}
-            isCreating={isCreating}
-            loading={loading}
-            onCancel={cancelCreate}
-            onSave={saveProject}
-            setDraft={setDraft}
-          />
-
-          {/* Client Assign Section */}
-          <ClientAssign
-            draft={draft}
-            loading={loading}
-            clientQuery={clientQuery}
-            setClientQuery={setClientQuery}
-            filteredClients={filteredClients}
-            applyClient={applyClient}
-          />
-
-          {/* Project Photos Section */}
-          <ProjectPhotos
-            draft={draft}
-            selected={selected}
-            isCreating={isCreating}
-            loading={loading}
-            setDraft={setDraft}
-            setItems={setItems}
-          />
-
-          {/* Milestones Section */}
-          <Milestones
-            milestones={draft.milestones}
-            loading={loading}
-            onAdd={addMilestone}
-            onUpdate={updateMilestone}
-            onRemove={removeMilestone}
-          />
-        </div>
-      </section>
-    );
-  }
-
-  // Fallback UI when no project is selected
-  return (
-    <section className="ap-card">
-      <div className="ap-card__header">
-        <h2 className="ap-card__title">Details</h2>
-      </div>
-      <div className="ap-empty">
-        Select a project on the left, or click “New”.
       </div>
     </section>
   );

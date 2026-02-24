@@ -167,4 +167,22 @@ class AdminProjectController extends Controller
 
         return response()->json(['ok' => true]);
     }
+
+    public function destroy(Project $project)
+    {
+        // Optional: delete related photos from storage
+        foreach ($project->photos as $photo) {
+            Storage::disk('public')->delete($photo->path);
+        }
+
+        // Delete related milestones
+        $project->milestones()->delete();
+
+        // Delete project (will also remove photos if DB has cascade)
+        $project->delete();
+
+        return response()->json([
+            'message' => 'Project deleted successfully'
+        ]);
+    }
 }

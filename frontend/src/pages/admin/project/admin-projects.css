@@ -395,6 +395,16 @@
   color: #fff;
 }
 
+.ap-btn--danger {
+  background: #dc2626;
+  border-color: #dc2626;
+  color: white;
+}
+
+.ap-btn--danger:hover {
+  background: #b91c1c;
+}
+
 .ap-btn:disabled {
   opacity: 0.5;
   cursor: not-allowed;
