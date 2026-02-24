@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import Select from "react-select";
 import "./client-documents.css";
 
@@ -14,7 +14,7 @@ import {
 
 export default function AdminClientDocuments() {
   const { clientId } = useParams();
-
+  const navigate = useNavigate();  
   const [q, setQ] = useState("");
   const [type, setType] = useState("All Types");
   const [dateRange, setDateRange] = useState("All Time");
@@ -37,6 +37,18 @@ export default function AdminClientDocuments() {
   const dateOptions = useMemo(() => toOptions(DATE_RANGES), []);
 
   const [uploading, setUploading] = useState(false);
+
+  const [showUploadModal, setShowUploadModal] = useState(false);
+  const [selectedUploadType, setSelectedUploadType] = useState("Contract");
+  const [selectedFile, setSelectedFile] = useState(null);
+
+  const [isPdfUploaded, setIsPdfUploaded] = useState(false);
+
+  const handleOpenUploadModal = () => {
+    setShowUploadModal(true);
+    setIsPdfUploaded(false);
+  };
+
 
   const typeValue = useMemo(
     () => typeOptions.find((o) => o.value === type) || typeOptions[0],
@@ -132,18 +144,28 @@ export default function AdminClientDocuments() {
     }
   };
 
-  const handlePickFile = () => {
-    document.getElementById("doc-upload-input")?.click();
+  // const handlePickFile = () => {
+  //   document.getElementById("doc-upload-input")?.click();
+  // };
+
+  const handleFileChange = (e) => {
+    const file = e.target.files?.[0];
+    if (!file) {
+      setIsPdfUploaded(false) 
+      return;
+    }
+
+    if (file.type !== "application/pdf") {
+      setError("Only PDF files are accepted.");
+      return;
+    }
+    setIsPdfUploaded(true);
+    setSelectedFile(file);
   };
 
-  const handleFileChange = async (e) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    // Validate PDF
-    if (file.type !== "application/pdf") {
-      setError("PDF files only.");
-      e.target.value = "";
+  const handleUploadSubmit = async () => {
+    if (!selectedFile) {
+      setError("Please select a PDF file.");
       return;
     }
 
@@ -153,28 +175,35 @@ export default function AdminClientDocuments() {
     try {
       const fd = new FormData();
       fd.append("user_id", clientId);
-      fd.append("type", type === "All Types" ? "Contract" : type);
+      fd.append("type", selectedUploadType);
       fd.append("document_date", new Date().toISOString());
-      fd.append("shared_by", "Admin"); // optional
-      fd.append("file", file);
+      fd.append("shared_by", "Admin");
+      fd.append("file", selectedFile);
 
       await uploadAdminDocument(fd);
 
-      // refresh docs list
+      setShowUploadModal(false);
+      setSelectedFile(null);
+      setSelectedUploadType("Contract");
       setPage(1);
       setRefreshKey((x) => x + 1);
     } catch (err) {
       setError(
-        err?.response?.data?.message || err?.message || "Upload failed.",
+        err?.response?.data?.message || err?.message || "Upload failed."
       );
     } finally {
       setUploading(false);
-      e.target.value = ""; // allow re-upload same file
     }
   };
 
   return (
     <section className="docs-page">
+      <button className="btn-back"
+        onClick={() => navigate("/w/admin/document")}
+       >
+        ← Back
+      </button>
+      
       <header className="docs-header">
         <h1 className="dash-title">Documents</h1>
         <p className="dash-subtitle">View documents for this client.</p>
@@ -198,7 +227,7 @@ export default function AdminClientDocuments() {
         <div className="docs-btn-group">
           <div
             className="docs-upload-button"
-            onClick={handlePickFile}
+            onClick={handleOpenUploadModal }
             style={{
               opacity: uploading ? 0.6 : 1,
               pointerEvents: uploading ? "none" : "auto",
@@ -221,7 +250,7 @@ export default function AdminClientDocuments() {
               type="button"
               onClick={handleUpdate}
             >
-              Update
+              Refresh
             </button>
           </div>
         </div>
@@ -374,6 +403,60 @@ export default function AdminClientDocuments() {
           </div>
         </div>
       </div>
+
+      {/* Upload Modal */}
+      {showUploadModal && (
+        <div className="upload-modal-overlay">
+          <div className="upload-modal">
+            <h2>Upload Document</h2>
+
+            <div className="upload-field">
+              <label>Document Type</label>
+              <Select
+                options={typeOptions.filter(o => o.value !== "All Types")}
+                value={typeOptions.find(o => o.value === selectedUploadType)}
+                onChange={(opt) => setSelectedUploadType(opt.value)}
+                isSearchable={false}
+              />
+            </div>
+
+            <div className="upload-field">
+              <label>Select File</label>
+              <input
+                type="file"
+                accept=".pdf"
+                onChange={handleFileChange}
+              />
+
+              {!isPdfUploaded && (
+                <small style={{ color: "red" }}>
+                  Only PDF files are accepted. Other file types are not allowed.
+                </small>
+              )}
+            
+            </div>
+
+            <div className="upload-actions">
+              <button
+                className="dash-btn ghost"
+                onClick={() => setShowUploadModal(false)}
+                disabled={uploading}
+              >
+                Cancel
+              </button>
+
+              <button
+                className="dash-btn"
+                onClick={handleUploadSubmit}
+                disabled={uploading || !selectedFile || !isPdfUploaded}
+              >
+                {uploading ? "Uploading..." : "Upload"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
     </section>
   );
 }
