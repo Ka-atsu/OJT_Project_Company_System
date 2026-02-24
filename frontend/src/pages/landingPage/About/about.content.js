@@ -41,17 +41,114 @@ export const ABOUT = {
   ],
 },
 
-  team: {
-    label: "Our Team",
-    title: "The people behind the work.",
-    subtitle:
-      "Our operations are led by experienced engineers, site managers, and field teams focused on safety, quality, and reliability.",
-    members: Array.from({ length: 8 }, () => ({
-      name: "Name",
-      role: "Role",
+team: {
+  label: "Our Team",
+  title: "The people behind the work.",
+  subtitle:
+    "Our operations are led by experienced engineers, site managers, and field teams focused on safety, quality, and reliability.",
+  members: [
+    {
+      name: "Rolando Climaco",
+      role: "President / CEO",
       img: null,
-    })),
-  },
+    },
+    {
+      name: "Maria Bella Climaco",
+      role: "Vice President",
+      img: null,
+    },
+    {
+      name: "Rheamie Alberastine",
+      role: "Marketing Manager / Engineering Manager",
+      img: null,
+    },
+    {
+      name: "Maria Cristina Dino",
+      role: "Accounting Head",
+      img: null,
+    },
+    {
+      name: "Rommel Matias",
+      role: "Field Agent",
+      img: null,
+    },
+    {
+      name: "Rolando Climaco",
+      role: "Chief of Site Operations",
+      img: null,
+    },
+    {
+      name: "Genesis De Guzman",
+      role: "Project Manager",
+      img: null,
+    },
+    {
+      name: "Col. Jose Caringal",
+      role: "Project Manager",
+      img: null,
+    },
+    {
+      name: "Aldwin Miranda",
+      role: "Senior Engineer",
+      img: null,
+    },
+    {
+      name: "Lucas Martinez",
+      role: "Site Foreman",
+      img: null,
+    },
+    {
+      name: "Renato Nebrida",
+      role: "Site Foreman",
+      img: null,
+    },
+    {
+      name: "Rolisdio Climaco",
+      role: "Supervisor / Safety Officer",
+      img: null,
+    },
+    {
+      name: "Katleen Mae Martinez",
+      role: "QA / QC Engineer",
+      img: null,
+    },
+    {
+      name: "Persues Sarte",
+      role: "Site Engineer",
+      img: null,
+    },
+    {
+      name: "Benilda Padilla",
+      role: "Purchasing Head",
+      img: null,
+    },
+    {
+      name: "Ivan Roy Climaco",
+      role: "Purchasing Officer",
+      img: null,
+    },
+    {
+      name: "Ofelia Macaldo",
+      role: "Head - HR Admin & Legal",
+      img: null,
+    },
+    {
+      name: "Ian Climaco",
+      role: "HR Admin Officer",
+      img: null,
+    },
+    {
+      name: "Atty. Paulo Punzalan",
+      role: "Legal Officer",
+      img: null,
+    },
+    {
+      name: "Atty. Dante Manguiat",
+      role: "Legal Officer",
+      img: null,
+    },
+  ],
+},
 
   slices: {
     missionVision: {
