@@ -7,12 +7,27 @@ export default function ProjectInfo({
   loading,
   onCancel,
   onSave,
+  onDelete,
   setDraft,
 }) {
   const isInvalidDate =
     draft.startDate && draft.dueDate && draft.dueDate < draft.startDate;
+
   const isFormInvalid =
     !draft.name?.trim() || !draft.startDate || !draft.dueDate || isInvalidDate;
+
+  const handleDelete = () => {
+    if (!draft?.id) return;
+
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this project? This action cannot be undone.",
+    );
+
+    if (confirmDelete) {
+      onDelete?.(draft.id);
+    }
+  };
+
   return (
     <div className="ap-block">
       <div className="ap-block__top">
@@ -30,6 +45,17 @@ export default function ProjectInfo({
               Cancel
             </button>
           )}
+
+          {!isCreating && draft?.id && (
+            <button
+              className="ap-btn ap-btn--danger"
+              onClick={handleDelete}
+              disabled={loading}
+            >
+              Delete
+            </button>
+          )}
+
           <button
             className="ap-btn ap-btn--primary"
             onClick={onSave}
@@ -41,23 +67,24 @@ export default function ProjectInfo({
       </div>
 
       <div className="ap-twoCol">
-        {/* Editable Project name */}
         <Field label="Project name">
           <input
-            value={draft.name || ""} // Ensure default value is empty if no name
-            onChange={(e) => setDraft((d) => ({ ...d, name: e.target.value }))} // Update name
-            disabled={loading} // Disable if loading
+            value={draft.name || ""}
+            onChange={(e) => setDraft((d) => ({ ...d, name: e.target.value }))}
+            disabled={loading}
           />
         </Field>
 
-        {/* Editable Status */}
         <Field label="Status">
           <select
-            value={draft.status || "draft"}
+            value={draft.status ?? "draft"}
             onChange={(e) =>
-              setDraft((d) => ({ ...d, status: e.target.value }))
+              setDraft((d) => ({
+                ...d,
+                status: e.target.value,
+              }))
             }
-            disabled={loading} // Disable if loading
+            disabled={loading}
           >
             {Object.entries(PSTATUS).map(([value, label]) => (
               <option key={value} value={value}>
@@ -66,28 +93,26 @@ export default function ProjectInfo({
             ))}
           </select>
         </Field>
-
-        {/* Editable Start date */}
+        
         <Field label="Start date">
           <input
             type="date"
             value={draft.startDate || ""}
             onChange={(e) =>
               setDraft((d) => ({ ...d, startDate: e.target.value }))
-            } // Update start date
-            disabled={loading} // Disable if loading
+            }
+            disabled={loading}
           />
         </Field>
 
-        {/* Editable Due date */}
         <Field label="Due date">
           <input
             type="date"
             value={draft.dueDate || ""}
             onChange={(e) =>
               setDraft((d) => ({ ...d, dueDate: e.target.value }))
-            } // Update due date
-            disabled={loading} // Disable if loading
+            }
+            disabled={loading}
           />
         </Field>
 
