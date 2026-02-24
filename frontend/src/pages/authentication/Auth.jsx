@@ -16,6 +16,19 @@ const Auth = () => {
   const [loading, setLoading] = useState(false);
   const [err, setErr] = useState("");
 
+  const Back_to_Home = (props) => {
+    return (
+      <button
+        className={`btn-back-to-home-pos-${props.className}`}
+        onClick={() => navigate("/")}
+        disabled={loading}
+      >
+        Landing Page
+      
+      </button>
+    );
+  }
+
   const toggleForm = () => {
     setErr("");
     setIsLogin((v) => !v);
@@ -271,6 +284,7 @@ const Auth = () => {
                   >
                     Register
                   </button>
+                  <Back_to_Home className="auth-btn auth-btnOutline"/>
                 </div>
               ) : (
                 <div className="panel-text">
@@ -283,7 +297,10 @@ const Auth = () => {
                   >
                     Login
                   </button>
+                  <Back_to_Home className = "auth-btn auth-btnOutline"/>
+
                 </div>
+                
               )}
             </div>
           </div>

@@ -378,12 +378,10 @@
   font-size: 0.95rem;
   margin: 0 0 12px;
   text-align: center;
-}
-
-.auth-welcomeSub {
   margin-top: 8px;
   margin-bottom: 16px;
 }
+
 
 /* Panel button */
 .auth-btnOutline {
@@ -403,6 +401,7 @@
     box-shadow 0.18s ease;
   line-height: 1;
   margin-top: 0.6rem;
+  margin-bottom: 0.5rem;
 }
 
 .auth-btnOutline:hover {
