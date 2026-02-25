@@ -1,25 +1,44 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./admin-document.css";
-
 import { fetchAdminClients } from "./documents.services";
 
 export default function AdminDocuments() {
+  const navigate = useNavigate();
+
   const [clients, setClients] = useState([]);
   const [search, setSearch] = useState("");
+  const [page, setPage] = useState(1);
+  const limit = 10;
+
+  const [totalPages, setTotalPages] = useState(1);
+  const [total, setTotal] = useState(0);
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const navigate = useNavigate();
+
+  const totalDocuments = useMemo(() => {
+    return clients.reduce((sum, c) => sum + (c.documents_count ?? 0), 0);
+  }, [clients]);
 
   const loadClients = async () => {
     setLoading(true);
     setError("");
 
     try {
-      const data = await fetchAdminClients();
-      setClients(Array.isArray(data) ? data : []);
+      const res = await fetchAdminClients({
+        q: search,
+        page,
+        limit,
+      });
+
+      setClients(Array.isArray(res?.data) ? res.data : []);
+      setTotalPages(Number(res?.totalPages ?? 1));
+      setTotal(Number(res?.total ?? 0));
     } catch (e) {
       setClients([]);
+      setTotalPages(1);
+      setTotal(0);
       setError(
         e?.response?.data?.message || e?.message || "Failed to load clients.",
       );
@@ -30,15 +49,8 @@ export default function AdminDocuments() {
 
   useEffect(() => {
     loadClients();
-  }, []);
-
-  const filteredClients = useMemo(() => {
-    const needle = search.trim().toLowerCase();
-    if (!needle) return clients;
-    return clients.filter((c) =>
-      (c?.name ?? "").toLowerCase().includes(needle),
-    );
-  }, [clients, search]);
+    // eslint-disable-next-line
+  }, [search, page]);
 
   const handleClientClick = (clientId) => {
     navigate(`/w/admin/clientDocuments/${clientId}`);
@@ -46,51 +58,113 @@ export default function AdminDocuments() {
 
   return (
     <div className="admin-documents">
-      <h2 className="title">Manage Documents</h2>
+      {/* Header */}
+      <div className="page-header">
+        <h2>Manage Client Documents</h2>
+        <p className="subtitle">
+          {total} clients • {totalDocuments} total documents
+        </p>
+      </div>
 
+      {/* Search */}
       <div className="search-container">
         <input
           type="text"
           placeholder="Search clients..."
           className="search-input"
           value={search}
-          onChange={(e) => setSearch(e.target.value)}
+          onChange={(e) => {
+            setSearch(e.target.value);
+            setPage(1);
+          }}
         />
       </div>
 
-      {loading && <p className="loading-text">Loading clients...</p>}
-      {error && !loading && (
-        <p className="loading-text">
-          {error}{" "}
-          <button
-            type="button"
-            className="dash-btn ghost"
-            onClick={loadClients}
-          >
-            Retry
-          </button>
-        </p>
-      )}
+      <div className="content-card">
+        {loading && <div className="empty-state">Loading clients…</div>}
 
-      {!loading && !error && filteredClients.length === 0 ? (
-        <p className="loading-text">No clients found.</p>
-      ) : (
-        <div className="client-grid">
-          {filteredClients.map((client) => (
-            <div
-              key={client.id}
-              className="client-card"
-              onClick={() => handleClientClick(client.id)}
-              style={{ cursor: "pointer" }}
-            >
-              <div className="logo-placeholder">
-                <span>LOGO</span>
-              </div>
-              <p className="client-name">{client.name}</p>
+        {error && !loading && (
+          <div className="empty-state">
+            {error}{" "}
+            <button type="button" className="retry-btn" onClick={loadClients}>
+              Retry
+            </button>
+          </div>
+        )}
+
+        {!loading && !error && clients.length === 0 && (
+          <div className="empty-state">No clients found.</div>
+        )}
+
+        {!loading && !error && clients.length > 0 && (
+          <>
+            <table className="client-table">
+              <thead>
+                <tr>
+                  <th>Client</th>
+                  <th>ID</th>
+                  <th>Documents</th>
+                  <th className="th-action">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {clients.map((client) => (
+                  <tr key={client.id}>
+                    <td className="client-name">{client.name}</td>
+
+                    <td className="muted">{client.id}</td>
+
+                    <td>
+                      <span className="doc-count">
+                        {client.documents_count ?? 0}
+                      </span>
+                    </td>
+
+                    <td className="td-action">
+                      <button
+                        className="view-btn"
+                        onClick={() => handleClientClick(client.id)}
+                      >
+                        View
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+
+            <div className="table-footer">
+              <span>
+                Showing {clients.length} of {total} clients
+              </span>
+
+              {totalPages > 1 && (
+                <div className="pagination">
+                  <button
+                    className="page-btn"
+                    onClick={() => setPage((p) => Math.max(1, p - 1))}
+                    disabled={page <= 1}
+                  >
+                    Prev
+                  </button>
+
+                  <span className="page-meta">
+                    Page {page} of {totalPages}
+                  </span>
+
+                  <button
+                    className="page-btn"
+                    onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                    disabled={page >= totalPages}
+                  >
+                    Next
+                  </button>
+                </div>
+              )}
             </div>
-          ))}
-        </div>
-      )}
+          </>
+        )}
+      </div>
     </div>
   );
 }
