@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { useRef, useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 import { ImgConstructionSite } from "../../../assets/images";
@@ -11,6 +11,9 @@ import { EASE, VIEWPORT, VIEWPORT_CARDS } from "../../../motion/constants";
 import logo from "../../../assets/Images/logo.jpg";
 
 import HomeProjectsSnapshot from "./HomeProjectsSnapshot";
+import CountUp from "react-countup";
+import { FaShieldAlt, FaCheckCircle, FaClock, FaNetworkWired } from "react-icons/fa";
+import { useInView } from "react-intersection-observer";
 
 import "./home.css";
 
@@ -27,6 +30,25 @@ export default function Home() {
 
   const counterLeft = String(active + 1).padStart(2, "0");
   const counterRight = String(total).padStart(2, "0");
+
+  const [startCount, setStartCount] = useState(false);
+  const { ref, inView } = useInView({
+    threshold: 0.3,
+  });
+
+  // Start counting when section is in view
+  useEffect(() => {
+    if (inView) {
+      setStartCount(true);
+    }
+  }, [inView]);
+
+  // Reset when component unmounts (leaving page)
+  useEffect(() => {
+    return () => {
+      setStartCount(false);
+    };
+  }, []);
 
   useHomeHeroScroll({
     wrapRef,
@@ -162,7 +184,7 @@ export default function Home() {
 
       
         {/* ================= METRICS ================= */}
-      <section className="home-metrics">
+      <section ref={ref} className="home-metrics">
         <div className="container">
           <motion.div
             initial="hidden"
@@ -172,7 +194,15 @@ export default function Home() {
             className="home-metrics-inner"
           >
             <motion.div className="home-metric" variants={fadeUpItem}>
-              <div className="home-metric-value">8+</div>
+              <motion.div
+              className="home-metric-value"
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+            >
+              {startCount && <CountUp end={8} duration={2} suffix="+" />}
+            </motion.div>
+
               <div className="home-metric-label">Years of Operational Experience</div>
               <div className="home-metric-sub">
                 Established expertise in materials supply and site operations
@@ -180,7 +210,14 @@ export default function Home() {
             </motion.div>
 
             <motion.div className="home-metric" variants={fadeUpItem}>
-              <div className="home-metric-value">150+</div>
+             <motion.div
+              className="home-metric-value"
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+            >
+              {startCount && <CountUp end={150} duration={2} suffix="+" />}
+            </motion.div>
               <div className="home-metric-label">Projects Completed</div>
               <div className="home-metric-sub">
                 Delivered across residential, commercial, and infrastructure sites
@@ -188,7 +225,14 @@ export default function Home() {
             </motion.div>
 
             <motion.div className="home-metric" variants={fadeUpItem}>
-              <div className="home-metric-value">100%</div>
+              <motion.div
+              className="home-metric-value"
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+            >
+              {startCount && <CountUp end={100} duration={2} suffix="%" />}
+            </motion.div>
               <div className="home-metric-label">Regulatory Compliance</div>
               <div className="home-metric-sub">
                 Fully aligned with DENR and local government requirements
@@ -259,44 +303,49 @@ export default function Home() {
       </section>
 
       {/* ================= WHY CHOOSE US ================= */}
-        <section className="section home-why">
-        <div className="container home-why-inner">
-          <motion.span className="eyebrow" variants={fadeUpItem}>
-            Why Clients Choose Us
-          </motion.span>
-          <motion.h2 variants={fadeUpItem}>
-            Built for reliability, compliance, and consistency.
-          </motion.h2>
+          <section className="section home-why">
+            <div className="container home-why-inner">
+              <motion.span className="eyebrow" variants={fadeUpItem}>
+                Why Clients Choose Us
+              </motion.span>
 
-          <motion.div
-            className="home-why-grid"
-            variants={revealStagger}
-            initial="hidden"
-            whileInView="visible"
-            viewport={VIEWPORT_CARDS}
-          >
-            <motion.div className="home-why-item" variants={fadeUpItem}>
-              <h4>DENR Compliant Operations</h4>
-              <p>Strict adherence to environmental and regulatory standards across all projects.</p>
-            </motion.div>
+              <motion.h2 variants={fadeUpItem}>
+                Built for reliability, compliance, and consistency.
+              </motion.h2>
 
-            <motion.div className="home-why-item" variants={fadeUpItem}>
-              <h4>Quality-Controlled Materials</h4>
-              <p>Engineered sourcing from controlled development areas to ensure consistency.</p>
-            </motion.div>
+              <motion.div
+                className="home-why-grid"
+                variants={revealStagger}
+                initial="hidden"
+                whileInView="visible"
+                viewport={VIEWPORT_CARDS}
+              >
+                <motion.div className="home-why-item" variants={fadeUpItem}>
+                  <FaShieldAlt className="why-icon" />
+                  <h4>DENR Compliant Operations</h4>
+                  <p>Strict adherence to environmental and regulatory standards across all projects.</p>
+                </motion.div>
 
-            <motion.div className="home-why-item" variants={fadeUpItem}>
-              <h4>On-Time Delivery</h4>
-              <p>Coordinated hauling and logistics planning to avoid delays.</p>
-            </motion.div>
+                <motion.div className="home-why-item" variants={fadeUpItem}>
+                  <FaCheckCircle className="why-icon" />
+                  <h4>Quality-Controlled Materials</h4>
+                  <p>Engineered sourcing from controlled development areas to ensure consistency.</p>
+                </motion.div>
 
-            <motion.div className="home-why-item" variants={fadeUpItem}>
-              <h4>Local Supply Network</h4>
-              <p>Strategically positioned sources serving projects across CALABARZON.</p>
-            </motion.div>
-          </motion.div>
-        </div>
-      </section>
+                <motion.div className="home-why-item" variants={fadeUpItem}>
+                  <FaClock className="why-icon" />
+                  <h4>On-Time Delivery</h4>
+                  <p>Coordinated hauling and logistics planning to avoid delays.</p>
+                </motion.div>
+
+                <motion.div className="home-why-item" variants={fadeUpItem}>
+                  <FaNetworkWired className="why-icon" />
+                  <h4>Local Supply Network</h4>
+                  <p>Strategically positioned sources serving projects across CALABARZON.</p>
+                </motion.div>
+              </motion.div>
+            </div>
+          </section>
 
 
       {/* ================= PROJECTS SNAPSHOT ================= */}
