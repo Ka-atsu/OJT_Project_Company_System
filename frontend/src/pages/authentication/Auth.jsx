@@ -4,6 +4,7 @@ import logo from "../../assets/Images/logo.jpg";
 import { login, register } from "./auth.service";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
+import MouseLook3D from "../../components/three/MouseLook3D";
 
 const Auth = () => {
   const navigate = useNavigate();
@@ -273,6 +274,8 @@ const Auth = () => {
                 </div>
               </div>
 
+               <MouseLook3D url={`${import.meta.env.BASE_URL}models/Backhoe.glb`} />
+
               {isLogin ? (
                 <div className="panel-text">
                   <h2>Welcome Back!</h2>
@@ -285,7 +288,18 @@ const Auth = () => {
                     Register
                   </button>
                   <Back_to_Home className="auth-btn auth-btnOutline"/>
+
+                  <div className="auth-why">
+                    <p className="auth-whyTitle">Why log in?</p>
+                    <ul>
+                      <li>Request project quotations</li>
+                      <li>Schedule site inspections</li>
+                      <li>Track project inquiries</li>
+                      <li>Manage account details securely</li>
+                    </ul>
+                  </div>
                 </div>
+
               ) : (
                 <div className="panel-text">
                   <h2>Hello, Welcome!</h2>
@@ -298,7 +312,15 @@ const Auth = () => {
                     Login
                   </button>
                   <Back_to_Home className = "auth-btn auth-btnOutline"/>
-
+                   <div className="auth-why">
+                    <p className="auth-whyTitle">Why register?</p>
+                    <ul>
+                      <li>Submit new project requests</li>
+                      <li>Monitor service updates</li>
+                      <li>Communicate with administrators</li>
+                      <li>Secure access to your dashboard</li>
+                    </ul>
+                  </div>
                 </div>
                 
               )}

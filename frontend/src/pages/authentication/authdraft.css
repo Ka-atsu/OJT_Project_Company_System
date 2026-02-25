@@ -527,3 +527,30 @@
   height: 100%;
   object-fit: cover; /* or contain */
 }
+/* =====================
+   THREE (Login only)
+===================== */
+
+.auth-three {
+  height: 260px;
+  margin: 0 0 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.auth-three canvas {
+  width: 100% !important;
+  height: 100% !important;
+  display: block;
+}
+
+/* trust line */
+.auth-credit {
+  margin: 10px 0 0;
+  font-size: 0.75rem;
+  opacity: 0.7;
+  line-height: 1.5;
+  color: rgba(0, 0, 0, 0.62);
+  text-align: center;
+}
