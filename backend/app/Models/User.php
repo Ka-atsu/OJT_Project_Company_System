@@ -55,6 +55,11 @@ class User extends Authenticatable
 
     public function documents()
     {
-        return $this->hasMany(\App\Models\Document::class);
+        return $this->hasMany(\App\Models\Document::class, 'user_id');
+    }
+
+    public function projects()
+    {
+        return $this->hasMany(\App\Models\Project::class);
     }
 }

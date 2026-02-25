@@ -15,15 +15,46 @@ class AdminDocumentController extends Controller
      * GET /api/admin/documents/clients
      * Returns: [{id, name}, ...]
      */
-    public function clients()
+    public function clients(Request $request)
     {
-        $clients = \App\Models\User::query()
-            ->where('is_admin', 0)
-            ->select('id', 'name')
-            ->orderBy('name')
-            ->get();
+        $limit = (int) $request->query('limit', 10);
+        $qText = trim((string) $request->query('q', ''));
+        $sort  = (string) $request->query('sort', 'name_asc');
 
-        return response()->json($clients);
+        $query = \App\Models\User::query()
+            ->where('is_admin', 0)
+            ->withCount('documents'); // ← keep only this
+
+        if ($qText !== '') {
+            $query->where(function ($sub) use ($qText) {
+                $sub->where('name', 'like', "%{$qText}%")
+                    ->orWhere('email', 'like', "%{$qText}%")
+                    ->orWhere('id', $qText);
+            });
+        }
+
+        switch ($sort) {
+            case 'name_desc':
+                $query->orderByDesc('name');
+                break;
+
+            case 'recent':
+                $query->orderByDesc('updated_at');
+                break;
+
+            default:
+                $query->orderBy('name');
+                break;
+        }
+
+        $paginator = $query->paginate($limit);
+
+        return response()->json([
+            'data' => $paginator->items(),
+            'page' => $paginator->currentPage(),
+            'totalPages' => $paginator->lastPage(),
+            'total' => $paginator->total(),
+        ]);
     }
 
     /**

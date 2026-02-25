@@ -30,10 +30,13 @@ const normalizeType = (type) => {
  * GET /api/admin/documents/clients
  * returns: [{id, name}, ...]
  */
-export async function fetchAdminClients() {
+export async function fetchAdminClients(params = {}) {
   await csrf();
-  const res = await api.get("/api/admin/documents/clients");
+  const res = await api.get("/api/admin/documents/clients", {
+    params,
+  });
   return res.data;
+  // expects: { data, page, totalPages, total }
 }
 
 /**
