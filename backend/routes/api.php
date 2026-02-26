@@ -10,6 +10,7 @@ use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\Admin\AdminAppointmentController;
 use App\Http\Controllers\Admin\AdminDocumentController;
 use App\Http\Controllers\Admin\AdminProjectController;
+use App\Http\Controllers\Admin\AdminDashboardController;
 
 Route::middleware('auth:sanctum')->get('/user', fn(Request $request) => $request->user());
 
@@ -45,4 +46,7 @@ Route::middleware(['auth:sanctum', 'admin'])->prefix('admin')->group(function ()
     Route::patch('/projects/{project}', [AdminProjectController::class, 'update']);
     Route::delete('/projects/{project}', [AdminProjectController::class, 'destroy']);
     Route::delete('/projects/photos/{photo}', [AdminProjectController::class, 'destroyPhoto']);
+
+    // dashboard (admin)
+    Route::get('/dashboard', [AdminDashboardController::class, 'show']);
 });
