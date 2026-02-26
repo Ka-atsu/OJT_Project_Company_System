@@ -348,3 +348,120 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* add to admin-dashboard.css */
+
+.ad-chartsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+@media (max-width: 1100px) {
+  .ad-chartsGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.ad-miniChart {
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 12px;
+  padding: 12px;
+}
+
+.ad-miniChart__title {
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.ad-miniChart__row {
+  display: grid;
+  grid-template-columns: 90px 1fr 28px;
+  align-items: center;
+  gap: 10px;
+  margin: 8px 0;
+}
+
+.ad-miniChart__label {
+  opacity: 0.8;
+  font-size: 12px;
+  text-transform: capitalize;
+}
+
+.ad-miniChart__value {
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+.ad-miniChart__barWrap {
+  height: 10px;
+  background: rgba(0, 0, 0, 0.06);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.ad-miniChart__bar {
+  height: 100%;
+  background: rgba(0, 0, 0, 0.35);
+  border-radius: 999px;
+}
+
+/* timeline */
+.ad-miniChart__timeline {
+  height: 120px;
+  display: flex;
+  gap: 8px;
+  align-items: flex-end;
+  padding-top: 6px;
+}
+
+.ad-miniChart__tick {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 6px;
+}
+
+.ad-miniChart__col {
+  width: 100%;
+  background: rgba(0, 0, 0, 0.35);
+  border-radius: 10px;
+  min-height: 4px;
+}
+
+.ad-miniChart__tickLabel {
+  font-size: 11px;
+  opacity: 0.7;
+}
+
+/* Add to admin-dashboard.css for the chart layout */
+
+.ad-chartsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+@media (max-width: 1100px) {
+  .ad-chartsGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.ad-chartBlock {
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 12px;
+  padding: 12px;
+}
+
+.ad-chartTitle {
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.ad-chartArea {
+  width: 100%;
+  height: 220px;
+}

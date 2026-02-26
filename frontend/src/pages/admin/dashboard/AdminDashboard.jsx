@@ -1,5 +1,21 @@
-import React, { useMemo } from "react";
+// AdminDashboard.jsx
+import React from "react";
 import "./admin-dashboard.css";
+import { useAdminDashboard } from "./useAdminDashboard";
+
+import {
+  ResponsiveContainer,
+  PieChart,
+  Pie,
+  Cell,
+  Tooltip,
+  Legend,
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+} from "recharts";
 
 const A_STATUS = {
   pending: "Pending",
@@ -63,133 +79,119 @@ function Card({ title, meta, actions, children }) {
   );
 }
 
-/** ---- Fake data ---- */
-function makeFakeAppointments(n = 14) {
-  const clients = ["A. Santos", "J. Rivera", "K. Tan", "L. Reyes", "P. Cruz"];
-  const types = ["Consultation", "Site Visit", "Project Update", "Support"];
-  const statuses = [
-    "pending",
-    "pending",
-    "approved",
-    "rescheduled",
-    "cancelled",
-  ];
+/* =========================
+   Recharts helpers
+========================= */
 
-  const pad = (x) => String(x).padStart(2, "0");
-  const out = [];
-  for (let i = 0; i < n; i++) {
-    const day = 1 + (i % 12);
-    const hour = 9 + (i % 7);
-    const status = statuses[i % statuses.length];
-    const mode = i % 2 === 0 ? "Online" : "Face-to-face";
-    out.push({
-      id: `APT-${1000 + i}`,
-      client: clients[i % clients.length],
-      type: types[i % types.length],
-      status,
-      mode,
-      requestedFor: `2026-02-${pad(day)} ${pad(hour)}:00`,
-    });
-  }
-  return out;
+const PIE_COLORS = ["#8884d8", "#82ca9d", "#ffc658", "#ff8042", "#00C49F"];
+
+function toPieData(obj, labelMap = {}) {
+  if (!obj) return [];
+  return Object.entries(obj).map(([k, v]) => ({
+    name: labelMap[k] ?? k,
+    value: Number(v ?? 0),
+    key: k,
+  }));
 }
 
-function makeFakeProjects(n = 10) {
-  const names = [
-    "Land Development – Phase 1 (Clearing/Grading)",
-    "Backfill Sourcing – Lot 7B",
-    "Site Management – Safety + Workflow",
-    "Equipment Leasing – Excavator Package",
-    "Land Dev Support – Extension Scope",
-  ];
-  const statuses = ["active", "active", "on_hold", "draft", "completed"];
-
-  const pad = (x) => String(x).padStart(2, "0");
-
-  const out = [];
-  for (let i = 0; i < n; i++) {
-    const status = statuses[i % statuses.length];
-    const progress =
-      status === "completed"
-        ? 100
-        : status === "active"
-          ? 35 + (i % 55)
-          : status === "on_hold"
-            ? 20 + (i % 25)
-            : 5 + (i % 15);
-
-    out.push({
-      id: `PRJ-${1200 + i}`,
-      name: names[i % names.length],
-      status,
-      client: ["A. Santos", "J. Rivera", "K. Tan", "L. Reyes"][i % 4],
-      progress,
-      nextMilestone: ["Mobilization", "Delivery", "Grading", "QA + Handover"][
-        i % 4
-      ],
-      milestoneDue: `2026-02-${pad(5 + (i % 18))}`,
-      updatedAt: `2026-01-${pad(10 + (i % 10))}`,
-    });
-  }
-  return out;
+function toBarDataMonthly(points = []) {
+  return (points || []).map((p) => ({
+    month: (p.month || "").slice(5), // "YYYY-MM" -> "MM"
+    count: Number(p.count ?? 0),
+  }));
 }
 
-function makeFakeDocuments(n = 10) {
-  const files = [
-    "Bill_of_Quantities.pdf",
-    "Site_Photos.zip",
-    "Delivery_Receipt.pdf",
-    "Soil_Test_Report.pdf",
-    "Project_Scope.docx",
-  ];
-  const clients = ["A. Santos", "J. Rivera", "K. Tan", "L. Reyes", "P. Cruz"];
-  const status = ["new", "review", "approved", "new", "review"];
-
-  const pad = (x) => String(x).padStart(2, "0");
-  const out = [];
-  for (let i = 0; i < n; i++) {
-    out.push({
-      id: `DOC-${2000 + i}`,
-      file: files[i % files.length],
-      client: clients[i % clients.length],
-      type: ["PDF", "ZIP", "DOCX"][i % 3],
-      uploadedAt: `2026-01-${pad(12 + (i % 10))}`,
-      status: status[i % status.length],
-      size: `${(1.2 + (i % 7) * 0.4).toFixed(1)} MB`,
-    });
-  }
-  return out;
+function EmptyChart({ text = "No data" }) {
+  return <div className="ad-muted ad-small">{text}</div>;
 }
 
-function makeFakeActivity() {
-  return [
-    { when: "Today 09:12", text: "Approved appointment APT-1004 (Online)." },
-    { when: "Today 08:40", text: "Updated PRJ-1201 milestone due date." },
-    { when: "Yesterday", text: "Uploaded Delivery_Receipt.pdf for J. Rivera." },
-    { when: "Yesterday", text: "Created new project draft PRJ-1288." },
-  ];
+function PieBlock({ title, data }) {
+  const has = (data || []).some((d) => d.value > 0);
+  return (
+    <div className="ad-chartBlock">
+      <div className="ad-chartTitle">{title}</div>
+      <div className="ad-chartArea">
+        {has ? (
+          <ResponsiveContainer width="100%" height={220}>
+            <PieChart>
+              <Pie
+                data={data}
+                dataKey="value"
+                nameKey="name"
+                innerRadius={55}
+                outerRadius={85}
+                paddingAngle={2}
+              >
+                {data.map((_, i) => (
+                  <Cell key={i} fill={PIE_COLORS[i % PIE_COLORS.length]} />
+                ))}
+              </Pie>
+              <Tooltip />
+              <Legend verticalAlign="bottom" height={36} />
+            </PieChart>
+          </ResponsiveContainer>
+        ) : (
+          <EmptyChart />
+        )}
+      </div>
+    </div>
+  );
 }
-/** -------------------- */
+
+function BarBlock({ title, data }) {
+  const has = (data || []).some((d) => d.count > 0);
+  return (
+    <div className="ad-chartBlock">
+      <div className="ad-chartTitle">{title}</div>
+      <div className="ad-chartArea">
+        {has ? (
+          <ResponsiveContainer width="100%" height={220}>
+            <BarChart data={data}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="month" />
+              <YAxis allowDecimals={false} />
+              <Tooltip />
+              <Bar dataKey="count" />
+            </BarChart>
+          </ResponsiveContainer>
+        ) : (
+          <EmptyChart />
+        )}
+      </div>
+    </div>
+  );
+}
 
 export default function AdminDashboard() {
-  const appointments = useMemo(() => makeFakeAppointments(16), []);
-  const projects = useMemo(() => makeFakeProjects(12), []);
-  const documents = useMemo(() => makeFakeDocuments(12), []);
-  const activity = useMemo(() => makeFakeActivity(), []);
+  const { data, loading, err, refresh } = useAdminDashboard();
 
-  const pendingCount = appointments.filter(
-    (a) => a.status === "pending",
-  ).length;
-  const activeCount = projects.filter((p) => p.status === "active").length;
-  const docsNew = documents.filter((d) => d.status === "new").length;
+  const appointments = data?.appointments ?? [];
+  const projects = data?.projects ?? [];
+  const documents = data?.documents ?? [];
+  const activity = data?.activity ?? [];
 
-  // milestones due soon (within “about a week” in fake world)
-  const milestonesDue = projects
-    .filter((p) => p.status === "active")
-    .slice(0, 4).length;
+  const pendingCount = data?.kpis?.pendingCount ?? 0;
+  const activeCount = data?.kpis?.activeCount ?? 0;
+  const docsNew = data?.kpis?.docsNew ?? 0;
+  const milestonesDue = data?.kpis?.milestonesDue ?? 0;
+
+  // ✅ chart series
+  const apptPie = toPieData(data?.charts?.appointmentsByStatus, {
+    pending: "Pending",
+    approved: "Approved",
+    rejected: "Rejected",
+  });
+
+  const projPie = toPieData(data?.charts?.projectsByStatus, {
+    active: "Active",
+    on_hold: "On hold",
+    completed: "Completed",
+    draft: "Draft",
+  });
+
+  const docsBars = toBarDataMonthly(data?.charts?.documentsMonthly);
 
   const go = (path) => {
-    // SPA-safe fallback without react-router dependency
     window.location.href = path;
   };
 
@@ -201,6 +203,26 @@ export default function AdminDashboard() {
           <p className="ad-sub">
             Quick overview of appointments, projects, documents, and activity.
           </p>
+
+          {loading ? (
+            <div className="ad-muted ad-small">Loading dashboard…</div>
+          ) : null}
+
+          {err ? (
+            <div
+              className="ad-small"
+              style={{ color: "crimson", marginTop: 6 }}
+            >
+              {err}{" "}
+              <button
+                className="ad-btn ad-btn--ghost"
+                type="button"
+                onClick={() => refresh()}
+              >
+                Retry
+              </button>
+            </div>
+          ) : null}
         </div>
 
         <div className="ad-quick">
@@ -263,6 +285,20 @@ export default function AdminDashboard() {
           </div>
         </section>
 
+        {/* Charts row (Recharts) */}
+        <section className="ad-row ad-row--charts">
+          <Card title="Overview charts" meta="Quick distribution">
+            <div className="ad-chartsGrid">
+              <PieBlock title="Appointments status" data={apptPie} />
+              <PieBlock title="Projects status" data={projPie} />
+              <BarBlock
+                title="Documents uploaded (last 6 months)"
+                data={docsBars}
+              />
+            </div>
+          </Card>
+        </section>
+
         {/* Row 2: Appointments + Projects */}
         <section className="ad-row ad-row--top">
           <Card
@@ -297,6 +333,10 @@ export default function AdminDashboard() {
                   <div className="ad-small ad-mono">{a.requestedFor}</div>
                 </button>
               ))}
+
+              {!loading && appointments.length === 0 ? (
+                <div className="ad-muted ad-small">No appointments found.</div>
+              ) : null}
             </div>
           </Card>
 
@@ -349,6 +389,10 @@ export default function AdminDashboard() {
                     </div>
                   </button>
                 ))}
+
+              {!loading && projects.length === 0 ? (
+                <div className="ad-muted ad-small">No projects found.</div>
+              ) : null}
             </div>
           </Card>
         </section>
@@ -399,6 +443,14 @@ export default function AdminDashboard() {
                       </td>
                     </tr>
                   ))}
+
+                  {!loading && documents.length === 0 ? (
+                    <tr>
+                      <td colSpan={4} className="ad-muted ad-small">
+                        No documents found.
+                      </td>
+                    </tr>
+                  ) : null}
                 </tbody>
               </table>
             </div>
@@ -406,12 +458,16 @@ export default function AdminDashboard() {
 
           <Card title="Activity" meta="Latest actions">
             <div className="ad-scroll">
-              {activity.map((x, idx) => (
-                <div key={idx} className="ad-activity">
-                  <div className="ad-activity__when">{x.when}</div>
-                  <div className="ad-activity__text">{x.text}</div>
-                </div>
-              ))}
+              {activity.length ? (
+                activity.map((x, idx) => (
+                  <div key={idx} className="ad-activity">
+                    <div className="ad-activity__when">{x.when}</div>
+                    <div className="ad-activity__text">{x.text}</div>
+                  </div>
+                ))
+              ) : !loading ? (
+                <div className="ad-muted ad-small">No recent activity.</div>
+              ) : null}
             </div>
           </Card>
         </section>
