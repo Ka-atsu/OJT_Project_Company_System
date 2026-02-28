@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\AppointmentResource;
 use App\Models\Appointment;
 use Illuminate\Http\Request;
+use App\Models\ActivityLog;
+use Illuminate\Support\Facades\Auth;
 
 class AdminAppointmentController extends Controller
 {
@@ -74,6 +76,8 @@ class AdminAppointmentController extends Controller
             'meeting_notes' => 'nullable|string',
         ]);
 
+        $oldStatus = $appointment->approval_status;
+
         $appointment->update($request->only([
             'approval_status',
             'meeting_link',
@@ -82,6 +86,22 @@ class AdminAppointmentController extends Controller
             'admin_note',
             'meeting_notes',
         ]));
+
+        // Log activity if status changed
+        if ($request->filled('approval_status') && $oldStatus !== $appointment->approval_status) {
+
+            $admin = Auth::user();
+            $adminName = $admin ? $admin->name : 'System';
+
+            ActivityLog::create([
+                'user_id' => Auth::id(),
+                'type' => 'appointment',
+                'action' => 'status_changed',
+                'description' => "{$adminName} changed appointment #{$appointment->id} to {$appointment->approval_status}",
+                'related_id' => $appointment->id,
+                'related_type' => 'Appointment',
+            ]);
+        }
 
         return response()->json(
             (new AppointmentResource($appointment->fresh('user')))->resolve()

@@ -8,6 +8,8 @@ use App\Models\Document;
 use App\Http\Resources\DocumentResource;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
+use App\Models\ActivityLog;
+use Illuminate\Support\Facades\Auth;
 
 class AdminDocumentController extends Controller
 {
@@ -109,7 +111,7 @@ class AdminDocumentController extends Controller
             $q->where('name', 'like', "%{$qText}%");
         }
 
-        // ✅ Filter by dateRange
+        // Filter by dateRange
         $dateRange = (string) $request->query('dateRange', 'All Time');
         switch ($dateRange) {
             case 'Last 3 Months':
@@ -159,13 +161,12 @@ class AdminDocumentController extends Controller
             'type' => ['required', 'string', 'max:80'],
             'document_date' => ['required', 'date'],
             'shared_by' => ['nullable', 'string', 'max:255'],
-            'file' => ['required', 'file', 'mimes:pdf', 'max:10240'], // 10MB
+            'file' => ['required', 'file', 'mimes:pdf', 'max:10240'],
         ]);
 
         $file = $request->file('file');
         $originalName = $file->getClientOriginalName();
 
-        // store under: storage/app/public/documents/{user_id}/...
         $path = $file->store("documents/{$validated['user_id']}", 'public');
 
         $doc = Document::create([
@@ -175,6 +176,18 @@ class AdminDocumentController extends Controller
             'shared_by' => $validated['shared_by'] ?? null,
             'document_date' => $validated['document_date'],
             'file_path' => $path,
+        ]);
+
+        $admin = Auth::user();
+        $adminName = $admin ? $admin->name : 'System';
+
+        ActivityLog::create([
+            'user_id' => Auth::id(),
+            'type' => 'document',
+            'action' => 'created',
+            'description' => "{$adminName} uploaded document: {$doc->name}",
+            'related_id' => $doc->id,
+            'related_type' => 'Document',
         ]);
 
         return (new DocumentResource($doc->load('user')))
@@ -225,6 +238,18 @@ class AdminDocumentController extends Controller
 
         $document->update($validated);
 
+        $admin = Auth::user();
+        $adminName = $admin ? $admin->name : 'System';
+
+        ActivityLog::create([
+            'user_id' => Auth::id(),
+            'type' => 'document',
+            'action' => 'updated',
+            'description' => "{$adminName} updated document: {$document->name}",
+            'related_id' => $document->id,
+            'related_type' => 'Document',
+        ]);
+
         return (new DocumentResource($document->fresh()->load('user')))->response();
     }
 
@@ -233,11 +258,26 @@ class AdminDocumentController extends Controller
      */
     public function destroy(Document $document)
     {
+        $name = $document->name;
+        $id = $document->id;
+
         if ($document->file_path) {
             Storage::disk('public')->delete($document->file_path);
         }
 
         $document->delete();
+
+        $admin = Auth::user();
+        $adminName = $admin ? $admin->name : 'System';
+
+        ActivityLog::create([
+            'user_id' => Auth::id(),
+            'type' => 'document',
+            'action' => 'deleted',
+            'description' => "{$adminName} deleted document: {$name}",
+            'related_id' => $id,
+            'related_type' => 'Document',
+        ]);
 
         return response()->json(['ok' => true]);
     }
