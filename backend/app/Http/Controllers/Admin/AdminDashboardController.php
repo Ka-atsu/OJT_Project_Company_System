@@ -9,6 +9,7 @@ use App\Models\Document;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Schema;
 use Carbon\Carbon;
+use App\Models\ActivityLog;
 
 class AdminDashboardController extends Controller
 {
@@ -178,10 +179,24 @@ class AdminDashboardController extends Controller
         }
 
         /* =========================
-           ACTIVITY (optional)
+           ACTIVITY
         ========================= */
 
-        $activity = [];
+        $activity = ActivityLog::with('user')
+            ->latest()
+            ->limit(10)
+            ->get()
+            ->map(function ($log) {
+                return [
+                    'id' => $log->id,
+                    'user' => $log->user?->name ?? 'System',
+                    'type' => $log->type,
+                    'action' => $log->action,
+                    'description' => $log->description,
+                    'when' => $log->created_at->diffForHumans(),
+                ];
+            })
+            ->values();
 
         return response()->json([
             'kpis' => [

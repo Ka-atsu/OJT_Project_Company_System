@@ -11,6 +11,8 @@ use Illuminate\Validation\Rule;
 use App\Models\ProjectPhoto;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
+use App\Models\ActivityLog;
+use Illuminate\Support\Facades\Auth;
 
 class AdminProjectController extends Controller
 {
@@ -101,6 +103,18 @@ class AdminProjectController extends Controller
             ]);
         }
 
+        $admin = Auth::user();
+        $adminName = $admin ? $admin->name : 'System';
+
+        ActivityLog::create([
+            'user_id' => Auth::id(),
+            'type' => 'project',
+            'action' => 'created',
+            'description' => "{$adminName} created project: {$project->name}",
+            'related_id' => $project->id,
+            'related_type' => 'Project',
+        ]);
+
         return (new ProjectResource(
             $project->load(['user', 'milestones', 'photos'])
         ))->response()->setStatusCode(201);
@@ -108,8 +122,6 @@ class AdminProjectController extends Controller
 
     public function update(Request $request, Project $project)
     {
-        // Log::info('RAW REQUEST DATA:', $request->all());
-
         $data = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'status' => ['required', Rule::in(['draft', 'active', 'on_hold', 'completed'])],
@@ -124,6 +136,9 @@ class AdminProjectController extends Controller
             'photos' => ['nullable', 'array'],
             'photos.*' => ['image', 'max:5120'],
         ]);
+
+        // Capture old status before updating
+        $oldStatus = $project->status;
 
         $milestones = json_decode($request->input('milestones', '[]'), true);
         if (!is_array($milestones)) $milestones = [];
@@ -143,12 +158,40 @@ class AdminProjectController extends Controller
                 : null,
         ]);
 
+        // Refresh model to get updated values
+        $project->refresh();
+
+        // Replace milestones
         $project->milestones()->delete();
         foreach ($milestones as $m) {
             $project->milestones()->create([
                 'title' => $m['title'],
                 'due' => $m['due'] ?? null,
                 'status' => $m['status'],
+            ]);
+        }
+
+        $admin = Auth::user();
+        $adminName = $admin ? $admin->name : 'System';
+
+        ActivityLog::create([
+            'user_id' => Auth::id(),
+            'type' => 'project',
+            'action' => 'updated',
+            'description' => "{$adminName} updated project: {$project->name}",
+            'related_id' => $project->id,
+            'related_type' => 'Project',
+        ]);
+
+        // Log status change separately
+        if ($oldStatus !== $project->status) {
+            ActivityLog::create([
+                'user_id' => Auth::id(),
+                'type' => 'project',
+                'action' => 'status_changed',
+                'description' => "{$adminName} changed project {$project->name} to {$project->status}",
+                'related_id' => $project->id,
+                'related_type' => 'Project',
             ]);
         }
 
@@ -170,16 +213,28 @@ class AdminProjectController extends Controller
 
     public function destroy(Project $project)
     {
-        // Optional: delete related photos from storage
+        $name = $project->name;
+        $id = $project->id;
+
         foreach ($project->photos as $photo) {
             Storage::disk('public')->delete($photo->path);
         }
 
-        // Delete related milestones
         $project->milestones()->delete();
-
-        // Delete project (will also remove photos if DB has cascade)
         $project->delete();
+
+        // Log deletion
+        $admin = Auth::user();
+        $adminName = $admin ? $admin->name : 'System';
+
+        ActivityLog::create([
+            'user_id' => Auth::id(),
+            'type' => 'project',
+            'action' => 'deleted',
+            'description' => "{$adminName} deleted project: {$name}",
+            'related_id' => $id,
+            'related_type' => 'Project',
+        ]);
 
         return response()->json([
             'message' => 'Project deleted successfully'
