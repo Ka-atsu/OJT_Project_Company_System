@@ -1,5 +1,6 @@
-import { useEffect, useMemo, useRef, useState, useCallback } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { ProjectsService } from "./projects.services";
+import { useSearchParams } from "react-router-dom";
 
 /* =========================
    Helpers
@@ -30,6 +31,11 @@ export function emptyProject() {
 ========================= */
 
 export default function useAdminProjects() {
+  /* ---------- URL State ---------- */
+
+  const [searchParams, setSearchParams] = useSearchParams();
+  const selectParam = searchParams.get("select");
+
   /* ---------- State ---------- */
 
   const [clients, setClients] = useState([]);
@@ -45,7 +51,10 @@ export default function useAdminProjects() {
   const [loading, setLoading] = useState(false);
   const [err, setErr] = useState("");
 
-  const [selectedId, setSelectedId] = useState(null);
+  const [selectedId, setSelectedId] = useState(
+    selectParam ? Number(selectParam) : null,
+  );
+
   const [isCreating, setIsCreating] = useState(false);
   const [draft, setDraft] = useState(emptyProject());
 
@@ -53,7 +62,7 @@ export default function useAdminProjects() {
 
   const abortRef = useRef(null);
 
-  /* ---------- Derived State ---------- */
+  /* ---------- Derived ---------- */
 
   const selected = useMemo(
     () => items.find((x) => x.id === selectedId) ?? null,
@@ -78,12 +87,44 @@ export default function useAdminProjects() {
      Effects
   ========================= */
 
-  // Reset page on filter change
+  // Reset page when filters change
   useEffect(() => {
     setPage(1);
   }, [status, q, sort, pageSize]);
 
-  // Fetch Clients (Single Responsibility)
+  // Sync URL → selectedId
+  useEffect(() => {
+    if (selectParam) {
+      setSelectedId(Number(selectParam));
+      setStatus("all");
+    }
+  }, [selectParam]);
+
+  // Fetch selected project directly (fix deep-link + pagination issue)
+  useEffect(() => {
+    if (!selectParam) return;
+
+    async function loadSelectedProject() {
+      try {
+        const project = await ProjectsService.get(selectParam);
+
+        setSelectedId(project.id);
+
+        // Inject into list if not already present
+        setItems((prev) => {
+          const exists = prev.find((p) => p.id === project.id);
+          if (exists) return prev;
+          return [project, ...prev];
+        });
+      } catch (e) {
+        console.error("Failed to load selected project");
+      }
+    }
+
+    loadSelectedProject();
+  }, [selectParam]);
+
+  // Fetch clients
   useEffect(() => {
     const controller = new AbortController();
 
@@ -102,7 +143,7 @@ export default function useAdminProjects() {
     return () => controller.abort();
   }, []);
 
-  // Fetch Projects
+  // Fetch projects
   useEffect(() => {
     abortRef.current?.abort?.();
     const controller = new AbortController();
@@ -111,24 +152,39 @@ export default function useAdminProjects() {
     setLoading(true);
     setErr("");
 
+    const effectiveStatus = selectParam ? "all" : status;
+
     ProjectsService.list(
-      { page, limit: pageSize, status, q, sort },
+      {
+        page,
+        limit: pageSize,
+        status: effectiveStatus,
+        q,
+        sort,
+      },
       controller.signal,
     )
       .then(({ items: nextItems, total: nextTotal }) => {
         setItems(nextItems);
         setTotal(nextTotal);
 
-        if (!isCreating && !selectedId && nextItems[0]) {
-          setSelectedId(nextItems[0].id);
+        if (!isCreating) {
+          if (selectParam) {
+            const exists = nextItems.find((p) => p.id === Number(selectParam));
+
+            if (exists) {
+              setSelectedId(Number(selectParam));
+              return;
+            }
+          }
+
+          if (!selectedId && nextItems.length > 0) {
+            setSelectedId(nextItems[0].id);
+          }
         }
       })
       .catch((e) => {
-        if (
-          e.name === "AbortError" ||
-          e.message === "canceled" ||
-          e.code === "ERR_CANCELED"
-        ) {
+        if (e.name === "AbortError" || e.code === "ERR_CANCELED") {
           return;
         }
 
@@ -137,9 +193,9 @@ export default function useAdminProjects() {
       .finally(() => setLoading(false));
 
     return () => controller.abort();
-  }, [page, pageSize, status, q, sort, isCreating]);
+  }, [page, pageSize, status, q, sort, isCreating, selectParam]);
 
-  // Sync Draft when selecting project
+  // Sync draft when selecting
   useEffect(() => {
     if (!selected || isCreating) return;
 
@@ -157,7 +213,7 @@ export default function useAdminProjects() {
   }, [selected, isCreating]);
 
   /* =========================
-     Handlers
+     Actions
   ========================= */
 
   const startCreate = () => {
@@ -183,6 +239,40 @@ export default function useAdminProjects() {
 
     setClientQuery("");
   };
+
+  /* =========================
+   Milestone Actions
+========================= */
+
+  const updateMilestones = (updater) => {
+    setDraft((prev) => {
+      const milestones = updater(prev.milestones || []);
+      return {
+        ...prev,
+        milestones,
+        progress: calcProgress(milestones),
+      };
+    });
+  };
+
+  const addMilestone = () =>
+    updateMilestones((list) => [
+      ...list,
+      {
+        id: `MS-${Date.now()}`,
+        title: "New milestone",
+        due: "",
+        status: "todo",
+      },
+    ]);
+
+  const updateMilestone = (id, patch) =>
+    updateMilestones((list) =>
+      list.map((m) => (m.id === id ? { ...m, ...patch } : m)),
+    );
+
+  const removeMilestone = (id) =>
+    updateMilestones((list) => list.filter((m) => m.id !== id));
 
   async function saveProject() {
     if (!draft.name.trim()) {
@@ -233,36 +323,6 @@ export default function useAdminProjects() {
     }
   }
 
-  const updateMilestones = (updater) => {
-    setDraft((d) => {
-      const milestones = updater(d.milestones || []);
-      return {
-        ...d,
-        milestones,
-        progress: calcProgress(milestones),
-      };
-    });
-  };
-
-  const addMilestone = () =>
-    updateMilestones((list) => [
-      ...list,
-      {
-        id: `MS-${Date.now()}`,
-        title: "New milestone",
-        due: "",
-        status: "todo",
-      },
-    ]);
-
-  const updateMilestone = (id, patch) =>
-    updateMilestones((list) =>
-      list.map((m) => (m.id === id ? { ...m, ...patch } : m)),
-    );
-
-  const removeMilestone = (id) =>
-    updateMilestones((list) => list.filter((m) => m.id !== id));
-
   /* =========================
      Return
   ========================= */
@@ -298,9 +358,6 @@ export default function useAdminProjects() {
     applyClient,
     saveProject,
     deleteProject,
-    addMilestone,
-    updateMilestone,
-    removeMilestone,
 
     setSelectedId,
     setDraft,
@@ -309,5 +366,9 @@ export default function useAdminProjects() {
     clientQuery,
     setClientQuery,
     filteredClients,
+
+    addMilestone,
+    updateMilestone,
+    removeMilestone,
   };
 }

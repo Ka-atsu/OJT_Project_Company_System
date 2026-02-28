@@ -42,6 +42,7 @@ Route::middleware(['auth:sanctum', 'admin'])->prefix('admin')->group(function ()
     // projects (admin)
     Route::get('/projects', [AdminProjectController::class, 'index']);
     Route::get('/projects/clients', [AdminProjectController::class, 'clients']); // users as clients
+    Route::get('/projects/{project}', [AdminProjectController::class, 'show']);
     Route::post('/projects', [AdminProjectController::class, 'store']);
     Route::patch('/projects/{project}', [AdminProjectController::class, 'update']);
     Route::delete('/projects/{project}', [AdminProjectController::class, 'destroy']);

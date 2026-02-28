@@ -4,6 +4,7 @@ import {
   adminListAppointments,
   adminUpdateAppointment,
 } from "./adminAppointments.service";
+import { useSearchParams } from "react-router-dom";
 
 const STATUS_OPTIONS = ["all", "pending", "accepted", "declined"];
 
@@ -42,6 +43,8 @@ function isValidUrl(value) {
 }
 
 export function useAdminAppointments() {
+  const [searchParams] = useSearchParams();
+  const selectParam = searchParams.get("select");
   const [status, setStatus] = useState("pending");
   const [q, setQ] = useState("");
   const [sort, setSort] = useState("requestedFor_asc");
@@ -102,12 +105,23 @@ export function useAdminAppointments() {
         setItems(mapped);
         setTotal(data?.total ?? 0);
 
-        if (!selectedId && mapped.length > 0) {
-          setSelectedId(mapped[0].id);
+        if (mapped.length > 0) {
+          const queryId = selectParam ? Number(selectParam) : null;
+
+          if (queryId) {
+            const exists = mapped.find((a) => a.id === queryId);
+            if (exists) {
+              setSelectedId(queryId);
+              return;
+            }
+          }
+
+          // fallback to first item
+          if (!selectedId) {
+            setSelectedId(mapped[0].id);
+          }
         }
-      })
-      .catch((e) => {
-        // ✅ Ignore canceled requests
+        // Ignore canceled requests
         if (
           axios.isCancel?.(e) ||
           e.code === "ERR_CANCELED" ||
@@ -129,7 +143,7 @@ export function useAdminAppointments() {
           setLoading(false);
         }
       });
-  }, [page, pageSize, status, q, sort, selectedId]);
+  }, [page, pageSize, status, q, sort]);
 
   // Sync selected details
   useEffect(() => {

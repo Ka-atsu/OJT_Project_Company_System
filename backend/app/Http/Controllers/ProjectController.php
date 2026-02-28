@@ -22,7 +22,7 @@ class ProjectController extends Controller
         // Allowed statuses for CLIENT
         $allowedStatuses = ['active', 'on_hold', 'completed'];
 
-        // Build base query (🚫 NEVER include draft)
+        // Build base query (NEVER include draft)
         $q = Project::query()
             ->with(['milestones', 'photos'])
             ->where('user_id', $request->user()->id)

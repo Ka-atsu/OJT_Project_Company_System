@@ -26,18 +26,25 @@ class AdminProjectController extends Controller
         );
     }
 
+    public function show(Project $project)
+    {
+        return new ProjectResource(
+            $project->load(['user', 'milestones', 'photos'])
+        );
+    }
+
     public function index(Request $request)
     {
         $page = (int) $request->query('page', 1);
         $pageSize = (int) $request->query('pageSize', 12);
-        $status = (string) $request->query('status', 'active');
+        $status = $request->query('status');
         $qText = trim((string) $request->query('q', ''));
         $sort = (string) $request->query('sort', 'due_asc');
 
         // As an admin, you want to see all projects, so remove the restriction on 'user_id'
         $q = Project::query()
             ->with(['user:id,name,email', 'milestones', 'photos'])
-            ->when($status !== 'all', fn($qq) => $qq->where('status', $status))
+            ->when($status && $status !== 'all', fn($qq) => $qq->where('status', $status))
             ->when($qText !== '', function ($qq) use ($qText) {
                 $qq->where('name', 'like', "%{$qText}%")
                     ->orWhere('id', $qText)
@@ -101,6 +108,17 @@ class AdminProjectController extends Controller
                 'due' => $m['due'] ?? null,
                 'status' => $m['status'],
             ]);
+        }
+
+        // Save uploaded photos
+        if ($request->hasFile('photos')) {
+            foreach ($request->file('photos') as $file) {
+                $path = $file->store('projects', 'public');
+
+                $project->photos()->create([
+                    'path' => $path,
+                ]);
+            }
         }
 
         $admin = Auth::user();
@@ -169,6 +187,17 @@ class AdminProjectController extends Controller
                 'due' => $m['due'] ?? null,
                 'status' => $m['status'],
             ]);
+        }
+
+        // Save newly uploaded photos
+        if ($request->hasFile('photos')) {
+            foreach ($request->file('photos') as $file) {
+                $path = $file->store('projects', 'public');
+
+                $project->photos()->create([
+                    'path' => $path,
+                ]);
+            }
         }
 
         $admin = Auth::user();

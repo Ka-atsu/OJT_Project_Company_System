@@ -137,6 +137,19 @@ export const ProjectsService = {
     }
   },
 
+  async get(id, signal) {
+    try {
+      const { data } = await api.get(
+        `${routes.projects}/${encodeURIComponent(id)}`,
+        { signal },
+      );
+
+      return data?.item ?? data?.data ?? data;
+    } catch (e) {
+      throw new Error(friendlyError(e, "Failed to load project"));
+    }
+  },
+
   async clients(signal) {
     try {
       const { data } = await api.get(routes.clients, { signal });
