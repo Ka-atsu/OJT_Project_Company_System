@@ -1,56 +1,25 @@
-import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./admin-document.css";
-import { fetchAdminClients } from "./documents.services";
+import "./skeleton.css";
+import useAdminDocuments from "./useAdminDocuments";
 
 export default function AdminDocuments() {
   const navigate = useNavigate();
+  const state = useAdminDocuments();
 
-  const [clients, setClients] = useState([]);
-  const [search, setSearch] = useState("");
-  const [page, setPage] = useState(1);
-  const limit = 10;
-
-  const [totalPages, setTotalPages] = useState(1);
-  const [total, setTotal] = useState(0);
-
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-
-  const totalDocuments = useMemo(() => {
-    return clients.reduce((sum, c) => sum + (c.documents_count ?? 0), 0);
-  }, [clients]);
-
-  const loadClients = async () => {
-    setLoading(true);
-    setError("");
-
-    try {
-      const res = await fetchAdminClients({
-        q: search,
-        page,
-        limit,
-      });
-
-      setClients(Array.isArray(res?.data) ? res.data : []);
-      setTotalPages(Number(res?.totalPages ?? 1));
-      setTotal(Number(res?.total ?? 0));
-    } catch (e) {
-      setClients([]);
-      setTotalPages(1);
-      setTotal(0);
-      setError(
-        e?.response?.data?.message || e?.message || "Failed to load clients.",
-      );
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    loadClients();
-    // eslint-disable-next-line
-  }, [search, page]);
+  const {
+    clients,
+    search,
+    setSearch,
+    page,
+    setPage,
+    totalPages,
+    total,
+    loading,
+    error,
+    totalDocuments,
+    loadClients,
+  } = state;
 
   const handleClientClick = (clientId) => {
     navigate(`/w/admin/clientDocuments/${clientId}`);
@@ -81,7 +50,36 @@ export default function AdminDocuments() {
       </div>
 
       <div className="content-card">
-        {loading && <div className="empty-state">Loading clients…</div>}
+        {loading && (
+          <table className="client-table">
+            <thead>
+              <tr>
+                <th>Client</th>
+                <th>ID</th>
+                <th>Documents</th>
+                <th className="th-action">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {Array.from({ length: 6 }).map((_, i) => (
+                <tr key={i} className="client-row-skeleton">
+                  <td>
+                    <div className="skel skel-name" />
+                  </td>
+                  <td>
+                    <div className="skel skel-id" />
+                  </td>
+                  <td>
+                    <div className="skel skel-count" />
+                  </td>
+                  <td>
+                    <div className="skel skel-view" />
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
 
         {error && !loading && (
           <div className="empty-state">

@@ -1,3 +1,4 @@
+/* client-document.css */
 /* =========================================================
    DOCUMENTS — PAGE ONLY (matches your dash theme)
 ========================================================= */
@@ -39,7 +40,7 @@
   min-width: 260px;
   flex: 1;
   max-width: 420px;
-    box-shadow:
+  box-shadow:
     0 4px 10px rgba(0, 0, 0, 0.05),
     0 18px 40px rgba(0, 0, 0, 0.06);
 }
@@ -95,7 +96,7 @@
   border: 1px solid rgba(0, 0, 0, 0.08);
   border-radius: 12px;
   overflow: hidden;
-    box-shadow:
+  box-shadow:
     0 4px 10px rgba(0, 0, 0, 0.05),
     0 18px 40px rgba(0, 0, 0, 0.06);
 }
@@ -198,8 +199,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: 
-    background 0.2s ease, 
+  transition:
+    background 0.2s ease,
     color 0.2s ease,
     transform 0.15s ease,
     box-shadow 0.2s ease;
@@ -261,10 +262,10 @@
 /* buttons uplaod adn update */
 /* Container for the buttons */
 .docs-btn-group {
-  display: flex;            /* horizontal alignment */
-  gap: 0.75rem;             /* space between buttons */
+  display: flex; /* horizontal alignment */
+  gap: 0.75rem; /* space between buttons */
   justify-content: flex-end; /* push the whole group to the right */
-  padding: 1rem;            /* optional spacing around the buttons */
+  padding: 1rem; /* optional spacing around the buttons */
   background-color: #f9fafb;
 }
 
@@ -279,7 +280,10 @@
   font-weight: 600;
   font-size: 0.85rem;
   cursor: pointer;
-  transition: background 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+  transition:
+    background 0.2s ease,
+    transform 0.15s ease,
+    box-shadow 0.2s ease;
 }
 
 .docs-upload-button:hover,
@@ -295,7 +299,6 @@
   cursor: not-allowed;
   box-shadow: none;
 }
-
 
 /* for upload modal */
 .upload-modal-overlay {
@@ -363,4 +366,41 @@
 
 .btn-back:focus {
   outline: none;
+}
+
+/* =========================================
+   DOCUMENT LIST SKELETON
+========================================= */
+
+.docs-row-skeleton {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+
+  padding: 0.9rem 1rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.skel-badge {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+}
+
+.skel-file-name {
+  height: 14px;
+  width: 180px;
+}
+
+.skel-file-sub {
+  height: 10px;
+  width: 140px;
+  margin-top: 6px;
+}
+
+.skel-action {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
 }

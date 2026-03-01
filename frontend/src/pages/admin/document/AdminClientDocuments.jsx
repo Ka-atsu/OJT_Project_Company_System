@@ -1,205 +1,64 @@
-import { useEffect, useMemo, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
 import Select from "react-select";
 import "./client-documents.css";
-
-import {
-  DOC_TYPES_ALL,
-  DATE_RANGES,
-  toOptions,
-  fetchClientDocumentsAdmin,
-  uploadAdminDocument,
-  deleteAdminDocument,
-} from "./documents.services";
+import "./skeleton.css";
+import useAdminClientDocuments from "./useAdminClientDocuments";
 
 export default function AdminClientDocuments() {
-  const { clientId } = useParams();
-  const navigate = useNavigate();  
-  const [q, setQ] = useState("");
-  const [type, setType] = useState("All Types");
-  const [dateRange, setDateRange] = useState("All Time");
-  const [sort, setSort] = useState("newest");
+  const state = useAdminClientDocuments();
 
-  const [page, setPage] = useState(1);
-  const limit = 6;
+  const {
+    navigate,
+    q,
+    setQ,
+    docs,
+    loading,
+    error,
+    page,
+    setPage,
+    totalPages,
+    total,
 
-  const [docs, setDocs] = useState([]);
-  const [totalPages, setTotalPages] = useState(1);
-  const [total, setTotal] = useState(0);
+    // filters
+    typeOptions,
+    typeValue,
+    setType,
+    toggleSort,
+    sort,
+    dateOptions,
+    dateValue,
+    setDateRange,
 
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+    // refresh
+    handleUpdate,
+    loadDocs,
 
-  // manual refresh trigger (Update button)
-  const [refreshKey, setRefreshKey] = useState(0);
+    // upload
+    uploading,
+    handleOpenUploadModal,
+    handleFileChange,
+    showUploadModal,
+    selectedUploadType,
+    setSelectedUploadType,
+    selectedFile,
+    isPdfUploaded,
+    handleUploadSubmit,
+    closeUploadModal,
 
-  const typeOptions = useMemo(() => toOptions(DOC_TYPES_ALL), []);
-  const dateOptions = useMemo(() => toOptions(DATE_RANGES), []);
-
-  const [uploading, setUploading] = useState(false);
-
-  const [showUploadModal, setShowUploadModal] = useState(false);
-  const [selectedUploadType, setSelectedUploadType] = useState("Contract");
-  const [selectedFile, setSelectedFile] = useState(null);
-
-  const [isPdfUploaded, setIsPdfUploaded] = useState(false);
-
-  const handleOpenUploadModal = () => {
-    setShowUploadModal(true);
-    setIsPdfUploaded(false);
-  };
-
-
-  const typeValue = useMemo(
-    () => typeOptions.find((o) => o.value === type) || typeOptions[0],
-    [typeOptions, type],
-  );
-
-  const dateValue = useMemo(
-    () => dateOptions.find((o) => o.value === dateRange) || dateOptions[0],
-    [dateOptions, dateRange],
-  );
-
-  const loadDocs = async () => {
-    if (!clientId) return;
-
-    setLoading(true);
-    setError("");
-
-    try {
-      const res = await fetchClientDocumentsAdmin(clientId, {
-        q,
-        type,
-        dateRange,
-        sort,
-        page,
-        limit,
-      });
-
-      setDocs(Array.isArray(res?.data) ? res.data : []);
-      setTotalPages(Number(res?.totalPages ?? 1));
-      setTotal(Number(res?.total ?? 0));
-
-      if (res?.page && Number(res.page) !== page) {
-        setPage(Number(res.page));
-      }
-    } catch (e) {
-      setDocs([]);
-      setTotalPages(1);
-      setTotal(0);
-      setError(
-        e?.response?.data?.message || e?.message || "Failed to load documents.",
-      );
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    loadDocs();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [clientId, q, type, dateRange, sort, page, limit, refreshKey]);
-
-  const toggleSort = () => {
-    setSort((s) => (s === "newest" ? "oldest" : "newest"));
-    setPage(1);
-  };
-
-  // Update button = refetch
-  const handleUpdate = () => setRefreshKey((x) => x + 1);
-
-  const onView = (doc) => {
-    if (!doc?.fileUrl) return;
-    window.open(doc.fileUrl, "_blank", "noopener,noreferrer");
-  };
-
-  const onDownload = (doc) => {
-    if (!doc?.fileUrl) return;
-    const a = document.createElement("a");
-    a.href = doc.fileUrl;
-    a.download = doc.name || "";
-    a.rel = "noopener";
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-  };
-
-  const onDelete = async (doc) => {
-    if (!doc?.id) return;
-
-    const ok = window.confirm(`Delete "${doc.name}"?`);
-    if (!ok) return;
-
-    setError("");
-
-    try {
-      await deleteAdminDocument(doc.id);
-
-      // refresh list
-      setRefreshKey((x) => x + 1);
-    } catch (err) {
-      setError(
-        err?.response?.data?.message || err?.message || "Delete failed.",
-      );
-    }
-  };
-
-  const handleFileChange = (e) => {
-    const file = e.target.files?.[0];
-    if (!file) {
-      setIsPdfUploaded(false) 
-      return;
-    }
-
-    if (file.type !== "application/pdf") {
-      setError("Only PDF files are accepted.");
-      return;
-    }
-    setIsPdfUploaded(true);
-    setSelectedFile(file);
-  };
-
-  const handleUploadSubmit = async () => {
-    if (!selectedFile) {
-      setError("Please select a PDF file.");
-      return;
-    }
-
-    setUploading(true);
-    setError("");
-
-    try {
-      const fd = new FormData();
-      fd.append("user_id", clientId);
-      fd.append("type", selectedUploadType);
-      fd.append("document_date", new Date().toISOString());
-      fd.append("shared_by", "Admin");
-      fd.append("file", selectedFile);
-
-      await uploadAdminDocument(fd);
-
-      setShowUploadModal(false);
-      setSelectedFile(null);
-      setSelectedUploadType("Contract");
-      setPage(1);
-      setRefreshKey((x) => x + 1);
-    } catch (err) {
-      setError(
-        err?.response?.data?.message || err?.message || "Upload failed."
-      );
-    } finally {
-      setUploading(false);
-    }
-  };
+    // actions
+    onView,
+    onDownload,
+    onDelete,
+  } = state;
 
   return (
     <section className="docs-page">
-      <button className="btn-back"
+      <button
+        className="btn-back"
         onClick={() => navigate("/w/admin/document")}
-       >
+      >
         ← Back
       </button>
-      
+
       <header className="docs-header">
         <h1 className="dash-title">Documents</h1>
         <p className="dash-subtitle">View documents for this client.</p>
@@ -223,7 +82,7 @@ export default function AdminClientDocuments() {
         <div className="docs-btn-group">
           <div
             className="docs-upload-button"
-            onClick={handleOpenUploadModal }
+            onClick={handleOpenUploadModal}
             style={{
               opacity: uploading ? 0.6 : 1,
               pointerEvents: uploading ? "none" : "auto",
@@ -305,7 +164,25 @@ export default function AdminClientDocuments() {
         ) : null}
 
         {loading ? (
-          <div className="docs-empty">Loading documents…</div>
+          <div className="docs-list">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <div key={i} className="docs-row-skeleton">
+                <div className="docs-file">
+                  <div className="skel skel-badge" />
+                  <div>
+                    <div className="skel skel-file-name" />
+                    <div className="skel skel-file-sub" />
+                  </div>
+                </div>
+
+                <div className="docs-actions">
+                  <div className="skel skel-action" />
+                  <div className="skel skel-action" />
+                  <div className="skel skel-action" />
+                </div>
+              </div>
+            ))}
+          </div>
         ) : docs.length === 0 ? (
           <div className="docs-empty">No documents found.</div>
         ) : (
@@ -409,8 +286,8 @@ export default function AdminClientDocuments() {
             <div className="upload-field">
               <label>Document Type</label>
               <Select
-                options={typeOptions.filter(o => o.value !== "All Types")}
-                value={typeOptions.find(o => o.value === selectedUploadType)}
+                options={typeOptions.filter((o) => o.value !== "All Types")}
+                value={typeOptions.find((o) => o.value === selectedUploadType)}
                 onChange={(opt) => setSelectedUploadType(opt.value)}
                 isSearchable={false}
               />
@@ -418,24 +295,19 @@ export default function AdminClientDocuments() {
 
             <div className="upload-field">
               <label>Select File</label>
-              <input
-                type="file"
-                accept=".pdf"
-                onChange={handleFileChange}
-              />
+              <input type="file" accept=".pdf" onChange={handleFileChange} />
 
               {!isPdfUploaded && (
                 <small style={{ color: "red" }}>
                   Only PDF files are accepted. Other file types are not allowed.
                 </small>
               )}
-            
             </div>
 
             <div className="upload-actions">
               <button
                 className="dash-btn ghost"
-                onClick={() => setShowUploadModal(false)}
+                onClick={closeUploadModal}
                 disabled={uploading}
               >
                 Cancel
@@ -452,7 +324,6 @@ export default function AdminClientDocuments() {
           </div>
         </div>
       )}
-
     </section>
   );
 }
