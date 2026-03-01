@@ -1,10 +1,16 @@
 import "./admin-projects.css";
-import useAdminProjects from "./useAdminProjects"; // The hook that manages project state
+import useAdminProjects from "./useAdminProjects";
 import AdminProjectsList from "./adminProjectsList";
 import ProjectDetails from "./ProjectDetails";
 
 export default function AdminProjects() {
-  const state = useAdminProjects(); // Hook that manages all the project-related states
+  const state = useAdminProjects();
+
+  // Ensure items is null during first load
+  const safeState = {
+    ...state,
+    items: state.items === undefined ? null : state.items,
+  };
 
   return (
     <div className="ap">
@@ -18,14 +24,13 @@ export default function AdminProjects() {
       </header>
 
       <main className="ap-grid">
-        {/* Pass onNew to AdminProjectsList to trigger new project creation */}
         <AdminProjectsList
-          {...state} // Spread the state to pass necessary values and handlers
-          onNew={state.startCreate} // Call startCreate from useAdminProjects directly
-          onSelect={state.setSelectedId} // Select a project by updating selectedId
+          {...safeState}
+          onNew={state.startCreate}
+          onSelect={state.setSelectedId}
         />
-        {/* Pass the same state to ProjectDetails to display details or new project form */}
-        <ProjectDetails {...state} />
+
+        <ProjectDetails {...safeState} />
       </main>
     </div>
   );

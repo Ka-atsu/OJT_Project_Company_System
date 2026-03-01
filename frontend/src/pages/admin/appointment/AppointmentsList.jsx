@@ -105,7 +105,21 @@ export default function AppointmentsList({
 
       <div className="aa-list">
         {loading ? (
-          <div className="aa-empty">Loading appointments…</div>
+          <>
+            {Array.from({ length: 6 }).map((_, i) => (
+              <div key={i} className="aa-item">
+                <div className="aa-item__top">
+                  <div className="aa-skel aa-skel-title" />
+                  <div className="aa-skel aa-skel-badge" />
+                </div>
+
+                <div className="aa-item__bottom">
+                  <div className="aa-skel aa-skel-small" />
+                  <div className="aa-skel aa-skel-line" />
+                </div>
+              </div>
+            ))}
+          </>
         ) : items.length === 0 ? (
           <div className="aa-empty">No results.</div>
         ) : (

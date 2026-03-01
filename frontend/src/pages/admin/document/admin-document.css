@@ -1,3 +1,4 @@
+/* admin-doment.css */
 .admin-documents {
   width: 100%;
   padding: 28px 40px;
@@ -159,4 +160,33 @@
   color: #111827;
   cursor: pointer;
   font-weight: 500;
+}
+
+/* =========================================
+   CLIENT TABLE SKELETON
+========================================= */
+
+.client-row-skeleton td {
+  padding: 16px;
+}
+
+.skel-name {
+  height: 14px;
+  width: 60%;
+}
+
+.skel-id {
+  height: 12px;
+  width: 40%;
+}
+
+.skel-count {
+  height: 14px;
+  width: 30px;
+}
+
+.skel-view {
+  height: 28px;
+  width: 60px;
+  border-radius: 6px;
 }

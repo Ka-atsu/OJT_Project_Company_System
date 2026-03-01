@@ -31,7 +31,39 @@ export default function AppointmentDetails({
   reject,
   reschedule,
   successMessage,
+  loading,
 }) {
+  if (loading) {
+    return (
+      <section className="aa-card">
+        <div className="aa-card__header">
+          <div className="aa-skel aa-skel-title" style={{ width: 120 }} />
+          <div className="aa-skel aa-skel-small" style={{ width: 80 }} />
+        </div>
+
+        <div className="aa-details">
+          <div className="aa-block">
+            <div className="aa-skel aa-skel-title" />
+            <div className="aa-skel aa-skel-small" />
+          </div>
+
+          <div className="aa-block">
+            <div className="aa-skel aa-skel-line" />
+            <div className="aa-skel aa-skel-line" />
+            <div className="aa-skel aa-skel-line" />
+          </div>
+
+          <div className="aa-block">
+            <div className="aa-actions">
+              <div className="aa-skel aa-skel-btn" />
+              <div className="aa-skel aa-skel-btn" />
+              <div className="aa-skel aa-skel-btn" />
+            </div>
+          </div>
+        </div>
+      </section>
+    );
+  }
   if (!selected) {
     return (
       <section className="aa-card">
