@@ -39,7 +39,8 @@ export default function useAdminProjects() {
   /* ---------- State ---------- */
 
   const [clients, setClients] = useState([]);
-  const [items, setItems] = useState([]);
+  const [items, setItems] = useState(null); // null = not loaded yet
+  const [loading, setLoading] = useState(true); // start true for first load
   const [total, setTotal] = useState(0);
 
   const [status, setStatus] = useState("active");
@@ -48,7 +49,6 @@ export default function useAdminProjects() {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(12);
 
-  const [loading, setLoading] = useState(false);
   const [err, setErr] = useState("");
 
   const [selectedId, setSelectedId] = useState(
@@ -64,10 +64,10 @@ export default function useAdminProjects() {
 
   /* ---------- Derived ---------- */
 
-  const selected = useMemo(
-    () => items.find((x) => x.id === selectedId) ?? null,
-    [items, selectedId],
-  );
+  const selected = useMemo(() => {
+    if (!items) return null;
+    return items.find((x) => x.id === selectedId) ?? null;
+  }, [items, selectedId]);
 
   const pageCount = Math.max(1, Math.ceil(total / pageSize));
   const from = total ? (page - 1) * pageSize + 1 : 0;
@@ -112,6 +112,7 @@ export default function useAdminProjects() {
 
         // Inject into list if not already present
         setItems((prev) => {
+          if (!prev) return [project];
           const exists = prev.find((p) => p.id === project.id);
           if (exists) return prev;
           return [project, ...prev];
@@ -165,7 +166,7 @@ export default function useAdminProjects() {
       controller.signal,
     )
       .then(({ items: nextItems, total: nextTotal }) => {
-        setItems(nextItems);
+        setItems(nextItems ?? []);
         setTotal(nextTotal);
 
         if (!isCreating) {
@@ -224,7 +225,7 @@ export default function useAdminProjects() {
 
   const cancelCreate = () => {
     setIsCreating(false);
-    if (items[0]) setSelectedId(items[0].id);
+    if (items && items[0]) setSelectedId(items[0].id);
   };
 
   const applyClient = (clientId) => {

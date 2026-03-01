@@ -20,17 +20,26 @@ export default function AdminProjectsList({
   pageCount,
   onPrev,
   onNext,
-  onNew, // Passed from parent (AdminProjects)
-  onSelect, // Passed from parent (AdminProjects)
-  selectedId, // Passed from parent (AdminProjects)
+  onNew,
+  onSelect,
+  selectedId,
 }) {
+  const isInitialLoading = items === null;
+
   return (
     <section className="ap-card">
       <div className="ap-card__header">
         <div>
           <h2 className="ap-card__title">Projects</h2>
           <div className="ap-card__meta">
-            {loading ? "Loading…" : `Showing ${from}–${to} of ${total}`}
+            {isInitialLoading ? (
+              <div
+                className="ap-skeleton ap-skel-text"
+                style={{ width: 120 }}
+              />
+            ) : (
+              `Showing ${from}–${to} of ${total}`
+            )}
           </div>
         </div>
 
@@ -44,7 +53,7 @@ export default function AdminProjectsList({
         </button>
       </div>
 
-      {/* Filters and search */}
+      {/* Filters */}
       <div className="ap-toolbar">
         <Field label="Status">
           <select
@@ -53,7 +62,6 @@ export default function AdminProjectsList({
             disabled={loading}
           >
             <option value="all">All</option>
-
             {Object.entries(PSTATUS).map(([value, label]) => (
               <option key={value} value={value}>
                 {label}
@@ -95,10 +103,33 @@ export default function AdminProjectsList({
         </Field>
       </div>
 
-      {/* Project list rendering */}
+      {/* Project List */}
       <div className="ap-list">
-        {loading ? (
-          <div className="ap-empty">Loading projects…</div>
+        {isInitialLoading ? (
+          // Skeleton
+          Array.from({ length: 6 }).map((_, i) => (
+            <div key={i} className="ap-item">
+              <div className="ap-item__top">
+                <div className="ap-skeleton ap-skel-title" />
+                <div className="ap-skeleton ap-skel-badge" />
+              </div>
+
+              <div style={{ marginTop: 8 }}>
+                <div
+                  className="ap-skeleton ap-skel-text"
+                  style={{ width: "50%" }}
+                />
+              </div>
+
+              <div className="ap-item__bottom">
+                <div className="ap-skeleton ap-skel-line" />
+              </div>
+
+              <div className="ap-progress" style={{ marginTop: 10 }}>
+                <div className="ap-skeleton ap-skel-progress" />
+              </div>
+            </div>
+          ))
         ) : items.length === 0 ? (
           <div className="ap-empty">No results.</div>
         ) : (
@@ -106,7 +137,7 @@ export default function AdminProjectsList({
             <button
               key={p.id}
               className={`ap-item ${p.id === selectedId ? "is-active" : ""}`}
-              onClick={() => onSelect(p.id)} // Trigger onSelect when clicked
+              onClick={() => onSelect(p.id)}
               type="button"
             >
               <div className="ap-item__top">

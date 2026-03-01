@@ -308,7 +308,7 @@
 .aa-btn[disabled] {
   opacity: 0.5;
   cursor: not-allowed;
-  pointer-events: none; /* 🔥 prevents hover */
+  pointer-events: none; /* prevents hover */
   transform: none; /* stops lift animation */
 }
 
@@ -426,4 +426,64 @@
   margin-bottom: 12px;
   font-weight: 500;
   border: 1px solid #b7e4c7;
+}
+
+/* =========================================
+   SKELETON SYSTEM
+========================================= */
+
+.aa-skel {
+  position: relative;
+  overflow: hidden;
+  background: rgba(0, 0, 0, 0.08);
+  border-radius: 8px;
+}
+
+.aa-skel::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.6),
+    transparent
+  );
+  animation: aa-shimmer 1.2s infinite;
+}
+
+@keyframes aa-shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* Variants */
+
+.aa-skel-title {
+  height: 14px;
+  width: 60%;
+}
+
+.aa-skel-line {
+  height: 10px;
+  width: 100%;
+}
+
+.aa-skel-small {
+  height: 10px;
+  width: 40%;
+}
+
+.aa-skel-badge {
+  height: 22px;
+  width: 70px;
+  border-radius: 999px;
+}
+
+.aa-skel-btn {
+  height: 38px;
+  width: 100px;
+  border-radius: 12px;
 }
