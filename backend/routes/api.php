@@ -13,6 +13,9 @@ use App\Http\Controllers\Admin\AdminDocumentController;
 use App\Http\Controllers\Admin\AdminProjectController;
 use App\Http\Controllers\Admin\AdminDashboardController;
 
+use App\Http\Controllers\ContactController;
+
+Route::post('/contact', [ContactController::class, 'send']);
 Route::get('/projects/showcase', [PublicProjectController::class, 'showcase']);
 
 Route::middleware('auth:sanctum')->get('/user', fn(Request $request) => $request->user());
