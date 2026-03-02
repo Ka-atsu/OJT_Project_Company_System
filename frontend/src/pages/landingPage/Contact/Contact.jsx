@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from "react";
+import { useRef } from "react";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Alert from "react-bootstrap/Alert";
@@ -8,88 +8,22 @@ import Accordion from "react-bootstrap/Accordion";
 import ReCAPTCHA from "react-google-recaptcha";
 import "./contact.css";
 import { RECAPTCHA_SITE_KEY } from "../../../api/publicApiKey";
+import useContactForm from "./useContactForm";
+import { FAQS } from "./faqData";
 
 export default function Contact() {
   const formSectionRef = useRef(null);
-  const captchaRef = useRef(null);
 
-  const recaptchaKey = RECAPTCHA_SITE_KEY;
-
-  const [form, setForm] = useState({
-    name: "",
-    email: "",
-    location: "",
-    subject: "",
-    message: "",
-  });
-
-  const [errors, setErrors] = useState({});
-  const [status, setStatus] = useState({ type: "", msg: "" });
-  const [loading, setLoading] = useState(false);
-  const [captcha, setCaptcha] = useState(null);
-
-  const FAQS = useMemo(
-    () => [
-      {
-        q: "What services do you offer?",
-        a: "We design and build modern, high-performing websites, landing pages, and UI systems—optimized for speed, clarity, and conversion.",
-      },
-      {
-        q: "How do projects start?",
-        a: "We begin with your goals, scope, and timeline. Then we confirm requirements and move into design + build with weekly check-ins.",
-      },
-      {
-        q: "How long is delivery?",
-        a: "Most small sites finish in 1–2 weeks. Larger builds typically take 2–4 weeks depending on scope and revisions.",
-      },
-      {
-        q: "Do you offer support after launch?",
-        a: "Yes—handover docs, small fixes, and ongoing improvements are available depending on your needs.",
-      },
-    ],
-    [],
-  );
-
-  const validate = () => {
-    const e = {};
-    if (!form.name.trim()) e.name = "Name is required.";
-    if (!form.email.trim()) e.email = "Email is required.";
-    else if (!/^\S+@\S+\.\S+$/.test(form.email))
-      e.email = "Enter a valid email.";
-    if (!form.subject.trim()) e.subject = "Subject is required.";
-    if (!form.message.trim()) e.message = "Message is required.";
-    if (!captcha) e.captcha = "Please verify that you are not a robot.";
-    return e;
-  };
-
-  const handleChange = (evt) => {
-    const { name, value } = evt.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleSubmit = async (evt) => {
-    evt.preventDefault();
-    setStatus({ type: "", msg: "" });
-
-    const e = validate();
-    setErrors(e);
-    if (Object.keys(e).length > 0) return;
-
-    setLoading(true);
-    try {
-      // Replace this with your real API call
-      await new Promise((r) => setTimeout(r, 800));
-
-      setStatus({ type: "success", msg: "Message sent successfully!" });
-      setForm({ name: "", email: "", location: "", subject: "", message: "" });
-      setCaptcha(null);
-      captchaRef.current?.reset?.();
-    } catch {
-      setStatus({ type: "danger", msg: "Something went wrong. Try again." });
-    } finally {
-      setLoading(false);
-    }
-  };
+  const {
+    form,
+    errors,
+    status,
+    loading,
+    captchaRef,
+    setCaptcha,
+    handleChange,
+    handleSubmit,
+  } = useContactForm();
 
   return (
     <div className="contact-page p-0">
@@ -114,7 +48,7 @@ export default function Contact() {
                 <Button
                   variant="light"
                   onClick={() =>
-                    formSectionRef.current.scrollIntoView({
+                    formSectionRef.current?.scrollIntoView({
                       behavior: "smooth",
                     })
                   }
@@ -127,7 +61,7 @@ export default function Contact() {
         </div>
       </section>
 
-      {/* FORM */}
+      {/* FORM SECTION */}
       <section
         ref={formSectionRef}
         className="contact-section"
@@ -140,8 +74,8 @@ export default function Contact() {
             possible.
           </p>
 
-          {/* CONTACT FORM & FAQ GRID */}
           <div className="contact-form-wrap">
+            {/* FORM */}
             <div className="contact-form-box">
               <div className="contact-form-head">
                 <p className="title">Contact us</p>
@@ -152,6 +86,7 @@ export default function Contact() {
 
               <Form onSubmit={handleSubmit}>
                 <Row className="g-3">
+                  {/* Name */}
                   <Col xs={12} md={6}>
                     <Form.Group>
                       <Form.Label>Name</Form.Label>
@@ -168,6 +103,7 @@ export default function Contact() {
                     </Form.Group>
                   </Col>
 
+                  {/* Email */}
                   <Col xs={12} md={6}>
                     <Form.Group>
                       <Form.Label>Email</Form.Label>
@@ -185,6 +121,7 @@ export default function Contact() {
                     </Form.Group>
                   </Col>
 
+                  {/* Subject */}
                   <Col xs={12}>
                     <Form.Group>
                       <Form.Label>Subject</Form.Label>
@@ -201,6 +138,7 @@ export default function Contact() {
                     </Form.Group>
                   </Col>
 
+                  {/* Message */}
                   <Col xs={12}>
                     <Form.Group>
                       <Form.Label>Message</Form.Label>
@@ -219,12 +157,13 @@ export default function Contact() {
                     </Form.Group>
                   </Col>
 
+                  {/* ReCAPTCHA */}
                   <Col xs={12}>
                     <Form.Group>
                       <ReCAPTCHA
                         ref={captchaRef}
-                        sitekey={recaptchaKey}
-                        onChange={(value) => setCaptcha(value)}
+                        sitekey={RECAPTCHA_SITE_KEY}
+                        onChange={setCaptcha}
                       />
                       {errors.captcha && (
                         <div className="text-danger mt-1 small">
@@ -243,7 +182,7 @@ export default function Contact() {
               </Form>
             </div>
 
-            {/* FAQ Section (on right side) */}
+            {/* FAQ SECTION */}
             <div className="contact-faq">
               <h2 className="contact-section-title">
                 Frequently asked questions
@@ -252,7 +191,7 @@ export default function Contact() {
                 Quick answers to common questions.
               </p>
 
-              <Accordion className="contact-faq" defaultActiveKey="0">
+              <Accordion defaultActiveKey="0">
                 {FAQS.map((item, idx) => (
                   <Accordion.Item eventKey={String(idx)} key={item.q}>
                     <Accordion.Header>{item.q}</Accordion.Header>
