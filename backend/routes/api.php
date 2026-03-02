@@ -6,11 +6,14 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\PublicProjectController;
 
 use App\Http\Controllers\Admin\AdminAppointmentController;
 use App\Http\Controllers\Admin\AdminDocumentController;
 use App\Http\Controllers\Admin\AdminProjectController;
 use App\Http\Controllers\Admin\AdminDashboardController;
+
+Route::get('/projects/showcase', [PublicProjectController::class, 'showcase']);
 
 Route::middleware('auth:sanctum')->get('/user', fn(Request $request) => $request->user());
 

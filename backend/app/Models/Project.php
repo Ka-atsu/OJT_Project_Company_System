@@ -17,6 +17,7 @@ class Project extends Model
         'budget',
         'progress',
         'description',
+        'showcase',
     ];
 
     protected $casts = [
@@ -25,6 +26,7 @@ class Project extends Model
         'completed_date' => 'date',
         'budget' => 'int',
         'progress' => 'int',
+        'showcase' => 'boolean',
     ];
 
     public function user()

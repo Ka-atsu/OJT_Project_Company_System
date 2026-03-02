@@ -168,55 +168,128 @@
 }
 
 /* Milestones */
-.ap-milestones {
-  position: relative;
+/* Container */
+.ms-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
 }
 
-.ap-ms {
-  border-radius: 14px;
-  padding: 14px;
+/* Card */
+.ms-card {
+  display: flex;
+  gap: 14px;
+  padding: 16px;
+  border-radius: 16px;
   background: #ffffff;
-  border: 1px solid #f1f1f1;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
-  transition: transform 0.15s ease;
+  border: 1px solid #ececec;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.04);
+  transition: 0.2s ease;
 }
 
-.ap-ms:hover {
-  transform: translateY(-2px);
+.ms-card:hover {
+  transform: translateY(-3px);
 }
 
-.ap-ms__row {
+/* Left index circle */
+.ms-index {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #f4f4f4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+}
+
+/* Body */
+.ms-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Top row */
+.ms-top {
   display: grid;
-  grid-template-columns: 1fr 140px 32px;
+  grid-template-columns: 1fr 150px 36px;
   gap: 10px;
   align-items: center;
 }
 
-.ap-ms__row--meta {
-  grid-template-columns: 40px 1fr auto;
+/* Title */
+.ms-title {
+  border: none;
+  font-size: 15px;
+  font-weight: 500;
+  background: transparent;
+  outline: none;
 }
 
-.ap-ms__title,
-.ap-ms__status {
-  border: 1px solid var(--aa-border);
+/* Status */
+.ms-status {
   border-radius: 10px;
-  padding: 8px 10px;
-  background: transparent;
-  color: inherit;
+  border: 1px solid #ddd;
+  padding: 6px 8px;
+  background: #fafafa;
 }
 
-.ap-ms__del {
-  border: 1px solid var(--aa-border);
-  border-radius: 10px;
+/* Delete */
+.ms-delete {
+  border: none;
   background: transparent;
+  font-size: 16px;
   cursor: pointer;
-  height: 36px;
+  opacity: 0.6;
+}
+
+.ms-delete:hover {
+  opacity: 1;
+}
+
+/* Meta row */
+.ms-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Status label */
+.ms-label {
+  font-size: 13px;
+  font-weight: 500;
+  opacity: 0.7;
+}
+
+/* Status color accents */
+.ms--done {
+  border-left: 4px solid #22c55e;
+}
+
+.ms--doing {
+  border-left: 4px solid #3b82f6;
+}
+
+.ms--todo {
+  border-left: 4px solid #9ca3af;
+}
+
+/* Progress bar */
+.ap-progress {
+  height: 6px;
+  background: #e5e7eb;
+  border-radius: 999px;
+  overflow: hidden;
+  margin-top: 12px;
 }
 
 .ap-progress__bar {
   height: 100%;
-  background: rgba(0, 0, 0, 0.35);
+  background: #3b82f6; /* blue */
   border-radius: 999px;
+  transition: width 0.3s ease;
 }
 
 /* Forms & Fields */

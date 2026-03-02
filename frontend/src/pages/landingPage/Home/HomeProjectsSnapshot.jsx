@@ -1,34 +1,20 @@
 import { motion } from "framer-motion";
-import { PROJECTS } from "../Projects/projects.data";
+import { useShowcaseProjects } from "../Projects/useShowcaseProjects";
 import { fadeUpItem, revealStagger } from "./home.motion";
 
 function ProjectCard({ project }) {
-  const cover = project.images?.[0];
+  const cover = project.photos?.[0]?.url || "/placeholder.jpg";
 
   return (
-    <motion.article
-      className="home-project-card"
-      variants={fadeUpItem}
-    >
+    <motion.article className="home-project-card" variants={fadeUpItem}>
       <div className="home-project-media">
-        <img
-          src={cover}
-          alt={project.title}
-          loading="lazy"
-          draggable={false}
-        />
+        <img src={cover} alt={project.name} loading="lazy" draggable={false} />
 
-        {/* Dark Gradient */}
         <div className="home-project-overlay" />
 
-        {/* Content */}
         <div className="home-project-content">
-          <h3 className="home-project-title">
-            {project.title}
-          </h3>
-          <p className="home-project-location">
-            {project.location}
-          </p>
+          <h3 className="home-project-title">{project.name}</h3>
+          <p className="home-project-location">{project.address}</p>
         </div>
       </div>
     </motion.article>
@@ -36,7 +22,9 @@ function ProjectCard({ project }) {
 }
 
 export default function HomeProjectsSnapshot() {
-  const featured = PROJECTS.featured;
+  const { projects, loading } = useShowcaseProjects();
+
+  if (loading) return null;
 
   return (
     <motion.div
@@ -46,11 +34,8 @@ export default function HomeProjectsSnapshot() {
       whileInView="visible"
       viewport={{ once: true, amount: 0.3 }}
     >
-      {featured.items.slice(0, 3).map((project) => (
-        <ProjectCard
-          key={project.title}
-          project={project}
-        />
+      {projects.slice(0, 3).map((project) => (
+        <ProjectCard key={project.id} project={project} />
       ))}
     </motion.div>
   );

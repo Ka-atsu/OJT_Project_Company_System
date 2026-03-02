@@ -1,14 +1,14 @@
-// Projects.jsx
+import { useShowcaseProjects } from "./useShowcaseProjects";
 import PageShell from "../../../components/layouts/PageShell";
-import "./projects.css";
-import { PROJECTS } from "./projects.data";
-
+import { PROJECTS_CONTENT } from "./projects.content";
 import ProjectsHero from "./ProjectsHero";
 import ProjectsInfo from "./ProjectsInfo";
 import FeaturedProjects from "./FeaturedProjects";
+import "./projects.css";
 
 export default function Projects() {
-  const { hero, stats, deliver, featured } = PROJECTS;
+  const { hero, stats, deliver, featured } = PROJECTS_CONTENT;
+  const { projects, loading } = useShowcaseProjects();
 
   return (
     <>
@@ -16,8 +16,13 @@ export default function Projects() {
 
       <PageShell>
         <ProjectsInfo hero={hero} stats={stats} deliver={deliver} />
-        <h1>for now the data is not connected to the database</h1>
-        <FeaturedProjects featured={featured} />
+
+        <FeaturedProjects
+          title={featured.title}
+          filters={featured.filters}
+          items={projects}
+          loading={loading}
+        />
       </PageShell>
     </>
   );

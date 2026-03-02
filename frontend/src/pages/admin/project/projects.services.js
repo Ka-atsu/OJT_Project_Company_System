@@ -76,6 +76,7 @@ function toFormData(draft = {}) {
     description: draft.description,
     address: draft.address,
     completedDate: draft.completedDate,
+    showcase: draft.showcase ? 1 : 0,
   };
 
   Object.entries(fields).forEach(([key, value]) => {

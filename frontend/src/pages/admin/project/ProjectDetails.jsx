@@ -84,12 +84,12 @@ export default function ProjectDetails({
 
   return (
     <section className={cardClass}>
-      {/* 1️⃣ FIRST: handle loading */}
+      {/* FIRST: handle loading */}
       {loading ? (
         <ProjectDetailsSkeleton />
       ) : (
         <>
-          {/* 2️⃣ THEN: handle empty state */}
+          {/* THEN: handle empty state */}
           {!isCreating && !selected ? (
             <>
               <div className="ap-card__header">
