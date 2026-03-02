@@ -79,10 +79,17 @@ export default function ProjectInfo({
           <select
             value={draft.status ?? "draft"}
             onChange={(e) =>
-              setDraft((d) => ({
-                ...d,
-                status: e.target.value,
-              }))
+              setDraft((d) => {
+                const newStatus = e.target.value;
+
+                return {
+                  ...d,
+                  status: newStatus,
+
+                  // Automatically remove showcase if not completed
+                  showcase: newStatus === "completed" ? d.showcase : false,
+                };
+              })
             }
             disabled={loading}
           >
@@ -93,7 +100,27 @@ export default function ProjectInfo({
             ))}
           </select>
         </Field>
-        
+
+        {/* Showcase Toggle — Only When Completed */}
+        {draft.status === "completed" && (
+          <Field label="Showcase">
+            <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
+              <input
+                type="checkbox"
+                checked={!!draft.showcase}
+                onChange={(e) =>
+                  setDraft((d) => ({
+                    ...d,
+                    showcase: e.target.checked,
+                  }))
+                }
+                disabled={loading}
+              />
+              Feature this project on landing page
+            </label>
+          </Field>
+        )}
+
         <Field label="Start date">
           <input
             type="date"

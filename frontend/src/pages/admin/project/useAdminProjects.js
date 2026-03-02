@@ -23,6 +23,7 @@ export function emptyProject() {
     milestones: [],
     photos: [],
     progress: 0,
+    showcase: false,
   };
 }
 

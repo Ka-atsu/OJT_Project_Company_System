@@ -1,4 +1,3 @@
-// projects.data.js
 import {
   ImgAggregates,
   ImgBackfill,
@@ -11,7 +10,7 @@ import {
   ImgLand,
 } from "../../../assets/images";
 
-export const PROJECTS = {
+export const PROJECTS_CONTENT = {
   hero: {
     eyebrow: "Projects",
     title: "From small to large commercial and industrial projects.",
@@ -42,49 +41,11 @@ export const PROJECTS = {
       { id: "land-dev-1", label: "Land Development" },
       { id: "site-mgmt", label: "Site Management" },
       { id: "equip", label: "Equipment Leasing" },
-      { id: "land-dev-2", label: "Land Development" },
       { id: "consult", label: "Project Management / Consultation" },
     ],
   },
 
   featured: {
     title: "Featured Projects",
-    filters: [
-      "All",
-      "Drainage",
-      "Roadworks",
-      "Industrial",
-      "Fencing",
-      "Residential",
-    ],
-    items: [
-      {
-        title: "MDI Infrastructure Upgrade (2019)",
-        location: "Laguna",
-        blurb:
-          "Completed utility rehabilitation and improved site access and drainage performance.",
-        category: "Drainage",
-        tags: ["Drainage", "Roadworks", "Industrial"],
-        images: [ImgAggregates, ImgBackfill, ImgAggregates],
-      },
-      {
-        title: "ABZ Commercial Site Development (2021)",
-        location: "Cavite",
-        blurb:
-          "Earthworks and sub-base preparation delivered with quality control and safety compliance.",
-        category: "Industrial",
-        tags: ["Fencing", "Residential"],
-        images: [ImgBackfill, ImgAggregates, ImgBackfill],
-      },
-      {
-        title: "MegaMart Access Road Construction (2022)",
-        location: "Laguna",
-        blurb:
-          "Road base and access route improvements to enhance site traffic flow and safety.",
-        category: "Roadworks",
-        tags: ["Roadworks", "Drainage"],
-        images: [ImgAggregates, ImgBackfill, ImgAggregates],
-      },
-    ],
   },
 };

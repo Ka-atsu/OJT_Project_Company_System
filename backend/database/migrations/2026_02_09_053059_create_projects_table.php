@@ -31,6 +31,8 @@ return new class extends Migration
             $table->unsignedInteger('budget')->default(0);
             $table->unsignedTinyInteger('progress')->default(0);
 
+            $table->boolean('showcase')->default(false);
+
             $table->text('description')->nullable();
             $table->timestamps();
         });

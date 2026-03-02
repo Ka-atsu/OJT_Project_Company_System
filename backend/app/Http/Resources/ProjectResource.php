@@ -14,6 +14,8 @@ class ProjectResource extends JsonResource
             'name' => $this->name,
             'status' => $this->status,
 
+            'showcase' => (bool) $this->showcase,
+
             'clientId' => (string) $this->user_id,
             'clientName' => $this->user?->name ?? '',
             'clientEmail' => $this->user?->email ?? '',

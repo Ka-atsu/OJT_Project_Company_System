@@ -84,6 +84,7 @@ class AdminProjectController extends Controller
             'completedDate' => ['nullable', 'date'],
             'photos' => ['nullable', 'array'],
             'photos.*' => ['image', 'max:5120'],
+            'showcase' => ['nullable', 'boolean'],
         ]);
 
         $milestones = json_decode($request->input('milestones', '[]'), true);
@@ -100,6 +101,7 @@ class AdminProjectController extends Controller
             'description' => $data['description'] ?? null,
             'address' => $data['address'] ?? null,
             'completed_date' => $data['completedDate'] ?? null,
+            'showcase' => (bool) ($data['showcase'] ?? false),
         ]);
 
         foreach ($milestones as $m) {
@@ -153,6 +155,7 @@ class AdminProjectController extends Controller
             'completedDate' => ['nullable', 'date'],
             'photos' => ['nullable', 'array'],
             'photos.*' => ['image', 'max:5120'],
+            'showcase' => ['nullable', 'boolean'],
         ]);
 
         // Capture old status before updating
@@ -174,6 +177,7 @@ class AdminProjectController extends Controller
             'completed_date' => $data['status'] === 'completed'
                 ? ($data['completedDate'] ?? now())
                 : null,
+            'showcase' => (bool) ($data['showcase'] ?? false),
         ]);
 
         // Refresh model to get updated values
