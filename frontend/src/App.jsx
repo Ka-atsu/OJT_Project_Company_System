@@ -23,12 +23,15 @@ import AdminAppointments from "./pages/admin/appointment/AdminAppointments";
 import AdminDashboard from "./pages/admin/dashboard/AdminDashboard";
 import AdminProjects from "./pages/admin/project/AdminProjects";
 import AdminSettings from "./pages/admin/settings/AdminSettings";
-import AdminDocuments from "./pages/admin/document/AdminDocuments";
+import AdminDocuments from "./pages/admin/document/components/AdminDocuments";
+import AdminClientDocuments from "./pages/admin/document/components/AdminClientDocuments";
 
 import AdminRoute from "./pages/authentication/AdminRoute";
 import GuestRoute from "./pages/authentication/GuestRoute";
 
 import ScrollManager from "./components/routing/ScrollManager";
+import kentTestingRoutes from "./testingRoutes/kentTestingRoutes";
+import warlyTestingRoutes from "./testingRoutes/warlyTestingRoutes";
 import { useLayoutEffect } from "react";
 
 export function DisableScrollRestoration() {
@@ -70,6 +73,10 @@ export default function App() {
             <Route index element={<AdminDashboard />} />
             <Route path="appointments" element={<AdminAppointments />} />
             <Route path="documents" element={<AdminDocuments />} />
+            <Route
+              path="clientDocuments/:clientId"
+              element={<AdminClientDocuments />}
+            />
             <Route path="projects" element={<AdminProjects />} />
             <Route path="settings" element={<AdminSettings />} />
           </Route>
@@ -82,6 +89,9 @@ export default function App() {
 
         <Route path="*" element={<NotFound />} />
       </Routes>
+
+      <kentTestingRoutes />
+      <warlyTestingRoutes />
     </>
   );
 }

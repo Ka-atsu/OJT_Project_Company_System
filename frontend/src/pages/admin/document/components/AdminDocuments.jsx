@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import "./admin-document.css";
 import "./skeleton.css";
-import useAdminDocuments from "./useAdminDocuments";
+import useAdminDocuments from "../hooks/useAdminDocuments";
 
 export default function AdminDocuments() {
   const navigate = useNavigate();
@@ -22,7 +22,7 @@ export default function AdminDocuments() {
   } = state;
 
   const handleClientClick = (clientId) => {
-    navigate(`/w/admin/clientDocuments/${clientId}`);
+    navigate(`/admin/clientDocuments/${clientId}`);
   };
 
   return (

@@ -1,7 +1,7 @@
 import Select from "react-select";
 import "./client-documents.css";
 import "./skeleton.css";
-import useAdminClientDocuments from "./useAdminClientDocuments";
+import useAdminClientDocuments from "../hooks/useAdminClientDocuments";
 
 export default function AdminClientDocuments() {
   const state = useAdminClientDocuments();
@@ -52,10 +52,7 @@ export default function AdminClientDocuments() {
 
   return (
     <section className="docs-page">
-      <button
-        className="btn-back"
-        onClick={() => navigate("/w/admin/document")}
-      >
+      <button className="btn-back" onClick={() => navigate("/admin/documents")}>
         ← Back
       </button>
 
