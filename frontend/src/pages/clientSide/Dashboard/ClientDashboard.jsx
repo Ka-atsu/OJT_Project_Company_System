@@ -33,15 +33,17 @@ export default function ClientDashboard() {
   const { pageProjects: allProjects = [], loading: loadingAllProjects } =
     useClientProjects({ limit: 1000 });
 
-  const projectStats = {
-    active: allProjects.filter((p) => p.status.toLowerCase() === "active")
-      .length,
-    completed: allProjects.filter((p) => p.status.toLowerCase() === "completed")
-      .length,
-    onHold: allProjects.filter((p) => p.status.toLowerCase() === "on_hold")
-      .length,
-    draft: allProjects.filter((p) => p.status.toLowerCase() === "draft").length,
-  };
+const projectStats = {
+  active: allProjects.filter(
+    (p) => p.status?.toLowerCase() === "active"
+  ).length,
+  completed: allProjects.filter(
+    (p) => p.status?.toLowerCase() === "completed"
+  ).length,
+  onHold: allProjects.filter(
+    (p) => p.status?.toLowerCase() === "on_hold"
+  ).length,
+};
 
   let greeting = "Welcome back";
   if (name) {
@@ -131,26 +133,28 @@ export default function ClientDashboard() {
         ) : (
           <>
             <div className="dash-surface dash-stat">
-              <span className="dash-stat-label">Active Projects</span>
-              <strong className="dash-stat-value">{projectStats.active}</strong>
+              <div className="dash-stat-row">
+                <span className="dash-stat-label">Active Projects</span>
+                <strong className="dash-stat-value">{projectStats.active}</strong>
+              </div>
             </div>
 
             <div className="dash-surface dash-stat">
-              <span className="dash-stat-label">Completed Projects</span>
-              <strong className="dash-stat-value">
-                {projectStats.completed}
-              </strong>
+              <div className="dash-stat-row">
+                <span className="dash-stat-label">Completed Projects</span>
+                <strong className="dash-stat-value">
+                  {projectStats.completed}
+                </strong>
+              </div>
             </div>
 
             <div className="dash-surface dash-stat">
-              <span className="dash-stat-label">On Hold</span>
-              <strong className="dash-stat-value">{projectStats.onHold}</strong>
+              <div className="dash-stat-row">
+                <span className="dash-stat-label">On Hold</span>
+                <strong className="dash-stat-value">{projectStats.onHold}</strong>
+              </div>
             </div>
 
-            <div className="dash-surface dash-stat">
-              <span className="dash-stat-label">Drafts</span>
-              <strong className="dash-stat-value">{projectStats.draft}</strong>
-            </div>
           </>
         )}
       </div>
@@ -174,35 +178,34 @@ export default function ClientDashboard() {
               <div>No upcoming appointments</div>
             ) : (
               <>
-                <div className="dash-list-item">
-                  <div>
-                    <div className="dash-item-title">
-                      {appointments[0].date} · {appointments[0].time}
-                    </div>
-                    <div className="dash-item-meta">
-                      {appointments[0].project} · {appointments[0].purpose}
-                    </div>
-                  </div>
-                  <span
-                    className={`dash-status ${
-                      appointments[0].approvalStatus === "accepted"
-                        ? "success"
-                        : "muted"
-                    }`}
-                  >
-                    {appointments[0].approvalStatus === "accepted"
-                      ? "Confirmed"
-                      : capitalize(appointments[0].approvalStatus)}
-                  </span>
-                </div>
+                    {appointments.slice(0, 3).map((appointment) => (
+                      <div key={appointment.id} className="dash-list-item">
+                        <div>
+                          <div className="dash-item-title">
+                            {appointment.date} · {appointment.time}
+                          </div>
+                          <div className="dash-item-meta">
+                            {appointment.project} · {appointment.purpose}
+                          </div>
+                        </div>
 
-                {appointments.length > 1 && (
-                  <div className="dash-item-meta dash-meta-spacer">
-                    +{appointments.length - 1} upcoming appointment
-                    {appointments.length - 1 > 1 ? "s" : ""}
-                  </div>
-                )}
-              </>
+                        <span
+                          className={`dash-status ${appointment.approvalStatus}`}
+                        >
+                          {appointment.approvalStatus === "accepted"
+                            ? "Confirmed"
+                            : capitalize(appointment.approvalStatus)}
+                        </span>
+                      </div>
+                    ))}
+
+                    {appointments.length > 3 && (
+                      <div className="dash-item-meta dash-meta-spacer">
+                        +{appointments.length - 3} upcoming appointment
+                        {appointments.length - 3 > 1 ? "s" : ""}
+                      </div>
+                    )}
+                  </>
             )}
 
             <button
