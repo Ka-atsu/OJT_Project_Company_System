@@ -68,6 +68,11 @@
   max-width: 18ch;
 }
 
+.home-hero-stage .light {
+  color: #1F4D3A;
+  text-shadow: 0px 4px 12px rgba(255, 255, 255, 0.25);
+}
+
 .home-hero .eyebrow {
   color: rgba(255, 255, 255, 0.72);
 }

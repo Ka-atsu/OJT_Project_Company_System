@@ -131,7 +131,7 @@ export default function Home() {
                   <motion.div className="hero-actions">
                     <Link
                       to={heroScroll.getStarted.to}
-                      className="btn btn-outline"
+                      className="btn btn-filled"
                     >
                       {heroScroll.getStarted.label}
                     </Link>
