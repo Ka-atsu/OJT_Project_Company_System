@@ -7,7 +7,7 @@ import {
   fetchClientDocumentsAdmin,
   uploadAdminDocument,
   deleteAdminDocument,
-} from "./documents.services";
+} from "../services/documents.services";
 
 export default function useAdminClientDocuments() {
   const { clientId } = useParams();

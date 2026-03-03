@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState, useRef } from "react";
-import { fetchAdminClients } from "./documents.services";
+import { fetchAdminClients } from "../services/documents.services";
 
 export default function useAdminDocuments() {
   const [clients, setClients] = useState([]);

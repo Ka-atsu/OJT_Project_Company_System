@@ -154,7 +154,6 @@ const projectStats = {
                 <strong className="dash-stat-value">{projectStats.onHold}</strong>
               </div>
             </div>
-
           </>
         )}
       </div>
