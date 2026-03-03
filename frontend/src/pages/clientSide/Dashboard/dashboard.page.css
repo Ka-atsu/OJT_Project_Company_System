@@ -1,3 +1,4 @@
+
 /* =========================================================
     DASHBOARD — Modern SaaS Style
     Scoped under `.dashboard`
@@ -11,7 +12,25 @@
   background: #f8fafc;
   min-height: 100vh;
 }
+.dashboard {
+  min-height: 100vh;
 
+  background:
+    linear-gradient(#f8fafc, #f1f5f9);
+  position: relative;
+}
+
+.dashboard::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(
+    rgba(15, 23, 42, 0.03) 1px,
+    transparent 1px
+  );
+  background-size: 20px 20px;
+  pointer-events: none;
+}
 /* -------------------------
     PAGE WRAPPER
   ------------------------- */
@@ -57,11 +76,24 @@
   margin-bottom: var(--dash-gap-lg);
 }
 
+
+.dashboard .dash-stat-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Remove top margin since it's now inline */
+.dashboard .dash-stat-value {
+  margin-top: 0;
+}
+
 .dashboard .dash-stat {
   padding: 1.2rem;
   border-radius: 16px;
   background: linear-gradient(180deg, #ffffff, #f8fafc);
   border: 1px solid var(--dash-border);
+   height: 100%;
   box-shadow:
     0 1px 2px rgba(0, 0, 0, 0.04),
     0 6px 20px rgba(0, 0, 0, 0.04);
@@ -78,7 +110,7 @@
 }
 
 .dashboard .dash-stat-label {
-  font-size: 0.65rem;
+  font-size: 0.75rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   font-weight: 600;
@@ -275,7 +307,27 @@
   background: rgba(148, 163, 184, 0.12);
   color: #475569;
 }
+/* =========================================================
+    APPOINTMENT STATUS PILLS
+  ========================================================= */
 
+/* Accepted */
+.dashboard .dash-status.accepted {
+  background: rgba(16, 185, 129, 0.12);
+  color: #059669;
+}
+
+/* Pending */
+.dashboard .dash-status.pending {
+  background: rgba(99, 102, 241, 0.12);
+  color: #4f46e5;
+}
+
+/* Declined */
+.dashboard .dash-status.declined {
+  background: rgba(239, 68, 68, 0.12);
+  color: #dc2626;
+}
 /* -------------------------
     VIEW ALL LINK
   ------------------------- */

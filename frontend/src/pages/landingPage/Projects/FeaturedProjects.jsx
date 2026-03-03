@@ -1,8 +1,8 @@
 import { useState, useMemo } from "react";
-
+import logo from "../../../assets/Images/logo.jpg";
 function FeaturedCard({ project }) {
   const cover =
-    project.photos?.[0]?.url || project.photos?.[0]?.path || "/placeholder.jpg";
+    project.photos?.[0]?.url || project.photos?.[0]?.path || logo;
 
   return (
     <article className="featured-card">

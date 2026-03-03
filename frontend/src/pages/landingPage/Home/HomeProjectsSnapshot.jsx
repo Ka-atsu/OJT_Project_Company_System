@@ -1,9 +1,10 @@
 import { motion } from "framer-motion";
 import { useShowcaseProjects } from "../Projects/useShowcaseProjects";
 import { fadeUpItem, revealStagger } from "./home.motion";
+import logo from "../../../assets/Images/logo.jpg";
 
 function ProjectCard({ project }) {
-  const cover = project.photos?.[0]?.url || "/placeholder.jpg";
+  const cover = project.photos?.[0]?.url || logo;
 
   return (
     <motion.article className="home-project-card" variants={fadeUpItem}>
