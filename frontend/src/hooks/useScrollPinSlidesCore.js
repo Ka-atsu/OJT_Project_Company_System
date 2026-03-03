@@ -2,25 +2,21 @@ import { useLayoutEffect } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-import { VIEWPORT_CARDS, EASE } from "../motion/constants";
-
 gsap.registerPlugin(ScrollTrigger);
 
 export function useScrollPinSlidesCore({
   wrapRef,
   pinRef,
-  stageRef,
   total,
   setActive,
   id = "scroll-slides",
   perSlideVh = 1,
-  parallaxY = 0,
 }) {
   useLayoutEffect(() => {
     if (!wrapRef.current || !pinRef.current || !total) return;
 
     const ctx = gsap.context(() => {
-      const pin = ScrollTrigger.create({
+      const st = ScrollTrigger.create({
         id: `${id}-pin`,
         trigger: wrapRef.current,
         start: "top top",
@@ -30,34 +26,21 @@ export function useScrollPinSlidesCore({
         scrub: true,
         invalidateOnRefresh: true,
         onUpdate: (self) => {
-          const idx = Math.min(total - 1, Math.floor(self.progress * total));
-          setActive((prev) => (prev === idx ? prev : idx));
+          const progress = Math.max(0, Math.min(0.999, self.progress));
+          const idx = Math.floor(progress * total);
+          setActive(idx);
         },
       });
 
-      let parallax;
-      if (stageRef?.current && parallaxY) {
-        parallax = gsap.to(stageRef.current, {
-          y: -Math.abs(parallaxY),
-          ease: "none",
-          scrollTrigger: {
-            id: `${id}-parallax`,
-            trigger: wrapRef.current,
-            start: "top top",
-            end: () => `+=${window.innerHeight}`,
-            scrub: true,
-            invalidateOnRefresh: true,
-          },
+      // 🔥 CRITICAL PART
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          window.scrollTo(0, 0);
+          ScrollTrigger.refresh(true);
         });
-      }
-
-      return () => {
-        pin?.kill(true);
-        parallax?.scrollTrigger?.kill(true);
-        parallax?.kill();
-      };
+      });
     }, wrapRef);
 
     return () => ctx.revert();
-  }, [wrapRef, pinRef, stageRef, total, setActive, id, perSlideVh, parallaxY]);
+  }, [total, perSlideVh, id]);
 }

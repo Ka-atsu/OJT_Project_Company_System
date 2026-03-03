@@ -47,7 +47,7 @@ export function usePrimaryHorizontalScrollFx(primaryRef) {
         });
       };
 
-      // ✅ prevent “teleport” on first scroll
+      // prevent “teleport” on first scroll
       setX(0);
 
       ScrollTrigger.create({
@@ -71,6 +71,14 @@ export function usePrimaryHorizontalScrollFx(primaryRef) {
           setX(-Math.min(dist, scrolled));
           revealCheck();
         },
+      });
+
+      // ADD THIS
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          window.scrollTo(0, 0);
+          ScrollTrigger.refresh(true);
+        });
       });
 
       gsap.delayedCall(0, () => ScrollTrigger.refresh());
