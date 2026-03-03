@@ -14,6 +14,7 @@ use App\Http\Controllers\Admin\AdminProjectController;
 use App\Http\Controllers\Admin\AdminDashboardController;
 
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\Auth\UserPasswordController;
 
 Route::post('/contact', [ContactController::class, 'send']);
 Route::get('/projects/showcase', [PublicProjectController::class, 'showcase']);
@@ -21,6 +22,7 @@ Route::get('/projects/showcase', [PublicProjectController::class, 'showcase']);
 Route::middleware('auth:sanctum')->get('/user', fn(Request $request) => $request->user());
 
 Route::middleware('auth:sanctum')->group(function () {
+    Route::put('/user/password', [UserPasswordController::class, 'update']);
     // appointments (client)
     Route::get('/appointments', [AppointmentController::class, 'index']);
     Route::post('/appointments', [AppointmentController::class, 'store']);

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { getCurrentUser } from "./adminSettings";
+import { getCurrentUser } from "./admin.Settings";
 
 import ProfileTab from "./ProfileTab";
 import SecurityTab from "./SecurityTab";

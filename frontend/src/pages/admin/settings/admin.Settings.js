@@ -11,3 +11,9 @@ export async function updateUserProfile(data) {
   const res = await api.put("/api/user", data);
   return res.data;
 }
+
+// Update Password
+export async function updatePassword(data) {
+  const res = await api.put("/api/user/password", data);
+  return res.data;
+}

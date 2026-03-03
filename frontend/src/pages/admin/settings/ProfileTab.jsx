@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { updateUserProfile } from "./adminSettings";
+import { updateUserProfile } from "./admin.Settings";
 import Row from "./components/Row";
 
 export default function ProfileTab({ admin, setAdmin }) {
@@ -28,12 +28,22 @@ export default function ProfileTab({ admin, setAdmin }) {
         help="This name is used across the admin portal."
         right={
           editing ? (
-            <>
-              <button onClick={() => setEditing(false)}>Cancel</button>
-              <button onClick={save}>Save</button>
-            </>
+            <div className="as-actions">
+              <button
+                className="as-btn as-btn--ghost"
+                onClick={() => setEditing(false)}
+              >
+                Cancel
+              </button>
+
+              <button className="as-btn" onClick={save}>
+                Save
+              </button>
+            </div>
           ) : (
-            <button onClick={() => setEditing(true)}>Edit</button>
+            <button className="as-btn" onClick={() => setEditing(true)}>
+              Edit
+            </button>
           )
         }
       >
