@@ -2,62 +2,39 @@ import { useLayoutEffect } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-import { VIEWPORT_CARDS, EASE } from "../motion/constants";
-
 gsap.registerPlugin(ScrollTrigger);
 
 export function useScrollPinSlidesCore({
   wrapRef,
   pinRef,
-  stageRef,
   total,
   setActive,
   id = "scroll-slides",
   perSlideVh = 1,
-  parallaxY = 0,
 }) {
   useLayoutEffect(() => {
     if (!wrapRef.current || !pinRef.current || !total) return;
 
-    const ctx = gsap.context(() => {
-      const pin = ScrollTrigger.create({
+    let ctx = gsap.context(() => {
+      ScrollTrigger.create({
         id: `${id}-pin`,
         trigger: wrapRef.current,
         start: "top top",
+        // Calculated end point
         end: () => `+=${window.innerHeight * total * perSlideVh}`,
         pin: pinRef.current,
         pinSpacing: true,
         scrub: true,
-        invalidateOnRefresh: true,
+        invalidateOnRefresh: true, // Crucial for responsive resizing
+        refreshPriority: 1, // Ensures this pins before other triggers
         onUpdate: (self) => {
-          const idx = Math.min(total - 1, Math.floor(self.progress * total));
-          setActive((prev) => (prev === idx ? prev : idx));
+          const progress = Math.max(0, Math.min(0.999, self.progress));
+          const idx = Math.floor(progress * total);
+          setActive(idx);
         },
       });
-
-      let parallax;
-      if (stageRef?.current && parallaxY) {
-        parallax = gsap.to(stageRef.current, {
-          y: -Math.abs(parallaxY),
-          ease: "none",
-          scrollTrigger: {
-            id: `${id}-parallax`,
-            trigger: wrapRef.current,
-            start: "top top",
-            end: () => `+=${window.innerHeight}`,
-            scrub: true,
-            invalidateOnRefresh: true,
-          },
-        });
-      }
-
-      return () => {
-        pin?.kill(true);
-        parallax?.scrollTrigger?.kill(true);
-        parallax?.kill();
-      };
     }, wrapRef);
 
     return () => ctx.revert();
-  }, [wrapRef, pinRef, stageRef, total, setActive, id, perSlideVh, parallaxY]);
+  }, [total, perSlideVh, id, setActive, wrapRef, pinRef]);
 }

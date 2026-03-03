@@ -32,7 +32,6 @@ import kentTestingRoutes from "./testingRoutes/kentTestingRoutes";
 import AdminRoute from "./pages/admin/AdminRoute";
 
 import { useLayoutEffect } from "react";
-import { useLocation } from "react-router-dom";
 
 export function DisableScrollRestoration() {
   useLayoutEffect(() => {
@@ -40,40 +39,6 @@ export function DisableScrollRestoration() {
       window.history.scrollRestoration = "manual";
     }
   }, []);
-  return null;
-}
-
-function ScrollManager() {
-  const { pathname, hash } = useLocation();
-
-  useLayoutEffect(() => {
-    // Hash navigation: scroll to the element with fixed-nav offset
-    if (hash) {
-      let tries = 0;
-
-      const tryScroll = () => {
-        const el = document.querySelector(hash);
-        if (el) {
-          const nav = document.querySelector(".site-nav");
-          const navH = nav?.offsetHeight ?? 72;
-
-          const top =
-            el.getBoundingClientRect().top + window.scrollY - (navH + 16);
-
-          window.scrollTo({ top, behavior: "smooth" });
-          return;
-        }
-
-        if (tries++ < 60) requestAnimationFrame(tryScroll);
-      };
-
-      requestAnimationFrame(tryScroll);
-      return;
-    }
-
-    // No hash => normal route change => scroll to top
-    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
-  }, [pathname, hash]);
 
   return null;
 }
@@ -82,7 +47,6 @@ export default function App() {
   return (
     <>
       <DisableScrollRestoration />
-      <ScrollManager />
       <Routes>
         {/* LANDING */}
         <Route path="/" element={<RootLayout />}>
