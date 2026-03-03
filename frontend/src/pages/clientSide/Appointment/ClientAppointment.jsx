@@ -1,8 +1,9 @@
 import { useEffect, useState, useCallback, useRef } from "react";
 import BookAppointment from "./BookAppointment";
 import { listAppointments, createAppointment } from "./appointments.service";
-import { useSearchParams , useNavigate } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
 import "./appointment.css";
+import "../globalClient.css";
 
 function getStatusDetails(a) {
   const approvalRaw = a.approvalStatus ?? "pending";
@@ -49,8 +50,8 @@ function getApiErrorMessage(err, fallback = "Something went wrong.") {
 }
 
 export default function ClientAppointment() {
-   const [searchParams] = useSearchParams();
-   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
 
   const [activeTab, setActiveTab] = useState("upcoming");
   const [open, setOpen] = useState(false);
@@ -61,7 +62,6 @@ export default function ClientAppointment() {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const limit = 7;
-  
 
   const requestIdRef = useRef(0);
 
@@ -102,15 +102,15 @@ export default function ClientAppointment() {
   };
 
   useEffect(() => {
-  if (searchParams.get("openModal") === "true") {
-    setOpen(true);
+    if (searchParams.get("openModal") === "true") {
+      setOpen(true);
 
-    // Remove query param after opening modal
-    const params = new URLSearchParams(searchParams);
-    params.delete("openModal");
-    navigate({ search: params.toString() }, { replace: true });
-  }
-}, [searchParams, navigate]);
+      // Remove query param after opening modal
+      const params = new URLSearchParams(searchParams);
+      params.delete("openModal");
+      navigate({ search: params.toString() }, { replace: true });
+    }
+  }, [searchParams, navigate]);
 
   return (
     <section className="appointment-page">
@@ -178,7 +178,42 @@ export default function ClientAppointment() {
 
         <div className="appointment-table-wrap">
           {loading ? (
-            <div className="appointment-loading">Loading…</div>
+            <table className="appointment-table">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Time</th>
+                  <th>Project</th>
+                  <th>Purpose</th>
+                  <th>Type</th>
+                  <th>Status / Details</th>
+                </tr>
+              </thead>
+              <tbody>
+                {[...Array(5)].map((_, i) => (
+                  <tr key={i}>
+                    <td>
+                      <div className="skeleton skeleton-text"></div>
+                    </td>
+                    <td>
+                      <div className="skeleton skeleton-text"></div>
+                    </td>
+                    <td>
+                      <div className="skeleton skeleton-text"></div>
+                    </td>
+                    <td>
+                      <div className="skeleton skeleton-text"></div>
+                    </td>
+                    <td>
+                      <div className="skeleton skeleton-text short"></div>
+                    </td>
+                    <td>
+                      <div className="skeleton skeleton-text long"></div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           ) : (
             <table className="appointment-table">
               <thead>

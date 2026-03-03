@@ -1,5 +1,6 @@
 import Select from "react-select";
 import "./documents.css";
+import "../globalClient.css";
 import { useClientDocuments } from "./document.service";
 
 export default function ClientDocuments() {
@@ -41,7 +42,7 @@ export default function ClientDocuments() {
   };
 
   return (
-    <section className="docs-page">
+    <section >
       <header className="docs-header">
         <h1 className="dash-title">Documents</h1>
         <p className="dash-subtitle">
@@ -105,7 +106,33 @@ export default function ClientDocuments() {
         {error ? <div className="docs-empty">{error}</div> : null}
 
         {loading ? (
-          <div className="docs-empty">Loading documents…</div>
+          <div className="docs-list">
+            {[...Array(6)].map((_, i) => (
+              <div key={i} className="docs-row">
+                <div className="docs-file">
+                  {/* PDF badge */}
+                  <div className="skeleton docs-badge-skeleton"></div>
+
+                  <div className="docs-file-meta">
+                    {/* File name */}
+                    <div className="skeleton docs-name-skeleton"></div>
+
+                    {/* Meta inline row */}
+                    <div className="docs-file-sub skeleton-inline">
+                      <div className="skeleton docs-meta-skeleton"></div>
+                      <div className="skeleton docs-meta-skeleton short"></div>
+                      <div className="skeleton docs-meta-skeleton long"></div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="docs-actions">
+                  <div className="skeleton docs-icon-skeleton"></div>
+                  <div className="skeleton docs-icon-skeleton"></div>
+                </div>
+              </div>
+            ))}
+          </div>
         ) : docs.length === 0 ? (
           <div className="docs-empty">No documents found.</div>
         ) : (

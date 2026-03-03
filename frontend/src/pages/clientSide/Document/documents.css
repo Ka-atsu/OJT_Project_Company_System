@@ -2,10 +2,6 @@
    DOCUMENTS — PAGE ONLY (matches your dash theme)
 ========================================================= */
 
-.docs-page {
-  padding: 2rem;
-}
-
 .docs-header {
   margin-bottom: 1.25rem;
 }
@@ -37,7 +33,7 @@
   min-width: 260px;
   flex: 1;
   max-width: 420px;
-    box-shadow:
+  box-shadow:
     0 4px 10px rgba(0, 0, 0, 0.05),
     0 18px 40px rgba(0, 0, 0, 0.06);
 }
@@ -93,7 +89,7 @@
   border: 1px solid rgba(0, 0, 0, 0.08);
   border-radius: 12px;
   overflow: hidden;
-    box-shadow:
+  box-shadow:
     0 4px 10px rgba(0, 0, 0, 0.05),
     0 18px 40px rgba(0, 0, 0, 0.06);
 }
@@ -184,7 +180,7 @@
 }
 
 .docs-action-btn {
-   width: 36px;
+  width: 36px;
   height: 36px;
   border-radius: 10px;
   border: 1px solid rgba(0, 0, 0, 0.08);
@@ -196,8 +192,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: 
-    background 0.2s ease, 
+  transition:
+    background 0.2s ease,
     color 0.2s ease,
     transform 0.15s ease,
     box-shadow 0.2s ease;
@@ -238,15 +234,91 @@
   padding: 0 10px;
 }
 
+/* =========================
+   Documents Skeleton Custom
+   (extends global .skeleton)
+========================= */
+
+/* Remove default margin stacking */
+.docs-row .skeleton-text,
+.docs-row .skeleton-title {
+  margin-bottom: 0;
+}
+
+/* Make row spacing match real layout */
+.docs-row {
+  align-items: center;
+}
+
+/* Badge */
+.docs-badge-skeleton {
+  width: 44px;
+  height: 26px;
+  border-radius: 6px;
+  margin-right: 16px;
+}
+
+/* File name */
+.docs-name-skeleton {
+  width: 50%;
+  height: 16px;
+  margin-bottom: 8px;
+  border-radius: 4px;
+}
+
+/* Inline meta container */
+.skeleton-inline {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+/* Meta lines */
+.docs-meta-skeleton {
+  width: 120px;
+  height: 12px;
+  border-radius: 4px;
+}
+
+.docs-meta-skeleton.short {
+  width: 90px;
+}
+
+.docs-meta-skeleton.long {
+  width: 150px;
+}
+
+/* Action buttons */
+.docs-icon-skeleton {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+}
+
+/* Space action buttons */
+.docs-actions {
+  display: flex;
+  gap: 10px;
+}
+
+/* Subtle row separation like real rows */
+.docs-row + .docs-row {
+  border-top: 1px solid #eee;
+}
+
+/* Optional: stagger shimmer for smoother feel */
+.docs-row:nth-child(1) .skeleton::after { animation-delay: 0s; }
+.docs-row:nth-child(2) .skeleton::after { animation-delay: 0.1s; }
+.docs-row:nth-child(3) .skeleton::after { animation-delay: 0.2s; }
+.docs-row:nth-child(4) .skeleton::after { animation-delay: 0.3s; }
+.docs-row:nth-child(5) .skeleton::after { animation-delay: 0.4s; }
+.docs-row:nth-child(6) .skeleton::after { animation-delay: 0.5s; }
+
 /* =========================================================
    RESPONSIVE
 ========================================================= */
 
 @media (max-width: 768px) {
-  .docs-page {
-    padding: 1.25rem;
-  }
-
   .docs-search {
     max-width: 100%;
   }

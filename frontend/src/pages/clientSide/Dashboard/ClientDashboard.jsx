@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { listAppointments } from "../Appointment/appointments.service";
 import { useClientDocuments } from "../Document/document.service";
 import { useClientProjects } from "../Project/useClientProject";
+import "../globalClient.css";
 
 function getStoredName() {
   const raw = localStorage.getItem("user");
@@ -18,30 +19,29 @@ function getStoredName() {
   }
 }
 
-const docs = ["Contract Document", "Progress Report", "Planning Files"];
-
 export default function ClientDashboard() {
   const name = getStoredName();
   const navigate = useNavigate();
   const [appointments, setAppointments] = useState([]);
   const [loadingAppointments, setLoadingAppointments] = useState(false);
-  const {
-  docs: recentDocs,
-  loading: loadingDocs,
-  } = useClientDocuments({ pageSize: 4, page: 1 });
-  const {
-    pageProjects: recentProjects,
-    loading: loadingProjects,
-  } = useClientProjects({ limit: 3 });
-  const { pageProjects: allProjects = [], loading: loadingAllProjects } = useClientProjects({ limit: 1000 });
+  const { docs: recentDocs, loading: loadingDocs } = useClientDocuments({
+    pageSize: 4,
+    page: 1,
+  });
+  const { pageProjects: recentProjects, loading: loadingProjects } =
+    useClientProjects({ limit: 3 });
+  const { pageProjects: allProjects = [], loading: loadingAllProjects } =
+    useClientProjects({ limit: 1000 });
 
   const projectStats = {
-  active: allProjects.filter(p => p.status.toLowerCase() === "active").length,
-  completed: allProjects.filter(p => p.status.toLowerCase() === "completed").length,
-  onHold: allProjects.filter(p => p.status.toLowerCase() === "on_hold").length,
-  draft: allProjects.filter(p => p.status.toLowerCase() === "draft").length,
-};
-  
+    active: allProjects.filter((p) => p.status.toLowerCase() === "active")
+      .length,
+    completed: allProjects.filter((p) => p.status.toLowerCase() === "completed")
+      .length,
+    onHold: allProjects.filter((p) => p.status.toLowerCase() === "on_hold")
+      .length,
+    draft: allProjects.filter((p) => p.status.toLowerCase() === "draft").length,
+  };
 
   let greeting = "Welcome back";
   if (name) {
@@ -49,31 +49,64 @@ export default function ClientDashboard() {
   }
 
   useEffect(() => {
-  const fetchAppointments = async () => {
-    setLoadingAppointments(true);
-    try {
-      const res = await listAppointments({ status: "upcoming", page: 1, limit: 5 });
-      setAppointments(res.data || []);
-    } catch (err) {
-      console.error("Failed to fetch appointments:", err);
-      setAppointments([]);
-    } finally {
-      setLoadingAppointments(false);
+    const fetchAppointments = async () => {
+      setLoadingAppointments(true);
+      try {
+        const res = await listAppointments({
+          status: "upcoming",
+          page: 1,
+          limit: 5,
+        });
+        setAppointments(res.data || []);
+      } catch (err) {
+        console.error("Failed to fetch appointments:", err);
+        setAppointments([]);
+      } finally {
+        setLoadingAppointments(false);
+      }
+    };
+
+    fetchAppointments();
+  }, []);
+
+  function capitalize(str) {
+    if (!str) return "";
+
+    // Handle special cases
+    if (str.toLowerCase() === "on_hold") return "On Hold";
+
+    // Default behavior: capitalize first letter
+    return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+  }
+
+  const alerts = [];
+
+  /* === Appointment Alert === */
+  if (appointments.length > 0) {
+    const next = appointments[0];
+
+    // Simple "tomorrow" logic
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+
+    if (next.date === tomorrow.toISOString().split("T")[0]) {
+      alerts.push("Appointment scheduled tomorrow");
     }
-  };
+  }
 
-  fetchAppointments();
-}, []);
+  /* === Document Alert === */
+  if (recentDocs.length > 0) {
+    alerts.push(`${recentDocs.length} new document(s) available`);
+  }
 
-function capitalize(str) {
-  if (!str) return "";
+  /* === Project Alert === */
+  const onHoldProject = allProjects.find(
+    (p) => p.status.toLowerCase() === "on_hold",
+  );
 
-  // Handle special cases
-  if (str.toLowerCase() === "on_hold") return "On Hold";
-
-  // Default behavior: capitalize first letter
-  return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
-}
+  if (onHoldProject) {
+    alerts.push(`Project "${onHoldProject.name}" is on hold`);
+  }
 
   return (
     <section className="dash-page dashboard">
@@ -87,7 +120,14 @@ function capitalize(str) {
       {/*=============== STATUS ===================*/}
       <div className="dash-stats">
         {loadingAllProjects ? (
-          <div>Loading stats…</div>
+          <>
+            {[...Array(4)].map((_, i) => (
+              <div key={i} className="dash-surface dash-stat">
+                <div className="skeleton dash-stat-label-skeleton"></div>
+                <div className="skeleton dash-stat-value-skeleton"></div>
+              </div>
+            ))}
+          </>
         ) : (
           <>
             <div className="dash-surface dash-stat">
@@ -97,7 +137,9 @@ function capitalize(str) {
 
             <div className="dash-surface dash-stat">
               <span className="dash-stat-label">Completed Projects</span>
-              <strong className="dash-stat-value">{projectStats.completed}</strong>
+              <strong className="dash-stat-value">
+                {projectStats.completed}
+              </strong>
             </div>
 
             <div className="dash-surface dash-stat">
@@ -121,65 +163,75 @@ function capitalize(str) {
             </div>
 
             {loadingAppointments ? (
-                  <div>Loading…</div>
-                ) : appointments.length === 0 ? (
-                  <div>No upcoming appointments</div>
-                ) : (
-                  <>
-                    <div className="dash-list-item">
-                      <div>
-                        <div className="dash-item-title">
-                          {appointments[0].date} · {appointments[0].time}
-                        </div>
-                        <div className="dash-item-meta">
-                          {appointments[0].project} · {appointments[0].purpose}
-                        </div>
-                      </div>
-                      <span
-                        className={`dash-status ${
-                          appointments[0].approvalStatus === "accepted" ? "success" : "muted"
-                        }`}
-                      >
-                        {appointments[0].approvalStatus === "accepted"
-                          ? "Confirmed"
-                           : capitalize(appointments[0].approvalStatus)}
-                      </span>
+              <div className="dash-list-item">
+                <div>
+                  <div className="skeleton dash-title-skeleton"></div>
+                  <div className="skeleton dash-meta-skeleton"></div>
+                </div>
+                <div className="skeleton dash-badge-skeleton"></div>
+              </div>
+            ) : appointments.length === 0 ? (
+              <div>No upcoming appointments</div>
+            ) : (
+              <>
+                <div className="dash-list-item">
+                  <div>
+                    <div className="dash-item-title">
+                      {appointments[0].date} · {appointments[0].time}
                     </div>
+                    <div className="dash-item-meta">
+                      {appointments[0].project} · {appointments[0].purpose}
+                    </div>
+                  </div>
+                  <span
+                    className={`dash-status ${
+                      appointments[0].approvalStatus === "accepted"
+                        ? "success"
+                        : "muted"
+                    }`}
+                  >
+                    {appointments[0].approvalStatus === "accepted"
+                      ? "Confirmed"
+                      : capitalize(appointments[0].approvalStatus)}
+                  </span>
+                </div>
 
-                    {appointments.length > 1 && (
-                      <div className="dash-item-meta dash-meta-spacer">
-                        +{appointments.length - 1} upcoming appointment
-                        {appointments.length - 1 > 1 ? "s" : ""}
-                      </div>
-                    )}
-                  </>
+                {appointments.length > 1 && (
+                  <div className="dash-item-meta dash-meta-spacer">
+                    +{appointments.length - 1} upcoming appointment
+                    {appointments.length - 1 > 1 ? "s" : ""}
+                  </div>
                 )}
+              </>
+            )}
 
-                <button
-                  type="button"
-                  className="dash-view-all"
-                  onClick={() => navigate("/dashboard/appointments")}
-                >
-                  View all appointments →
-                </button>
-      {/*=============== ALERTS ===================*/}                
+            <button
+              type="button"
+              className="dash-view-all"
+              onClick={() => navigate("/dashboard/appointments")}
+            >
+              View all appointments →
+            </button>
+            {/*=============== ALERTS ===================*/}
           </div>
           <div className="dash-surface">
             <div className="dash-surface-header">
               <span>Alerts</span>
             </div>
-           <div className="dash-list">
-              <div className="dash-item-meta">• 1 document pending review</div>
-              <div className="dash-item-meta">
-                • Appointment scheduled tomorrow
-              </div>
-              <div className="dash-item-meta">
-                • Project “Random Building” updated
-              </div>
-          </div>
+            <div className="dash-list">
+              {alerts.length === 0 ? (
+                <div className="dash-item-meta">No alerts right now.</div>
+              ) : (
+                alerts.map((msg, i) => (
+                  <div key={i} className="dash-item-meta">
+                    • {msg}
+                  </div>
+                ))
+              )}
+            </div>
           </div>
         </div>
-      {/*=============== DOCUMENTS ===================*/}
+        {/*=============== DOCUMENTS ===================*/}
         <div className="dash-col">
           <div className="dash-surface">
             <div className="dash-surface-header">
@@ -188,7 +240,12 @@ function capitalize(str) {
 
             <div className="dash-list">
               {loadingDocs ? (
-                <div className="dash-item-meta">Loading documents…</div>
+                [...Array(4)].map((_, i) => (
+                  <div key={i} className="dash-doc">
+                    <div className="skeleton dash-doc-name-skeleton"></div>
+                    <div className="skeleton dash-doc-btn-skeleton"></div>
+                  </div>
+                ))
               ) : recentDocs.length === 0 ? (
                 <div className="dash-item-meta">No documents found.</div>
               ) : (
@@ -226,7 +283,12 @@ function capitalize(str) {
 
         <div className="dash-projects">
           {loadingProjects ? (
-            <div className="dash-item-meta">Loading projects…</div>
+            [...Array(3)].map((_, i) => (
+              <div key={i} className="dash-project-row">
+                <div className="skeleton dash-project-name-skeleton"></div>
+                <div className="skeleton dash-badge-skeleton"></div>
+              </div>
+            ))
           ) : recentProjects.length === 0 ? (
             <div className="dash-item-meta">No projects found.</div>
           ) : (

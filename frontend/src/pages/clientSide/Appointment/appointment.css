@@ -369,6 +369,52 @@
 }
 
 /* =========================
+   Appointment Table Skeleton Custom
+   (extends global .skeleton base)
+========================= */
+
+/* Keep row height aligned with real content */
+.appointment-table td {
+  padding: 14px 12px;
+}
+
+/* Remove global bottom margin inside table cells */
+.appointment-table .skeleton-text {
+  margin-bottom: 0;
+}
+
+/* Width modifiers for table columns */
+.appointment-table .short {
+  width: 60%;
+}
+
+.appointment-table .long {
+  width: 85%;
+}
+
+/* Optional: Slightly softer look inside table */
+.appointment-table .skeleton {
+  border-radius: 4px;
+}
+
+/* Optional: Stagger shimmer for smoother feel */
+.appointment-table tbody tr:nth-child(1) .skeleton::after {
+  animation-delay: 0s;
+}
+.appointment-table tbody tr:nth-child(2) .skeleton::after {
+  animation-delay: 0.1s;
+}
+.appointment-table tbody tr:nth-child(3) .skeleton::after {
+  animation-delay: 0.2s;
+}
+.appointment-table tbody tr:nth-child(4) .skeleton::after {
+  animation-delay: 0.3s;
+}
+.appointment-table tbody tr:nth-child(5) .skeleton::after {
+  animation-delay: 0.4s;
+}
+
+/* =========================
    RESPONSIVE (MODAL)
 ========================= */
 @media (max-width: 768px) {

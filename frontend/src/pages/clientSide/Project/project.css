@@ -8,10 +8,6 @@
    PAGE
 ========================================================= */
 
-.project-page {
-  padding: 2rem;
-}
-
 .project-header {
   margin-bottom: 1.25rem;
 }
@@ -25,7 +21,7 @@
   border: 1px solid rgba(0, 0, 0, 0.08);
   border-radius: 12px;
   overflow: hidden;
-    box-shadow:
+  box-shadow:
     0 4px 10px rgba(0, 0, 0, 0.05),
     0 18px 40px rgba(0, 0, 0, 0.06);
 }
@@ -110,19 +106,19 @@
 }
 
 .project-meta {
-  display: flex;          
-  align-items: center;    
-  gap: 8px;              
+  display: flex;
+  align-items: center;
+  gap: 8px;
   min-width: 0;
 }
 .project-text {
-  display: flex;          
-  flex-direction: column; 
-  min-width: 0;           
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
 }
 .dash-icon {
-  font-size: 2rem;       
-  flex-shrink: 0;         
+  font-size: 2rem;
+  flex-shrink: 0;
 }
 
 .project-title {
@@ -157,22 +153,22 @@
 }
 
 .project-status.active {
-  background: #e0e7ff; 
+  background: #e0e7ff;
   color: #4338ca;
 }
 
 .project-status.completed {
-  background: #d1fae5; 
+  background: #d1fae5;
   color: #047857;
 }
 
 .project-status.on_hold {
-   background: #fee2e2;
+  background: #fee2e2;
   color: #b91c1c;
 }
 
 .project-status.draft {
-   background: #f3f4f6;
+  background: #f3f4f6;
   color: #4a4e57;
 }
 
@@ -183,7 +179,7 @@
 }
 
 .project-status:hover {
-  transform: scale(1.05); 
+  transform: scale(1.05);
   transition: all 0.5s ease;
 }
 
@@ -192,7 +188,7 @@
 }
 
 .project-status.completed:hover {
-  background: #a7f3d0; 
+  background: #a7f3d0;
 }
 
 .project-status.on_hold:hover {
@@ -459,6 +455,78 @@
   background: rgba(255, 255, 255, 0.25);
 }
 
+/* =========================
+   Projects Skeleton Custom
+   (extends global .skeleton)
+========================= */
+
+/* Prevent bottom margin stacking */
+.project-skeleton-row .skeleton-text,
+.project-skeleton-row .skeleton-title {
+  margin-bottom: 0;
+}
+
+/* Keep layout aligned */
+.project-skeleton-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Fake icon */
+.project-icon-skeleton {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  margin-right: 14px;
+}
+
+/* Title placeholder */
+.project-title-skeleton {
+  width: 180px;
+  height: 16px;
+  border-radius: 4px;
+  margin-bottom: 6px;
+}
+
+/* Subtitle placeholder */
+.project-subtitle-skeleton {
+  width: 120px;
+  height: 12px;
+  border-radius: 4px;
+}
+
+/* Status badge placeholder */
+.project-status-skeleton {
+  width: 90px;
+  height: 28px;
+  border-radius: 20px;
+}
+
+/* Optional: subtle row divider like real list */
+.project-row + .project-row {
+  border-top: 1px solid #eee;
+}
+
+/* Optional stagger animation */
+.project-row:nth-child(1) .skeleton::after {
+  animation-delay: 0s;
+}
+.project-row:nth-child(2) .skeleton::after {
+  animation-delay: 0.1s;
+}
+.project-row:nth-child(3) .skeleton::after {
+  animation-delay: 0.2s;
+}
+.project-row:nth-child(4) .skeleton::after {
+  animation-delay: 0.3s;
+}
+.project-row:nth-child(5) .skeleton::after {
+  animation-delay: 0.4s;
+}
+.project-row:nth-child(6) .skeleton::after {
+  animation-delay: 0.5s;
+}
 
 /* =========================================================
    RESPONSIVE
