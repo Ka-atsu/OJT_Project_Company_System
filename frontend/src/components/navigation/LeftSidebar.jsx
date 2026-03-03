@@ -6,7 +6,7 @@ import {
   FaCalendarAlt,
   FaUserShield,
 } from "react-icons/fa";
-import useAuthUser from "../../pages/admin/useAuthUser";
+import useAuthUser from "../../pages/authentication/useAuthUser";
 
 export default function LeftSidebar() {
   const navigate = useNavigate();

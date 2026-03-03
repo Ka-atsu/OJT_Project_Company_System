@@ -17,6 +17,7 @@ import ClientAccountSettings from "./pages/clientSide/AccountSettings/ClientAcco
 import ClientAppointment from "./pages/clientSide/Appointment/ClientAppointment";
 import ClientProject from "./pages/clientSide/Project/ClientProject";
 import ClientDocuments from "./pages/clientSide/Document/ClientDocuments";
+import ClientRoute from "./pages/authentication/ClientRoute";
 
 import AdminAppointments from "./pages/admin/appointment/AdminAppointments";
 import AdminDashboard from "./pages/admin/dashboard/AdminDashboard";
@@ -24,7 +25,8 @@ import AdminProjects from "./pages/admin/project/AdminProjects";
 import AdminSettings from "./pages/admin/settings/AdminSettings";
 import AdminDocuments from "./pages/admin/document/AdminDocuments";
 
-import AdminRoute from "./pages/admin/AdminRoute";
+import AdminRoute from "./pages/authentication/AdminRoute";
+import GuestRoute from "./pages/authentication/GuestRoute";
 
 import ScrollManager from "./components/routing/ScrollManager";
 import { useLayoutEffect } from "react";
@@ -53,31 +55,31 @@ export default function App() {
           <Route path="projects" element={<Projects />} />
         </Route>
 
-        <Route path="/dashboard" element={<DashboardLayout />}>
-          <Route index element={<ClientDashboard />} />
-          <Route path="profile" element={<ClientAccountSettings />} />
-          <Route path="appointments" element={<ClientAppointment />} />
-          <Route path="documents" element={<ClientDocuments />} />
-          <Route path="projects" element={<ClientProject />} />
+        <Route element={<ClientRoute />}>
+          <Route path="/dashboard" element={<DashboardLayout />}>
+            <Route index element={<ClientDashboard />} />
+            <Route path="profile" element={<ClientAccountSettings />} />
+            <Route path="appointments" element={<ClientAppointment />} />
+            <Route path="documents" element={<ClientDocuments />} />
+            <Route path="projects" element={<ClientProject />} />
+          </Route>
         </Route>
 
-        <Route
-          path="/admin"
-          element={
-            <AdminRoute>
-              <DashboardLayout />
-            </AdminRoute>
-          }
-        >
-          <Route index element={<AdminDashboard />} />
-          <Route path="appointments" element={<AdminAppointments />} />
-          <Route path="documents" element={<AdminDocuments />} />
-          <Route path="projects" element={<AdminProjects />} />
-          <Route path="settings" element={<AdminSettings />} />
+        <Route element={<AdminRoute />}>
+          <Route path="/admin" element={<DashboardLayout />}>
+            <Route index element={<AdminDashboard />} />
+            <Route path="appointments" element={<AdminAppointments />} />
+            <Route path="documents" element={<AdminDocuments />} />
+            <Route path="projects" element={<AdminProjects />} />
+            <Route path="settings" element={<AdminSettings />} />
+          </Route>
         </Route>
 
-        <Route path="/login" element={<Auth />} />
-        <Route path="/register" element={<Auth />} />
+        <Route element={<GuestRoute />}>
+          <Route path="/login" element={<Auth />} />
+          <Route path="/register" element={<Auth />} />
+        </Route>
+
         <Route path="*" element={<NotFound />} />
       </Routes>
     </>
