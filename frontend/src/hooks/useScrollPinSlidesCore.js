@@ -15,26 +15,32 @@ export function useScrollPinSlidesCore({
   useLayoutEffect(() => {
     if (!wrapRef.current || !pinRef.current || !total) return;
 
-    let ctx = gsap.context(() => {
-      ScrollTrigger.create({
+    const ctx = gsap.context(() => {
+      const st = ScrollTrigger.create({
         id: `${id}-pin`,
         trigger: wrapRef.current,
         start: "top top",
-        // Calculated end point
         end: () => `+=${window.innerHeight * total * perSlideVh}`,
         pin: pinRef.current,
         pinSpacing: true,
         scrub: true,
-        invalidateOnRefresh: true, // Crucial for responsive resizing
-        refreshPriority: 1, // Ensures this pins before other triggers
+        invalidateOnRefresh: true,
         onUpdate: (self) => {
           const progress = Math.max(0, Math.min(0.999, self.progress));
           const idx = Math.floor(progress * total);
           setActive(idx);
         },
       });
+
+      // 🔥 CRITICAL PART
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          window.scrollTo(0, 0);
+          ScrollTrigger.refresh(true);
+        });
+      });
     }, wrapRef);
 
     return () => ctx.revert();
-  }, [total, perSlideVh, id, setActive, wrapRef, pinRef]);
+  }, [total, perSlideVh, id]);
 }

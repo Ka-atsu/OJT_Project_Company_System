@@ -10,8 +10,6 @@ import Contact from "./pages/landingPage/Contact/Contact";
 import Projects from "./pages/landingPage/Projects/Projects";
 import NotFound from "./pages/NotFound";
 
-//import Login from "./pages/authentication/Login";
-//import Register from "./pages/authentication/Register";
 import Auth from "./pages/authentication/Auth";
 
 import ClientDashboard from "./pages/clientSide/Dashboard/ClientDashboard";
@@ -26,11 +24,9 @@ import AdminProjects from "./pages/admin/project/AdminProjects";
 import AdminSettings from "./pages/admin/settings/AdminSettings";
 import AdminDocuments from "./pages/admin/document/AdminDocuments";
 
-import warlyTestingRoutes from "./testingRoutes/warlyTestingRoutes";
-import kentTestingRoutes from "./testingRoutes/kentTestingRoutes";
-
 import AdminRoute from "./pages/admin/AdminRoute";
 
+import ScrollManager from "./components/routing/ScrollManager";
 import { useLayoutEffect } from "react";
 
 export function DisableScrollRestoration() {
@@ -39,7 +35,6 @@ export function DisableScrollRestoration() {
       window.history.scrollRestoration = "manual";
     }
   }, []);
-
   return null;
 }
 
@@ -47,8 +42,9 @@ export default function App() {
   return (
     <>
       <DisableScrollRestoration />
+      <ScrollManager />
+
       <Routes>
-        {/* LANDING */}
         <Route path="/" element={<RootLayout />}>
           <Route index element={<HomeEntry />} />
           <Route path="about" element={<About />} />
@@ -57,7 +53,6 @@ export default function App() {
           <Route path="projects" element={<Projects />} />
         </Route>
 
-        {/* CLIENT DASHBOARD */}
         <Route path="/dashboard" element={<DashboardLayout />}>
           <Route index element={<ClientDashboard />} />
           <Route path="profile" element={<ClientAccountSettings />} />
@@ -66,7 +61,6 @@ export default function App() {
           <Route path="projects" element={<ClientProject />} />
         </Route>
 
-        {/* ADMIN (TEMP / INTERNAL) */}
         <Route
           path="/admin"
           element={
@@ -82,16 +76,9 @@ export default function App() {
           <Route path="settings" element={<AdminSettings />} />
         </Route>
 
-        {/* AUTH */}
         <Route path="/login" element={<Auth />} />
         <Route path="/register" element={<Auth />} />
-
-        {/* FALLBACK */}
         <Route path="*" element={<NotFound />} />
-
-        {/* Route tester to avoid merge conflict */}
-        {warlyTestingRoutes()}
-        {kentTestingRoutes()}
       </Routes>
     </>
   );
