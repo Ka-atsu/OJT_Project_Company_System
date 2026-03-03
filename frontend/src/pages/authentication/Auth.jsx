@@ -17,18 +17,17 @@ const Auth = () => {
   const [loading, setLoading] = useState(false);
   const [err, setErr] = useState("");
 
-  const Back_to_Home = (props) => {
-    return (
-      <button
-        className={`btn-back-to-home-pos-${props.className}`}
-        onClick={() => navigate("/")}
-        disabled={loading}
-      >
-        Landing Page
-      
-      </button>
-    );
-  }
+ const Back_to_Home = ({ className }) => {
+  return (
+    <button
+      className={className}
+      onClick={() => navigate("/")}
+      disabled={loading}
+    >
+      Return to Website
+    </button>
+  );
+};
 
   const toggleForm = () => {
     setErr("");
@@ -281,7 +280,7 @@ const Auth = () => {
                   <h2>Welcome Back!</h2>
                   <p className="auth-welcomeSub">Don&apos;t have an account?</p>
                   <button
-                    className="auth-btn auth-btnOutline"
+                    className="auth-btn auth-btnLogin"
                     onClick={toggleForm}
                     disabled={loading}
                   >
@@ -305,7 +304,7 @@ const Auth = () => {
                   <h2>Hello, Welcome!</h2>
                   <p className="auth-muted">Already have an account?</p>
                   <button
-                    className="auth-btn auth-btnOutline"
+                    className="auth-btn auth-btnLogin"
                     onClick={toggleForm}
                     disabled={loading}
                   >

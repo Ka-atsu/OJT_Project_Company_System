@@ -220,7 +220,7 @@
   align-items: center;
   justify-content: center;
   text-align: center;
-  transition: transform 0.3s ease-in-out;
+  transition: transform 0.8s ease-in-out;
   pointer-events: none;
 }
 
@@ -270,9 +270,12 @@
   border-bottom-right-radius: 0;
   border-top-left-radius: 80px;
   border-bottom-left-radius: 80px;
+  will-change: transform, border-radius;
+  transform: translateZ(0);
+
   transition:
-    transform 0.3s ease-in-out,
-    border-radius 0.3s ease-in-out;
+    transform 0.5s ease-out,
+    border-radius 0.5s ease-out;
 }
 
 /* RIGHT PANEL MOVED */
@@ -284,20 +287,20 @@
   border-bottom-left-radius: 0px;
 }
 
-.left-panel.moved-right {
+/* .left-panel.moved-right {
   transform: translateX(-100%);
 }
 
 .right-panel.moved-left {
   transform: translateX(-100%);
-}
+} */
 
 /* =====================
    PANEL CONTENT
 ===================== */
 .panel-content {
   color: white;
-  max-width: 420px;
+  max-width: 520px;
   width: 100%;
   pointer-events: auto;
   display: flex;
@@ -350,7 +353,7 @@
   align-items: center;
   justify-content: flex-start;
   flex: 1;
-  margin-top: 15%;
+  padding: 40px 20px 40px;
 }
 
 /* Panel headings */
@@ -359,7 +362,6 @@
   font-size: clamp(2rem, 3vw, 2.45rem);
   font-weight: 800;
   line-height: 1.05;
-  margin: 0 0 16px;
   text-align: center;
 }
 
@@ -388,10 +390,13 @@
   background: transparent;
   color: #fff;
   border: 1px solid rgba(255, 255, 255, 0.55);
-  width: 250px;
-  padding: 0.75rem 1.2rem;
+  width: fit-content;
+  padding: 0.7rem 2rem;
+  margin: 0.6rem auto;
+  display: block;
+  font-size: 1rem;
   border-radius: 999px;
-  font-weight: 800;
+  font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   cursor: pointer;
@@ -400,8 +405,6 @@
     opacity 0.18s ease,
     box-shadow 0.18s ease;
   line-height: 1;
-  margin-top: 0.6rem;
-  margin-bottom: 0.5rem;
 }
 
 .auth-btnOutline:hover {
@@ -410,12 +413,54 @@
   transform: translateY(-1px);
 }
 
+.auth-btnLogin {
+  background: #ffffff;
+  color: #0b2a63;
+  border: 1px solid #ffffff;
+
+  width: fit-content;
+  padding: 0.8rem 2.2rem;
+  margin: 0.6rem auto;
+  display: block;
+
+  font-size: 1rem;
+  border-radius: 999px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+
+  cursor: pointer;
+
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
+  transition:
+    transform 0.18s ease,
+    box-shadow 0.18s ease,
+    background 0.18s ease;
+  line-height: 1;
+}
+
+/* Hover state */
+.auth-btnLogin:hover {
+  background: #f2f6ff;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.25);
+}
+
+/* Active state */
+.auth-btnLogin:active {
+  transform: translateY(0);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
 /* Why section */
 .auth-why {
   margin-top: 1.6rem;
   font-size: 0.82rem;
   opacity: 0.92;
   color: rgba(255, 255, 255, 0.82);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 16px;
+  border-radius: 12px;
 }
 
 .auth-whyTitle {
@@ -426,13 +471,26 @@
 }
 
 .auth-why ul {
+  list-style: none;
   margin: 0;
-  padding-left: 18px;
+  padding: 0;
+
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px 24px; /* row gap, column gap */
 }
 
 .auth-why ul li {
-  margin-bottom: 0.35rem;
+  position: relative;
+  padding-left: 14px;
   line-height: 1.5;
+}
+
+.auth-why ul li::before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  color: rgba(255,255,255,0.7);
 }
 
 /* =====================
@@ -532,7 +590,7 @@
 ===================== */
 
 .auth-three {
-  height: 260px;
+  height: 200px;
   margin: 0 0 6px;
   display: flex;
   align-items: center;

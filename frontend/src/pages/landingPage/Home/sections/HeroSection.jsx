@@ -32,10 +32,7 @@ export default function HeroSection() {
   });
 
   return (
-    <section
-      ref={wrapRef}
-      className="hero-scroll"
-    >
+    <section ref={wrapRef} className="hero-scroll">
       <section ref={pinRef} className="hero full-bleed home-hero">
         <div className="home-hero-bg" aria-hidden="true">
           <img className="home-hero-bg-img" src={ImgConstructionSite} alt="" />
@@ -101,7 +98,7 @@ export default function HeroSection() {
                 <motion.div className="hero-actions">
                   <Link
                     to={heroScroll.getStarted.to}
-                    className="btn btn-outline"
+                    className="btn btn-filled"
                   >
                     {heroScroll.getStarted.label}
                   </Link>
