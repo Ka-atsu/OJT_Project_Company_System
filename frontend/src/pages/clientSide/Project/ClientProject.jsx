@@ -1,5 +1,6 @@
 import React from "react";
 import "./project.css";
+import "../globalClient.css";
 import ProjectModal from "./ProjectModal";
 import {
   getStatusClass,
@@ -97,7 +98,32 @@ export default function ClientProject() {
 
         <div className="project-list-wrap">
           {loading ? (
-            <div className="project-empty">Loading projects…</div>
+            <div className="project-list">
+              {[...Array(6)].map((_, i) => (
+                <div
+                  key={i}
+                  className="project-row project-row-btn project-skeleton-row"
+                >
+                  <div className="project-main">
+                    <div className="project-meta">
+                      {/* Icon placeholder */}
+                      <div className="skeleton project-icon-skeleton"></div>
+
+                      <div className="project-text">
+                        {/* Project name */}
+                        <div className="skeleton project-title-skeleton"></div>
+
+                        {/* Project type */}
+                        <div className="skeleton project-subtitle-skeleton"></div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Status badge */}
+                  <div className="skeleton project-status-skeleton"></div>
+                </div>
+              ))}
+            </div>
           ) : err ? (
             <div className="project-empty">Error: {err}</div>
           ) : pageProjects.length === 0 ? (
