@@ -5,6 +5,7 @@ import "./clientAccountSettings.css";
 import { useNavigate } from "react-router-dom";
 import ConfirmModal from "./confirmModal";
 import { logout } from "../../authentication/auth.service";
+import EmailVerificationModal from "./EmailVerificationModal";
 
 /* API services */
 import {
@@ -15,12 +16,16 @@ import {
   toggleTwoFactor,
   toggleNotifications,
   deleteAccount,
+  sendEmailVerification,
+  verifyEmailOtp,
 } from "./account.service";
 
 export default function ClientAccountSettings() {
   const [activeTab, setActiveTab] = useState("My Profile");
   const [showConfirm, setShowConfirm] = useState(false);
   const [user, setUser] = useState(null);
+  const [showVerifyModal, setShowVerifyModal] = useState(false);
+  const [otp, setOtp] = useState("");
 
   const navigate = useNavigate();
 
@@ -124,6 +129,11 @@ export default function ClientAccountSettings() {
      Toggle 2FA
   ========================= */
   const handleToggle2FA = async (enabled) => {
+    if (!user.email_verified_at) {
+      alert("Please verify your email before enabling 2-step verification.");
+      return;
+    }
+
     try {
       await toggleTwoFactor(enabled);
       await loadUser();
@@ -136,6 +146,11 @@ export default function ClientAccountSettings() {
      Toggle notifications
   ========================= */
   const handleToggleNotifications = async (enabled) => {
+    if (!user.email_verified_at) {
+      alert("Please verify your email before enabling notifications.");
+      return;
+    }
+
     try {
       await toggleNotifications(enabled);
       await loadUser();
@@ -158,6 +173,36 @@ export default function ClientAccountSettings() {
     } catch (err) {
       console.error(err);
       alert("Failed to delete account.");
+    }
+  };
+
+  /* =========================
+     Send Verification Code
+  ========================= */
+  const handleSendVerification = async () => {
+    try {
+      await sendEmailVerification();
+      setShowVerifyModal(true);
+      alert("Verification code sent to your email.");
+    } catch (err) {
+      console.error(err);
+      alert("Failed to send verification email.");
+    }
+  };
+
+  /* =========================
+     Send Verify Otp
+  ========================= */
+  const handleVerifyOtp = async () => {
+    try {
+      await verifyEmailOtp(otp);
+      alert("Email verified successfully!");
+      setShowVerifyModal(false);
+      setOtp("");
+      await loadUser();
+    } catch (err) {
+      console.error(err);
+      alert("Invalid verification code.");
     }
   };
 
@@ -204,6 +249,7 @@ export default function ClientAccountSettings() {
               <Toggle
                 checked={user.two_factor_enabled}
                 onChange={handleToggle2FA}
+                disabled={!user.email_verified_at}
               />
             }
           />
@@ -244,6 +290,16 @@ export default function ClientAccountSettings() {
             title="Email"
             desc="Used for login and important notifications."
             value={user.email}
+            action={
+              !user.email_verified_at && (
+                <button
+                  className="btn-outline"
+                  onClick={handleSendVerification}
+                >
+                  Verify Email
+                </button>
+              )
+            }
           />
         </div>
       )}
@@ -260,6 +316,7 @@ export default function ClientAccountSettings() {
               <Toggle
                 checked={user.account_activity_notifications}
                 onChange={handleToggleNotifications}
+                disabled={!user.email_verified_at}
               />
             }
           />
@@ -296,6 +353,17 @@ export default function ClientAccountSettings() {
           alert("You have been logged out successfully.");
           navigate("/");
         }}
+      />
+
+      <EmailVerificationModal
+        open={showVerifyModal}
+        otp={otp}
+        setOtp={setOtp}
+        onClose={() => {
+          setShowVerifyModal(false);
+          setOtp("");
+        }}
+        onVerify={handleVerifyOtp}
       />
     </div>
   );

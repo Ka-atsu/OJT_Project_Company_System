@@ -16,10 +16,11 @@ return new class extends Migration
             $table->string('name');
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
+            $table->string('email_verification_code')->nullable();
             $table->string('password');
             $table->boolean('is_admin')->default(false);
             $table->boolean('two_factor_enabled')->default(false);
-            $table->boolean('account_activity_notifications')->default(true);
+            $table->boolean('account_activity_notifications')->default(false);
             $table->rememberToken();
             $table->timestamps();
         });
