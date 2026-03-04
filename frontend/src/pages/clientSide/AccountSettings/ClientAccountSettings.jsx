@@ -1,26 +1,131 @@
-import { useState, useEffect  } from "react";
+import { useState, useEffect } from "react";
 import AccountNav from "../../../components/navigation/AccountNav";
-import {
-  SettingRow,
-  Divider,
-  Toggle,
-} from "./AccountSettingsComponent";
+import { SettingRow, Divider, Toggle } from "./AccountSettingsComponent";
 import "./clientAccountSettings.css";
 import { useNavigate } from "react-router-dom";
 import ConfirmModal from "./confirmModal";
 import { logout } from "../../authentication/auth.service";
 
+/* API services */
+import {
+  getUser,
+  updateProfile,
+  updateEmail,
+  changePassword,
+  toggleTwoFactor,
+  deleteAccount,
+} from "./account.service";
+
 export default function ClientAccountSettings() {
   const [activeTab, setActiveTab] = useState("My Profile");
   const [showConfirm, setShowConfirm] = useState(false);
   const [user, setUser] = useState(null);
+
   const navigate = useNavigate();
 
-  // Load user from localStorage
+  /* =========================
+     Fetch user from backend
+  ========================= */
+  const loadUser = async () => {
+    try {
+      const data = await getUser();
+      setUser(data);
+    } catch (err) {
+      console.error("Failed to load user", err);
+    }
+  };
+
   useEffect(() => {
-    const stored = localStorage.getItem("user");
-    if (stored) setUser(JSON.parse(stored));
+    loadUser();
   }, []);
+
+  /* =========================
+     Update name
+  ========================= */
+  const handleUpdateName = async () => {
+    const name = prompt("Enter new name", user?.name);
+
+    if (!name) return;
+
+    try {
+      await updateProfile({ name });
+      await loadUser();
+      alert("Name updated successfully.");
+    } catch (err) {
+      console.error(err);
+      alert("Failed to update name.");
+    }
+  };
+
+  /* =========================
+     Update email
+  ========================= */
+  const handleUpdateEmail = async () => {
+    const email = prompt("Enter new email", user?.email);
+
+    if (!email) return;
+
+    try {
+      await updateEmail(email);
+      await loadUser();
+      alert("Email updated successfully.");
+    } catch (err) {
+      console.error(err);
+      alert("Failed to update email.");
+    }
+  };
+
+  /* =========================
+     Change password
+  ========================= */
+  const handleChangePassword = async () => {
+    const current_password = prompt("Enter current password");
+    const password = prompt("Enter new password");
+
+    if (!current_password || !password) return;
+
+    try {
+      await changePassword({
+        current_password,
+        password,
+        password_confirmation: password,
+      });
+
+      alert("Password updated successfully.");
+    } catch (err) {
+      console.error(err);
+      alert("Failed to update password.");
+    }
+  };
+
+  /* =========================
+     Toggle 2FA
+  ========================= */
+  const handleToggle2FA = async (enabled) => {
+    try {
+      await toggleTwoFactor(enabled);
+      alert("Two-factor setting updated.");
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  /* =========================
+     Delete account
+  ========================= */
+  const handleDeleteAccount = async () => {
+    if (!window.confirm("Are you sure you want to delete your account?"))
+      return;
+
+    try {
+      await deleteAccount();
+      alert("Account deleted successfully.");
+      navigate("/");
+    } catch (err) {
+      console.error(err);
+      alert("Failed to delete account.");
+    }
+  };
 
   return (
     <div className="account-settings">
@@ -28,13 +133,18 @@ export default function ClientAccountSettings() {
 
       <AccountNav active={activeTab} onChange={setActiveTab} />
 
+      {/* SECURITY TAB */}
       {activeTab === "Security" && (
         <div className="account-card">
           <SettingRow
             title="Email address"
             desc="The email address associated with your account"
             value={user?.email || ""}
-            action={<button className="btn-outline">Edit</button>}
+            action={
+              <button className="btn-outline" onClick={handleUpdateEmail}>
+                Edit
+              </button>
+            }
           />
 
           <Divider />
@@ -42,7 +152,11 @@ export default function ClientAccountSettings() {
           <SettingRow
             title="Password"
             desc="Set a unique password to protect your account"
-            action={<button className="btn-outline">Change Password</button>}
+            action={
+              <button className="btn-outline" onClick={handleChangePassword}>
+                Change Password
+              </button>
+            }
           />
 
           <Divider />
@@ -50,7 +164,12 @@ export default function ClientAccountSettings() {
           <SettingRow
             title="2-step Verification"
             desc="Make your account extra secure."
-            action={<Toggle defaultChecked />}
+            action={
+              <Toggle
+                defaultChecked={false}
+                onChange={(e) => handleToggle2FA(e.target.checked)}
+              />
+            }
           />
 
           <Divider />
@@ -58,18 +177,27 @@ export default function ClientAccountSettings() {
           <SettingRow
             title="Delete Account"
             desc="This will permanently delete your account"
-            action={<button className="btn-danger">Delete</button>}
+            action={
+              <button className="btn-danger" onClick={handleDeleteAccount}>
+                Delete
+              </button>
+            }
           />
         </div>
       )}
 
+      {/* PROFILE TAB */}
       {activeTab === "My Profile" && (
         <div className="account-card">
           <SettingRow
             title="Name"
             desc="This name is used across your account."
-             value={user?.name || ""}
-            action={<button className="btn-outline">Edit</button>}
+            value={user?.name || ""}
+            action={
+              <button className="btn-outline" onClick={handleUpdateName}>
+                Edit
+              </button>
+            }
           />
 
           <Divider />
@@ -77,12 +205,12 @@ export default function ClientAccountSettings() {
           <SettingRow
             title="Email"
             desc="Used for login and important notifications."
-             value={user?.email || ""}
-            action={<button className="btn-outline">Change</button>}
+            value={user?.email || ""}
           />
         </div>
       )}
 
+      {/* NOTIFICATIONS TAB */}
       {activeTab === "Notifications" && (
         <div className="account-card">
           <SettingRow
@@ -101,36 +229,35 @@ export default function ClientAccountSettings() {
 
           <Divider />
 
-            <SettingRow
-              title="Return to Landing Page"
-              desc="Leave the dashboard and go back to the public website."
-              action={
-                <button
-                  className="btn-outline"
-                  onClick={() => setShowConfirm(true)}
-                >
-                  Back to Landing Page
-                </button>
-              }
-            />
+          <SettingRow
+            title="Return to Landing Page"
+            desc="Leave the dashboard and go back to the public website."
+            action={
+              <button
+                className="btn-outline"
+                onClick={() => setShowConfirm(true)}
+              >
+                Back to Landing Page
+              </button>
+            }
+          />
         </div>
       )}
-      {/* Confirmation modal for going back to the landing page */}
-      {/* Verified! it also logout the account after returning */}
-      <ConfirmModal
-          open={showConfirm}
-          title="Return to Landing Page?"
-          message="You will leave the dashboard and return to the public website."
-          confirmText="Back to Landing Page"
-          cancelText="Stay Here"
-          onCancel={() => setShowConfirm(false)}
-          onConfirm={async () => {
-            await logout();   // log out user
-            alert("You have been logged out successfully.");//just for confirmation can be change to a popup
-            navigate("/");    // redirect to landing page
-          }}
-/>
 
+      {/* CONFIRM MODAL */}
+      <ConfirmModal
+        open={showConfirm}
+        title="Return to Landing Page?"
+        message="You will leave the dashboard and return to the public website."
+        confirmText="Back to Landing Page"
+        cancelText="Stay Here"
+        onCancel={() => setShowConfirm(false)}
+        onConfirm={async () => {
+          await logout();
+          alert("You have been logged out successfully.");
+          navigate("/");
+        }}
+      />
     </div>
   );
 }
