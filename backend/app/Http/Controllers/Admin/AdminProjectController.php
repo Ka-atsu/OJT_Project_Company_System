@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use App\Models\ProjectPhoto;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Log;
+use App\Services\NotificationService;
 use App\Models\ActivityLog;
 use Illuminate\Support\Facades\Auth;
 
@@ -135,6 +135,14 @@ class AdminProjectController extends Controller
             'related_type' => 'Project',
         ]);
 
+        NotificationService::send(
+            $project->user,
+            'project',
+            "A new project '{$project->name}' has been created for you.",
+            $project->id,
+            'Project'
+        );
+
         return (new ProjectResource(
             $project->load(['user', 'milestones', 'photos'])
         ))->response()->setStatusCode(201);
@@ -226,6 +234,14 @@ class AdminProjectController extends Controller
                 'related_id' => $project->id,
                 'related_type' => 'Project',
             ]);
+
+            NotificationService::send(
+                $project->user,
+                'project',
+                "Your project '{$project->name}' has been updated.",
+                $project->id,
+                'Project'
+            );
         }
 
         return new ProjectResource(
@@ -268,6 +284,14 @@ class AdminProjectController extends Controller
             'related_id' => $id,
             'related_type' => 'Project',
         ]);
+
+        NotificationService::send(
+            $project->user,
+            'project',
+            "Your project '{$name}' has been removed.",
+            $id,
+            'Project'
+        );
 
         return response()->json([
             'message' => 'Project deleted successfully'

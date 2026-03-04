@@ -101,4 +101,22 @@ class UserController extends Controller
             'message' => 'Account deleted successfully.',
         ]);
     }
+
+    public function toggleNotifications(Request $request)
+    {
+        $request->validate([
+            'enabled' => ['required', 'boolean'],
+        ]);
+
+        $user = $request->user();
+
+        $user->update([
+            'account_activity_notifications' => $request->enabled,
+        ]);
+
+        return response()->json([
+            'message' => 'Notification settings updated.',
+            'account_activity_notifications' => $user->account_activity_notifications,
+        ]);
+    }
 }

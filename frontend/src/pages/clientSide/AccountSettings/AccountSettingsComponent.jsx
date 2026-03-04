@@ -15,10 +15,14 @@ export function Divider() {
   return <div className="divider" />;
 }
 
-export function Toggle({ defaultChecked }) {
+export function Toggle({ checked, onChange }) {
   return (
     <label className="toggle">
-      <input type="checkbox" defaultChecked={defaultChecked} />
+      <input
+        type="checkbox"
+        checked={checked}
+        onChange={(e) => onChange(e.target.checked)}
+      />
       <span className="slider" />
     </label>
   );

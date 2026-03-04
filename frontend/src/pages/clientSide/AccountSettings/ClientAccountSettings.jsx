@@ -13,6 +13,7 @@ import {
   updateEmail,
   changePassword,
   toggleTwoFactor,
+  toggleNotifications,
   deleteAccount,
 } from "./account.service";
 
@@ -39,11 +40,32 @@ export default function ClientAccountSettings() {
     loadUser();
   }, []);
 
+  if (!user)
+    return (
+      <div className="account-settings">
+        <div className="skeleton skeleton-title" />
+
+        <div className="account-tabs">
+          <div className="skeleton skeleton-tab" />
+          <div className="skeleton skeleton-tab" />
+          <div className="skeleton skeleton-tab" />
+        </div>
+
+        <div className="account-card">
+          <div className="skeleton skeleton-row" />
+          <div className="divider" />
+          <div className="skeleton skeleton-row" />
+          <div className="divider" />
+          <div className="skeleton skeleton-row" />
+        </div>
+      </div>
+    );
+
   /* =========================
      Update name
   ========================= */
   const handleUpdateName = async () => {
-    const name = prompt("Enter new name", user?.name);
+    const name = prompt("Enter new name", user.name);
 
     if (!name) return;
 
@@ -61,7 +83,7 @@ export default function ClientAccountSettings() {
      Update email
   ========================= */
   const handleUpdateEmail = async () => {
-    const email = prompt("Enter new email", user?.email);
+    const email = prompt("Enter new email", user.email);
 
     if (!email) return;
 
@@ -104,7 +126,19 @@ export default function ClientAccountSettings() {
   const handleToggle2FA = async (enabled) => {
     try {
       await toggleTwoFactor(enabled);
-      alert("Two-factor setting updated.");
+      await loadUser();
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  /* =========================
+     Toggle notifications
+  ========================= */
+  const handleToggleNotifications = async (enabled) => {
+    try {
+      await toggleNotifications(enabled);
+      await loadUser();
     } catch (err) {
       console.error(err);
     }
@@ -133,13 +167,15 @@ export default function ClientAccountSettings() {
 
       <AccountNav active={activeTab} onChange={setActiveTab} />
 
-      {/* SECURITY TAB */}
+      {/* =========================
+         SECURITY TAB
+      ========================= */}
       {activeTab === "Security" && (
         <div className="account-card">
           <SettingRow
             title="Email address"
             desc="The email address associated with your account"
-            value={user?.email || ""}
+            value={user.email}
             action={
               <button className="btn-outline" onClick={handleUpdateEmail}>
                 Edit
@@ -166,8 +202,8 @@ export default function ClientAccountSettings() {
             desc="Make your account extra secure."
             action={
               <Toggle
-                defaultChecked={false}
-                onChange={(e) => handleToggle2FA(e.target.checked)}
+                checked={user.two_factor_enabled}
+                onChange={handleToggle2FA}
               />
             }
           />
@@ -186,13 +222,15 @@ export default function ClientAccountSettings() {
         </div>
       )}
 
-      {/* PROFILE TAB */}
+      {/* =========================
+         PROFILE TAB
+      ========================= */}
       {activeTab === "My Profile" && (
         <div className="account-card">
           <SettingRow
             title="Name"
             desc="This name is used across your account."
-            value={user?.name || ""}
+            value={user.name}
             action={
               <button className="btn-outline" onClick={handleUpdateName}>
                 Edit
@@ -205,26 +243,25 @@ export default function ClientAccountSettings() {
           <SettingRow
             title="Email"
             desc="Used for login and important notifications."
-            value={user?.email || ""}
+            value={user.email}
           />
         </div>
       )}
 
-      {/* NOTIFICATIONS TAB */}
+      {/* =========================
+         NOTIFICATIONS TAB
+      ========================= */}
       {activeTab === "Notifications" && (
         <div className="account-card">
           <SettingRow
             title="Account activity"
             desc="Notifications about important account activity."
-            action={<Toggle defaultChecked />}
-          />
-
-          <Divider />
-
-          <SettingRow
-            title="Security alerts"
-            desc="Alerts for new logins or unusual activity."
-            action={<Toggle defaultChecked />}
+            action={
+              <Toggle
+                checked={user.account_activity_notifications}
+                onChange={handleToggleNotifications}
+              />
+            }
           />
 
           <Divider />
@@ -244,7 +281,9 @@ export default function ClientAccountSettings() {
         </div>
       )}
 
-      {/* CONFIRM MODAL */}
+      {/* =========================
+         CONFIRM MODAL
+      ========================= */}
       <ConfirmModal
         open={showConfirm}
         title="Return to Landing Page?"

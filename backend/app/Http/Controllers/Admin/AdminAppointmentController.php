@@ -8,10 +8,11 @@ use App\Models\Appointment;
 use Illuminate\Http\Request;
 use App\Models\ActivityLog;
 use Illuminate\Support\Facades\Auth;
+use App\Services\NotificationService;
 
 class AdminAppointmentController extends Controller
 {
-    // GET /api/admin/appointments?status=pending|accepted|declined|all&page=1&limit=12&q=
+    // GET /api/admin/appointments
     public function index(Request $request)
     {
         $status = $request->query('status', 'pending');
@@ -19,8 +20,7 @@ class AdminAppointmentController extends Controller
         $qText  = trim((string) $request->query('q', ''));
         $sort   = $request->query('sort', 'scheduled_at_asc');
 
-        $q = Appointment::query()
-            ->with('user');
+        $q = Appointment::query()->with('user');
 
         if ($status !== 'all') {
             $q->where('approval_status', $status);
@@ -28,11 +28,9 @@ class AdminAppointmentController extends Controller
 
         if ($qText !== '') {
             $q->where(function ($sub) use ($qText) {
-
                 $sub->where('project', 'like', "%{$qText}%")
                     ->orWhere('purpose', 'like', "%{$qText}%")
                     ->orWhere('id', $qText)
-
                     ->orWhereHas('user', function ($u) use ($qText) {
                         $u->where('name', 'like', "%{$qText}%")
                             ->orWhere('email', 'like', "%{$qText}%");
@@ -40,7 +38,6 @@ class AdminAppointmentController extends Controller
             });
         }
 
-        // REPLACE HARD-CODED SORT WITH THIS
         switch ($sort) {
             case 'scheduled_at_desc':
                 $q->orderBy('scheduled_at', 'desc');
@@ -87,12 +84,17 @@ class AdminAppointmentController extends Controller
             'meeting_notes',
         ]));
 
-        // Log activity if status changed
+        // If appointment status changed
         if ($request->filled('approval_status') && $oldStatus !== $appointment->approval_status) {
 
             $admin = Auth::user();
             $adminName = $admin ? $admin->name : 'System';
 
+            /*
+            |-----------------------------------------
+            | Activity Log
+            |-----------------------------------------
+            */
             ActivityLog::create([
                 'user_id' => Auth::id(),
                 'type' => 'appointment',
@@ -101,6 +103,19 @@ class AdminAppointmentController extends Controller
                 'related_id' => $appointment->id,
                 'related_type' => 'Appointment',
             ]);
+
+            /*
+            |-----------------------------------------
+            | Send Notification to Client
+            |-----------------------------------------
+            */
+            NotificationService::send(
+                $appointment->user,
+                'appointment',
+                "Your appointment #{$appointment->id} has been {$appointment->approval_status}.",
+                $appointment->id,
+                'Appointment'
+            );
         }
 
         return response()->json(

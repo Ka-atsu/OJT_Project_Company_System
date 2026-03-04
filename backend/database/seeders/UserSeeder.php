@@ -36,8 +36,8 @@ class UserSeeder extends Seeder
         // =========================
 
         $users = [
-            ['name' => 'Kent', 'email' => 'kent@cliberduche.com'],
-            ['name' => 'Warly', 'email' => 'warly@cliberduche.com'],
+            ['name' => 'Kent', 'email' => 'tallaferkent775@gmail.com'],
+            ['name' => 'Warly', 'email' => 'jaculanwarlyfrance52@gmail.com'],
             ['name' => 'Jash', 'email' => 'jash@cliberduche.com'],
             ['name' => 'Jenny', 'email' => 'jenny@cliberduche.com'],
             ['name' => 'Matthew', 'email' => 'matthew@cliberduche.com'],

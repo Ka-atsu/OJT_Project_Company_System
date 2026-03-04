@@ -22,11 +22,13 @@ Route::get('/projects/showcase', [PublicProjectController::class, 'showcase']);
 Route::middleware('auth:sanctum')->get('/user', fn(Request $request) => $request->user());
 
 Route::middleware('auth:sanctum')->group(function () {
+    // User Client or Admin
     Route::put('/user/profile', [UserController::class, 'updateProfile']);
     Route::put('/user/email', [UserController::class, 'updateEmail']);
     Route::put('/user/password', [UserController::class, 'updatePassword']);
     Route::put('/user/2fa', [UserController::class, 'toggleTwoFactor']);
     Route::delete('/user', [UserController::class, 'destroy']);
+    Route::patch('/user/notifications', [UserController::class, 'toggleNotifications']);
 
     // appointments (client)
     Route::get('/appointments', [AppointmentController::class, 'index']);

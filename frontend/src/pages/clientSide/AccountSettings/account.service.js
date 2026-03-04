@@ -37,11 +37,20 @@ export const changePassword = async (data) => {
 };
 
 /* =========================
-   Toggle 2FA
+   Toggle Two Factor Authentication
 ========================= */
 export const toggleTwoFactor = async (enabled) => {
   await csrf();
   const res = await api.put("/api/user/2fa", { enabled });
+  return res.data;
+};
+
+/* =========================
+   Toggle Notifications
+========================= */
+export const toggleNotifications = async (enabled) => {
+  await csrf();
+  const res = await api.patch("/api/user/notifications", { enabled });
   return res.data;
 };
 
