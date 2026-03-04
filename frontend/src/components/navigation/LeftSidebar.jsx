@@ -23,7 +23,8 @@ export default function LeftSidebar() {
     }
   };
 
-  if (loading) return null; // Prevent flicker while loading user
+  // Its good if its 1 component
+  // if (loading) return null; // Prevent flicker while loading user
 
   return (
     <aside className="dash-sidebar">

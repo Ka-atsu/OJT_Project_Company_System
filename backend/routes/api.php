@@ -14,7 +14,7 @@ use App\Http\Controllers\Admin\AdminProjectController;
 use App\Http\Controllers\Admin\AdminDashboardController;
 
 use App\Http\Controllers\ContactController;
-use App\Http\Controllers\Auth\UserPasswordController;
+use App\Http\Controllers\Auth\UserController;
 
 Route::post('/contact', [ContactController::class, 'send']);
 Route::get('/projects/showcase', [PublicProjectController::class, 'showcase']);
@@ -22,7 +22,14 @@ Route::get('/projects/showcase', [PublicProjectController::class, 'showcase']);
 Route::middleware('auth:sanctum')->get('/user', fn(Request $request) => $request->user());
 
 Route::middleware('auth:sanctum')->group(function () {
-    Route::put('/user/password', [UserPasswordController::class, 'update']);
+    // User Client or Admin
+    Route::put('/user/profile', [UserController::class, 'updateProfile']);
+    Route::put('/user/email', [UserController::class, 'updateEmail']);
+    Route::put('/user/password', [UserController::class, 'updatePassword']);
+    Route::put('/user/2fa', [UserController::class, 'toggleTwoFactor']);
+    Route::delete('/user', [UserController::class, 'destroy']);
+    Route::patch('/user/notifications', [UserController::class, 'toggleNotifications']);
+
     // appointments (client)
     Route::get('/appointments', [AppointmentController::class, 'index']);
     Route::post('/appointments', [AppointmentController::class, 'store']);
