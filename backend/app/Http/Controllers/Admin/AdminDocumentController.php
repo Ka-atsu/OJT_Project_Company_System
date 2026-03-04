@@ -7,7 +7,8 @@ use Illuminate\Http\Request;
 use App\Models\Document;
 use App\Http\Resources\DocumentResource;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Validation\Rule;
+use App\Services\NotificationService;
+use App\Models\User;
 use App\Models\ActivityLog;
 use Illuminate\Support\Facades\Auth;
 
@@ -190,6 +191,16 @@ class AdminDocumentController extends Controller
             'related_type' => 'Document',
         ]);
 
+        $user = User::find($validated['user_id']);
+
+        NotificationService::send(
+            $user,
+            'document',
+            "A new document '{$doc->name}' has been uploaded to your account.",
+            $doc->id,
+            'Document'
+        );
+
         return (new DocumentResource($doc->load('user')))
             ->response()
             ->setStatusCode(201);
@@ -250,6 +261,14 @@ class AdminDocumentController extends Controller
             'related_type' => 'Document',
         ]);
 
+        NotificationService::send(
+            $document->user,
+            'document',
+            "Your document '{$document->name}' has been updated.",
+            $document->id,
+            'Document'
+        );
+
         return (new DocumentResource($document->fresh()->load('user')))->response();
     }
 
@@ -278,6 +297,14 @@ class AdminDocumentController extends Controller
             'related_id' => $id,
             'related_type' => 'Document',
         ]);
+
+        NotificationService::send(
+            $document->user,
+            'document',
+            "Your document '{$name}' has been removed from your account.",
+            $id,
+            'Document'
+        );
 
         return response()->json(['ok' => true]);
     }
