@@ -1,7 +1,6 @@
 /* =========================================================
-   PROJECTS PAGE — PAGE ONLY
-   Uses global dash primitives from index.css
-   (cleaned: removed duplicates + made modal backend-image-ready)
+   PROJECTS PAGE — THEME ALIGNED
+   Uses global dash tokens
 ========================================================= */
 
 /* =========================================================
@@ -9,7 +8,9 @@
 ========================================================= */
 
 .project-header {
-  margin-bottom: 1.25rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--dash-border-soft);
 }
 
 /* =========================================================
@@ -17,41 +18,40 @@
 ========================================================= */
 
 .project-surface {
-  background: #fff;
-  border: 1px solid rgba(0, 0, 0, 0.08);
+  background: var(--dash-surface);
+  border: 1px solid var(--dash-border);
   border-radius: 12px;
   overflow: hidden;
-  box-shadow:
-    0 4px 10px rgba(0, 0, 0, 0.05),
-    0 18px 40px rgba(0, 0, 0, 0.06);
+  box-shadow: var(--dash-shadow-sm), var(--dash-shadow-md);
 }
 
 .project-surface-header {
   padding: 0.9rem 1rem;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  border-bottom: 1px solid var(--dash-border);
   font-size: 0.85rem;
-  color: #111827;
+  color: var(--dash-text);
 }
 
 /* =========================================================
-   FILTERS (Tabs-like)
+   FILTERS
 ========================================================= */
 
 .project-filters {
   display: flex;
   gap: 0.75rem;
   padding: 0.75rem 1rem;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  border-bottom: 1px solid var(--dash-border-soft);
   flex-wrap: wrap;
 }
 
 .project-filter.is-active {
-  background: rgba(0, 0, 0, 0.08);
+  background: rgba(9, 14, 122, 0.08);
+  color: var(--dash-primary);
   font-weight: 600;
 }
 
 /* =========================================================
-   LIST (Scroll Area)
+   LIST
 ========================================================= */
 
 .project-list-wrap {
@@ -64,7 +64,6 @@
   flex-direction: column;
 }
 
-/* Row (also supports button) */
 .project-row {
   width: 100%;
   display: flex;
@@ -73,7 +72,7 @@
   gap: 1rem;
 
   padding: 0.9rem 1rem;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  border-bottom: 1px solid var(--dash-border-soft);
   background: transparent;
 }
 
@@ -81,7 +80,6 @@
   border-bottom: none;
 }
 
-/* clickability without breaking layout */
 .project-row-btn {
   border: 0;
   text-align: left;
@@ -89,14 +87,14 @@
 }
 
 .project-row-btn:focus-visible {
-  outline: 2px solid #2b8cff;
+  outline: 2px solid var(--dash-primary);
   outline-offset: 2px;
   border-radius: 10px;
 }
 
 @media (hover: hover) {
   .project-row:hover {
-    background: rgba(0, 0, 0, 0.02);
+    background: rgba(9, 14, 122, 0.05);
   }
 }
 
@@ -111,13 +109,17 @@
   gap: 8px;
   min-width: 0;
 }
+
 .project-text {
   display: flex;
   flex-direction: column;
   min-width: 0;
 }
+
 .dash-icon {
-  font-size: 2rem;
+  font-size: 1.3rem;
+  color: var(--dash-primary);
+  opacity: 0.9;
   flex-shrink: 0;
 }
 
@@ -125,7 +127,7 @@
   margin: 0;
   font-weight: 700;
   font-size: 0.95rem;
-  color: #111827;
+  color: var(--dash-primary);
 
   white-space: nowrap;
   overflow: hidden;
@@ -135,77 +137,67 @@
 .project-subtitle {
   margin: 0;
   font-size: 0.85rem;
-  color: #6b7280;
+  color: var(--dash-muted);
 
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-/* Status pill */
+/* =========================================================
+   STATUS
+========================================================= */
+
 .project-status {
   padding: 6px 12px;
   border-radius: 10px;
   font-size: 0.75rem;
   font-weight: 700;
   white-space: nowrap;
-  border: 1px solid rgba(0, 0, 0, 0.08);
+  border: 1px solid var(--dash-border);
 }
 
 .project-status.active {
-  background: #e0e7ff;
-  color: #4338ca;
+  background: rgba(9, 14, 122, 0.12);
+  color: var(--dash-primary);
 }
 
 .project-status.completed {
-  background: #d1fae5;
-  color: #047857;
+  background: rgba(9, 122, 122, 0.15);
+  color: #065f46;
 }
 
 .project-status.on_hold {
-  background: #fee2e2;
-  color: #b91c1c;
+  background: rgba(239, 68, 68, 0.12);
+  color: #991b1b;
 }
 
 .project-status.draft {
-  background: #f3f4f6;
-  color: #4a4e57;
+  background: rgba(60, 70, 122, 0.12);
+  color: var(--dash-muted);
 }
 
-/* Empty state */
+.project-status:hover {
+  transform: scale(1.05);
+  transition: all 0.2s ease;
+}
+
+/* =========================================================
+   EMPTY
+========================================================= */
+
 .project-empty {
   padding: 16px;
   opacity: 0.7;
 }
 
-.project-status:hover {
-  transform: scale(1.05);
-  transition: all 0.5s ease;
-}
-
-.project-status.active:hover {
-  background: #c7d2fe;
-}
-
-.project-status.completed:hover {
-  background: #a7f3d0;
-}
-
-.project-status.on_hold:hover {
-  background: #fecaca;
-}
-
-.project-status.draft:hover {
-  background: #e5e7eb;
-}
-
 /* =========================================================
-   PAGINATION (Separate Bar)
+   PAGINATION
 ========================================================= */
 
 .project-pagination {
   padding: 0.75rem;
-  border-top: 1px solid rgba(0, 0, 0, 0.08);
+  border-top: 1px solid var(--dash-border);
 
   display: flex;
   align-items: center;
@@ -218,7 +210,7 @@
 }
 
 /* =========================================================
-   PROJECT MODAL (Overlay)
+   MODAL
 ========================================================= */
 
 .project-overlay {
@@ -243,7 +235,7 @@
   z-index: 1000;
   width: min(900px, 100%);
   border-radius: 18px;
-  background: #fff;
+  background: var(--dash-surface);
   box-shadow:
     0 10px 30px rgba(0, 0, 0, 0.12),
     0 30px 80px rgba(0, 0, 0, 0.18);
@@ -268,14 +260,14 @@
   align-items: flex-start;
   justify-content: space-between;
   gap: 1rem;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  border-bottom: 1px solid var(--dash-border);
 }
 
 .project-modal-title {
   margin: 0;
   font-size: 1rem;
   font-weight: 800;
-  color: #111827;
+  color: var(--dash-primary);
   text-transform: uppercase;
   letter-spacing: 0.02em;
 }
@@ -283,7 +275,7 @@
 .project-modal-subtitle {
   margin: 2px 0 0;
   font-size: 0.85rem;
-  color: #6b7280;
+  color: var(--dash-muted);
 }
 
 .project-modal-close {
@@ -319,17 +311,17 @@
 
 .project-modal-label {
   font-size: 0.75rem;
-  color: #6b7280;
+  color: var(--dash-muted);
 }
 
 .project-modal-value {
   margin: 0;
   font-size: 0.9rem;
-  color: #111827;
+  color: var(--dash-text);
 }
 
 /* =========================================================
-   MODAL MEDIA (backend-ready images + thumbs)
+   MEDIA
 ========================================================= */
 
 .project-modal-media {
@@ -338,7 +330,7 @@
 }
 
 .project-modal-media-main {
-  border: 1px solid rgba(0, 0, 0, 0.08);
+  border: 1px solid var(--dash-border);
   border-radius: 14px;
   overflow: hidden;
   position: relative;
@@ -361,15 +353,14 @@
 
 .project-modal-count {
   font-weight: 800;
-  color: #111827;
+  color: var(--dash-text);
   background: rgba(17, 24, 39, 0.06);
   padding: 0.45rem 0.85rem;
   border-radius: 999px;
-  border: 1px solid rgba(0, 0, 0, 0.08);
+  border: 1px solid var(--dash-border);
   font-size: 0.85rem;
 }
 
-/* thumbs */
 .project-modal-thumbs {
   display: flex;
   gap: 0.5rem;
@@ -378,7 +369,7 @@
 }
 
 .project-modal-thumb {
-  border: 1px solid rgba(0, 0, 0, 0.08);
+  border: 1px solid var(--dash-border);
   background: #fff;
   border-radius: 12px;
   padding: 0;
@@ -388,7 +379,7 @@
 }
 
 .project-modal-thumb.is-active {
-  border-color: rgba(0, 0, 0, 0.25);
+  border-color: var(--dash-primary);
 }
 
 .project-modal-thumb-img {
@@ -399,7 +390,7 @@
 }
 
 /* =========================================================
-   FULL IMAGE LIGHTBOX
+   IMAGE LIGHTBOX
 ========================================================= */
 
 .project-modal-img-btn {
@@ -455,88 +446,11 @@
   background: rgba(255, 255, 255, 0.25);
 }
 
-/* =========================
-   Projects Skeleton Custom
-   (extends global .skeleton)
-========================= */
-
-/* Prevent bottom margin stacking */
-.project-skeleton-row .skeleton-text,
-.project-skeleton-row .skeleton-title {
-  margin-bottom: 0;
-}
-
-/* Keep layout aligned */
-.project-skeleton-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-/* Fake icon */
-.project-icon-skeleton {
-  width: 36px;
-  height: 36px;
-  border-radius: 8px;
-  margin-right: 14px;
-}
-
-/* Title placeholder */
-.project-title-skeleton {
-  width: 180px;
-  height: 16px;
-  border-radius: 4px;
-  margin-bottom: 6px;
-}
-
-/* Subtitle placeholder */
-.project-subtitle-skeleton {
-  width: 120px;
-  height: 12px;
-  border-radius: 4px;
-}
-
-/* Status badge placeholder */
-.project-status-skeleton {
-  width: 90px;
-  height: 28px;
-  border-radius: 20px;
-}
-
-/* Optional: subtle row divider like real list */
-.project-row + .project-row {
-  border-top: 1px solid #eee;
-}
-
-/* Optional stagger animation */
-.project-row:nth-child(1) .skeleton::after {
-  animation-delay: 0s;
-}
-.project-row:nth-child(2) .skeleton::after {
-  animation-delay: 0.1s;
-}
-.project-row:nth-child(3) .skeleton::after {
-  animation-delay: 0.2s;
-}
-.project-row:nth-child(4) .skeleton::after {
-  animation-delay: 0.3s;
-}
-.project-row:nth-child(5) .skeleton::after {
-  animation-delay: 0.4s;
-}
-.project-row:nth-child(6) .skeleton::after {
-  animation-delay: 0.5s;
-}
-
 /* =========================================================
    RESPONSIVE
 ========================================================= */
 
 @media (max-width: 768px) {
-  .project-page {
-    padding: 1.25rem;
-  }
-
   .project-list-wrap {
     max-height: 320px;
   }

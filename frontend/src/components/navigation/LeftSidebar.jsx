@@ -23,14 +23,6 @@ export default function LeftSidebar() {
     }
   };
 
-  const handleViewProjects = () => {
-    if (isAdmin) {
-      navigate("/admin/projects");
-    } else {
-      navigate("/dashboard/projects");
-    }
-  };
-
   if (loading) return null; // Prevent flicker while loading user
 
   return (
@@ -110,23 +102,21 @@ export default function LeftSidebar() {
           </div>
         </nav>
 
-        {/* Quick Actions */}
-        <div className="dash-card">
-          <span className="dash-card-title">Quick actions</span>
+        {/* Quick Actions (Clients only) */}
+        {!isAdmin && (
+          <div className="dash-card">
+            <span className="dash-card-title">Quick action</span>
 
-          <button
-            className="dash-btn primary"
-            onClick={handleScheduleAppointment}
-          >
-            {isAdmin ? "Manage appointments" : "Schedule appointment"}
-          </button>
+            <button
+              className="dash-btn primary"
+              onClick={handleScheduleAppointment}
+            >
+              Schedule appointment
+            </button>
+          </div>
+        )}
 
-          <button className="dash-btn ghost" onClick={handleViewProjects}>
-            {isAdmin ? "Manage projects" : "View all projects"}
-          </button>
-        </div>
-
-        {/* Support (Optional: hide for admin if you want) */}
+        {/* Support (Clients only) */}
         {!isAdmin && (
           <div className="dash-card subtle">
             <span className="dash-card-title">Support</span>

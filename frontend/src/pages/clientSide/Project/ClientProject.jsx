@@ -7,6 +7,7 @@ import {
   projectFilters,
   useClientProjects,
 } from "./useClientProject";
+import { LuFolderKanban } from "react-icons/lu";
 
 function capitalize(str) {
   if (!str) return "";
@@ -32,7 +33,9 @@ function ProjectRow({ project, onClick }) {
     >
       <div className="project-main">
         <div className="project-meta">
-          <span className="dash-icon">🏠</span>
+          <span className="dash-icon">
+            <LuFolderKanban />
+          </span>
           <div className="project-text">
             <h6 className="project-title">{project.name}</h6>
             <p className="project-subtitle">{project.type}</p>

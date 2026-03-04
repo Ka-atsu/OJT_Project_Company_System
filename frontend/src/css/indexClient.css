@@ -9,16 +9,27 @@
   --dash-topnav-h: 64px;
   --dash-sidebar-w: 260px;
 
-  --dash-bg: #f6f7f9;
+  /* BACKGROUNDS */
+  --dash-bg: #f4f6ff;
   --dash-surface: #ffffff;
-  --dash-muted: #6b7280;
-  --dash-text: #111827;
 
-  --dash-border: rgba(0, 0, 0, 0.08);
-  --dash-border-soft: rgba(0, 0, 0, 0.06);
+  /* TEXT */
+  --dash-text: #090e7a;
+  --dash-muted: #3c467a;
 
-  --dash-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.03);
-  --dash-shadow-md: 0 10px 28px rgba(0, 0, 0, 0.06);
+  /* BRAND COLORS */
+  --dash-primary: #090e7a;
+  --dash-secondary: #09527a;
+  --dash-accent: #097a7a;
+  --dash-purple: #28097a;
+
+  /* BORDERS */
+  --dash-border: rgba(9, 14, 122, 0.08);
+  --dash-border-soft: rgba(9, 14, 122, 0.05);
+
+  /* SHADOWS */
+  --dash-shadow-sm: 0 2px 6px rgba(9, 14, 122, 0.06);
+  --dash-shadow-md: 0 14px 34px rgba(9, 14, 122, 0.08);
 }
 
 /* Optional layout helper if you have a wrapper */
@@ -58,7 +69,7 @@
 .dash-brand-text {
   font-size: 0.9rem;
   font-weight: 700;
-  color: var(--dash-text);
+  color: var(--dash-primary);
 }
 
 .dash-brand-text span {
@@ -201,7 +212,7 @@
   width: 4px;
   height: 18px;
   border-radius: 999px;
-  background: #111827;
+  background: var(--dash-accent);
 }
 
 .dash-icon {
@@ -269,12 +280,12 @@
 }
 
 .dash-btn.primary {
-  background: #111827;
+  background: var(--dash-primary);
   color: #fff;
 }
 
 .dash-btn.primary:hover {
-  background: #000;
+  background: var(--dash-accent);
   transform: translateY(-1px);
   box-shadow: 0 10px 22px rgba(0, 0, 0, 0.18);
 }
@@ -322,6 +333,7 @@
   padding: 1.25rem;
   box-shadow: var(--dash-shadow-sm), var(--dash-shadow-md);
   border: 1px solid rgba(0, 0, 0, 0.04);
+  backdrop-filter: blur(6px);
 }
 
 .dash-surface.full {
@@ -385,18 +397,18 @@
 }
 
 .dash-status.success {
-  background: rgba(16, 185, 129, 0.12);
+  background: rgba(9, 122, 122, 0.15);
   color: #065f46;
 }
 
 .dash-status.active {
-  background: rgba(59, 130, 246, 0.12);
-  color: #1e3a8a;
+  background: rgba(9, 82, 122, 0.15);
+  color: var(--dash-primary);
 }
 
 .dash-status.muted {
-  background: rgba(0, 0, 0, 0.06);
-  color: #374151;
+  background: rgba(60, 70, 122, 0.15);
+  color: var(--dash-muted);
 }
 
 /* =========================================================
