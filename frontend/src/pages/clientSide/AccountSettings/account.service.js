@@ -62,3 +62,21 @@ export const deleteAccount = async () => {
   const res = await api.delete("/api/user");
   return res.data;
 };
+
+/* =========================
+   Send Email Verification
+========================= */
+export const sendEmailVerification = async () => {
+  await csrf();
+  const res = await api.post("/api/user/email/send-verification");
+  return res.data;
+};
+
+/* =========================
+   Verify Email OTP
+========================= */
+export const verifyEmailOtp = async (code) => {
+  await csrf();
+  const res = await api.post("/api/user/email/verify", { code });
+  return res.data;
+};

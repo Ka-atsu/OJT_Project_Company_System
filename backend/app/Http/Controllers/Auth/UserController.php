@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\EmailVerificationMail;
 
 class UserController extends Controller
 {
@@ -117,6 +119,43 @@ class UserController extends Controller
         return response()->json([
             'message' => 'Notification settings updated.',
             'account_activity_notifications' => $user->account_activity_notifications,
+        ]);
+    }
+
+    public function sendVerification(Request $request)
+    {
+        $user = $request->user();
+
+        $code = rand(100000, 999999);
+
+        $user->email_verification_code = $code;
+        $user->save();
+
+        Mail::to($user->email)->send(new EmailVerificationMail($code));
+
+        return response()->json(['message' => 'Verification code sent']);
+    }
+
+    public function verifyEmail(Request $request)
+    {
+        $request->validate([
+            'code' => 'required'
+        ]);
+
+        $user = $request->user();
+
+        if ($user->email_verification_code != $request->code) {
+            return response()->json([
+                'message' => 'Invalid verification code'
+            ], 422);
+        }
+
+        $user->email_verified_at = now();
+        $user->email_verification_code = null;
+        $user->save();
+
+        return response()->json([
+            'message' => 'Email verified successfully'
         ]);
     }
 }

@@ -29,6 +29,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/user/2fa', [UserController::class, 'toggleTwoFactor']);
     Route::delete('/user', [UserController::class, 'destroy']);
     Route::patch('/user/notifications', [UserController::class, 'toggleNotifications']);
+    Route::post('/user/email/send-verification', [UserController::class, 'sendVerification']);
+    Route::post('/user/email/verify', [UserController::class, 'verifyEmail']);
 
     // appointments (client)
     Route::get('/appointments', [AppointmentController::class, 'index']);
