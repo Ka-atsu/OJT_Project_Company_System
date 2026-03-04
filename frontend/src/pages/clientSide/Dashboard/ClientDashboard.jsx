@@ -1,141 +1,53 @@
 import "./dashboard.page.css";
 import { useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
-import { listAppointments } from "../Appointment/appointments.service";
-import { useClientDocuments } from "../Document/document.service";
-import { useClientProjects } from "../Project/useClientProject";
+import { useClientDashboard } from "./useClientDashboard";
 import "../globalClient.css";
 
-function getStoredName() {
-  const raw = localStorage.getItem("user");
-  if (!raw) return "";
-
-  try {
-    const user = JSON.parse(raw);
-    const name = user?.name || user?.fullName || user?.username;
-    return name || "";
-  } catch {
-    return "";
-  }
-}
-
 export default function ClientDashboard() {
-  const name = getStoredName();
   const navigate = useNavigate();
-  const [appointments, setAppointments] = useState([]);
-  const [loadingAppointments, setLoadingAppointments] = useState(false);
-  const { docs: recentDocs, loading: loadingDocs } = useClientDocuments({
-    pageSize: 4,
-    page: 1,
-  });
-  const { pageProjects: recentProjects, loading: loadingProjects } =
-    useClientProjects({ limit: 3 });
-  const { pageProjects: allProjects = [], loading: loadingAllProjects } =
-    useClientProjects({ limit: 1000 });
 
-const projectStats = {
-  active: allProjects.filter(
-    (p) => p.status?.toLowerCase() === "active"
-  ).length,
-  completed: allProjects.filter(
-    (p) => p.status?.toLowerCase() === "completed"
-  ).length,
-  onHold: allProjects.filter(
-    (p) => p.status?.toLowerCase() === "on_hold"
-  ).length,
-};
-
-  let greeting = "Welcome back";
-  if (name) {
-    greeting = `Welcome back, ${name}`;
-  }
-
-  useEffect(() => {
-    const fetchAppointments = async () => {
-      setLoadingAppointments(true);
-      try {
-        const res = await listAppointments({
-          status: "upcoming",
-          page: 1,
-          limit: 5,
-        });
-        setAppointments(res.data || []);
-      } catch (err) {
-        console.error("Failed to fetch appointments:", err);
-        setAppointments([]);
-      } finally {
-        setLoadingAppointments(false);
-      }
-    };
-
-    fetchAppointments();
-  }, []);
-
-  function capitalize(str) {
-    if (!str) return "";
-
-    // Handle special cases
-    if (str.toLowerCase() === "on_hold") return "On Hold";
-
-    // Default behavior: capitalize first letter
-    return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
-  }
-
-  const alerts = [];
-
-  /* === Appointment Alert === */
-  if (appointments.length > 0) {
-    const next = appointments[0];
-
-    // Simple "tomorrow" logic
-    const tomorrow = new Date();
-    tomorrow.setDate(tomorrow.getDate() + 1);
-
-    if (next.date === tomorrow.toISOString().split("T")[0]) {
-      alerts.push("Appointment scheduled tomorrow");
-    }
-  }
-
-  /* === Document Alert === */
-  if (recentDocs.length > 0) {
-    alerts.push(`${recentDocs.length} new document(s) available`);
-  }
-
-  /* === Project Alert === */
-  const onHoldProject = allProjects.find(
-    (p) => p.status.toLowerCase() === "on_hold",
-  );
-
-  if (onHoldProject) {
-    alerts.push(`Project "${onHoldProject.name}" is on hold`);
-  }
+  const {
+    greeting,
+    appointments,
+    loadingAppointments,
+    recentDocs,
+    loadingDocs,
+    recentProjects,
+    loadingProjects,
+    loadingAllProjects,
+    projectStats,
+    alerts,
+    capitalize,
+  } = useClientDashboard();
 
   return (
     <section className="dash-page dashboard">
-      <header className="dash-page-header">
+      {/* HERO */}
+      <header className="dash-hero">
         <h1 className="dash-title">{greeting}</h1>
         <p className="dash-subtitle">
-          Here’s what’s happening with your projects today.
+          Here’s an overview of your current projects, documents, and
+          appointments.
         </p>
       </header>
 
-      {/*=============== STATUS ===================*/}
+      {/* STATS */}
       <div className="dash-stats">
         {loadingAllProjects ? (
-          <>
-            {[...Array(4)].map((_, i) => (
-              <div key={i} className="dash-surface dash-stat">
-                <div className="skeleton dash-stat-label-skeleton"></div>
-                <div className="skeleton dash-stat-value-skeleton"></div>
-              </div>
-            ))}
-          </>
+          [...Array(3)].map((_, i) => (
+            <div key={i} className="dash-surface dash-stat">
+              <div className="skeleton dash-stat-label-skeleton"></div>
+              <div className="skeleton dash-stat-value-skeleton"></div>
+            </div>
+          ))
         ) : (
           <>
             <div className="dash-surface dash-stat">
               <div className="dash-stat-row">
                 <span className="dash-stat-label">Active Projects</span>
-                <strong className="dash-stat-value">{projectStats.active}</strong>
+                <strong className="dash-stat-value">
+                  {projectStats.active}
+                </strong>
               </div>
             </div>
 
@@ -151,19 +63,21 @@ const projectStats = {
             <div className="dash-surface dash-stat">
               <div className="dash-stat-row">
                 <span className="dash-stat-label">On Hold</span>
-                <strong className="dash-stat-value">{projectStats.onHold}</strong>
+                <strong className="dash-stat-value">
+                  {projectStats.onHold}
+                </strong>
               </div>
             </div>
           </>
         )}
       </div>
-      {/*=============== APPOINTMENTS ===================*/}
+
+      {/* GRID */}
       <div className="dash-grid">
+        {/* LEFT */}
         <div className="dash-col">
           <div className="dash-surface">
-            <div className="dash-surface-header">
-              <span>Next appointment</span>
-            </div>
+            <div className="dash-surface-header">Next appointment</div>
 
             {loadingAppointments ? (
               <div className="dash-list-item">
@@ -176,50 +90,104 @@ const projectStats = {
             ) : appointments.length === 0 ? (
               <div>No upcoming appointments</div>
             ) : (
-              <>
-                    {appointments.slice(0, 3).map((appointment) => (
-                      <div key={appointment.id} className="dash-list-item">
-                        <div>
-                          <div className="dash-item-title">
-                            {appointment.date} · {appointment.time}
-                          </div>
-                          <div className="dash-item-meta">
-                            {appointment.project} · {appointment.purpose}
-                          </div>
-                        </div>
+              appointments.slice(0, 3).map((appointment) => (
+                <div key={appointment.id} className="dash-list-item">
+                  <div>
+                    <div className="dash-item-title">
+                      {appointment.date} · {appointment.time}
+                    </div>
+                    <div className="dash-item-meta">
+                      {appointment.project} · {appointment.purpose}
+                    </div>
+                  </div>
 
-                        <span
-                          className={`dash-status ${appointment.approvalStatus}`}
-                        >
-                          {appointment.approvalStatus === "accepted"
-                            ? "Confirmed"
-                            : capitalize(appointment.approvalStatus)}
-                        </span>
-                      </div>
-                    ))}
-
-                    {appointments.length > 3 && (
-                      <div className="dash-item-meta dash-meta-spacer">
-                        +{appointments.length - 3} upcoming appointment
-                        {appointments.length - 3 > 1 ? "s" : ""}
-                      </div>
-                    )}
-                  </>
+                  <span className={`dash-status ${appointment.approvalStatus}`}>
+                    {appointment.approvalStatus === "accepted"
+                      ? "Confirmed"
+                      : capitalize(appointment.approvalStatus)}
+                  </span>
+                </div>
+              ))
             )}
 
             <button
-              type="button"
               className="dash-view-all"
               onClick={() => navigate("/dashboard/appointments")}
             >
               View all appointments →
             </button>
-            {/*=============== ALERTS ===================*/}
           </div>
+
+          {/* PROJECTS */}
           <div className="dash-surface">
-            <div className="dash-surface-header">
-              <span>Alerts</span>
+            <div className="dash-surface-header">Projects overview</div>
+
+            <div className="dash-projects">
+              {loadingProjects
+                ? [...Array(3)].map((_, i) => (
+                    <div key={i} className="dash-project-row">
+                      <div className="skeleton dash-project-name-skeleton"></div>
+                      <div className="skeleton dash-badge-skeleton"></div>
+                    </div>
+                  ))
+                : recentProjects.map((project) => (
+                    <div key={project.id} className="dash-project-row">
+                      <span className="dash-project-name">{project.name}</span>
+                      <span className={`dash-status ${project.status}`}>
+                        {capitalize(project.status)}
+                      </span>
+                    </div>
+                  ))}
             </div>
+
+            <button
+              className="dash-view-all"
+              onClick={() => navigate("/dashboard/projects")}
+            >
+              View all projects →
+            </button>
+          </div>
+        </div>
+
+        {/* RIGHT */}
+        <div className="dash-col">
+          {/* DOCUMENTS */}
+          <div className="dash-surface">
+            <div className="dash-surface-header">Recent documents</div>
+
+            <div className="dash-list">
+              {loadingDocs
+                ? [...Array(4)].map((_, i) => (
+                    <div key={i} className="dash-doc">
+                      <div className="skeleton dash-doc-name-skeleton"></div>
+                      <div className="skeleton dash-doc-btn-skeleton"></div>
+                    </div>
+                  ))
+                : recentDocs.map((d) => (
+                    <div key={d.id} className="dash-doc">
+                      <span>{d.name}</span>
+                      <button
+                        className="dash-doc-action"
+                        onClick={() => window.open(d.fileUrl, "_blank")}
+                      >
+                        Download
+                      </button>
+                    </div>
+                  ))}
+            </div>
+
+            <button
+              className="dash-view-all"
+              onClick={() => navigate("/dashboard/documents")}
+            >
+              View all documents →
+            </button>
+          </div>
+
+          {/* ALERTS */}
+          <div className="dash-surface">
+            <div className="dash-surface-header">Alerts</div>
+
             <div className="dash-list">
               {alerts.length === 0 ? (
                 <div className="dash-item-meta">No alerts right now.</div>
@@ -233,85 +201,6 @@ const projectStats = {
             </div>
           </div>
         </div>
-        {/*=============== DOCUMENTS ===================*/}
-        <div className="dash-col">
-          <div className="dash-surface">
-            <div className="dash-surface-header">
-              <span>Recent documents</span>
-            </div>
-
-            <div className="dash-list">
-              {loadingDocs ? (
-                [...Array(4)].map((_, i) => (
-                  <div key={i} className="dash-doc">
-                    <div className="skeleton dash-doc-name-skeleton"></div>
-                    <div className="skeleton dash-doc-btn-skeleton"></div>
-                  </div>
-                ))
-              ) : recentDocs.length === 0 ? (
-                <div className="dash-item-meta">No documents found.</div>
-              ) : (
-                recentDocs.map((d) => (
-                  <div key={d.id} className="dash-doc">
-                    <span>{d.name}</span>
-                    <button
-                      type="button"
-                      className="dash-doc-action"
-                      onClick={() => window.open(d.fileUrl, "_blank")}
-                      disabled={!d.fileUrl}
-                    >
-                      Download
-                    </button>
-                  </div>
-                ))
-              )}
-            </div>
-
-            <button
-              type="button"
-              className="dash-view-all"
-              onClick={() => navigate("/dashboard/documents")}
-            >
-              View all documents →
-            </button>
-          </div>
-        </div>
-      </div>
-      {/*=============== PROJECTS ===================*/}
-      <div className="dash-surface">
-        <div className="dash-surface-header">
-          <span>Projects overview</span>
-        </div>
-
-        <div className="dash-projects">
-          {loadingProjects ? (
-            [...Array(3)].map((_, i) => (
-              <div key={i} className="dash-project-row">
-                <div className="skeleton dash-project-name-skeleton"></div>
-                <div className="skeleton dash-badge-skeleton"></div>
-              </div>
-            ))
-          ) : recentProjects.length === 0 ? (
-            <div className="dash-item-meta">No projects found.</div>
-          ) : (
-            recentProjects.map((project) => (
-              <div key={project.id} className="dash-project-row">
-                <span className="dash-project-name">{project.name}</span>
-                <span className={`dash-status ${project.status}`}>
-                  {capitalize(project.status)}
-                </span>
-              </div>
-            ))
-          )}
-        </div>
-
-        <button
-          type="button"
-          className="dash-view-all"
-          onClick={() => navigate("/dashboard/projects")}
-        >
-          View all projects →
-        </button>
       </div>
     </section>
   );

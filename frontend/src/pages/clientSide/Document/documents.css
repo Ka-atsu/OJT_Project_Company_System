@@ -1,9 +1,11 @@
 /* =========================================================
-   DOCUMENTS — PAGE ONLY (matches your dash theme)
+   DOCUMENTS — PAGE ONLY (aligned with dash theme)
 ========================================================= */
 
 .docs-header {
   margin-bottom: 1.25rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--dash-border-soft);
 }
 
 /* =========================================================
@@ -25,17 +27,16 @@
   align-items: center;
   gap: 0.5rem;
 
-  background: #fff;
-  border: 1px solid rgba(0, 0, 0, 0.08);
+  background: var(--dash-surface);
+  border: 1px solid var(--dash-border);
   border-radius: 12px;
 
   padding: 0.55rem 0.75rem;
   min-width: 260px;
   flex: 1;
   max-width: 420px;
-  box-shadow:
-    0 4px 10px rgba(0, 0, 0, 0.05),
-    0 18px 40px rgba(0, 0, 0, 0.06);
+
+  box-shadow: var(--dash-shadow-sm), var(--dash-shadow-md);
 }
 
 .docs-search-icon {
@@ -43,15 +44,16 @@
   font-size: 0.9rem;
 }
 
-/* Uses global dash-input; keep only what is needed */
 .docs-search-input {
   border: 0;
   background: transparent;
-  padding: 0; /* avoid double padding (dash-input already has padding) */
+  padding: 0;
   font-size: 0.85rem;
+  color: var(--dash-text);
 }
 
 /* Controls */
+
 .docs-controls {
   display: flex;
   align-items: center;
@@ -68,10 +70,9 @@
 
 .docs-control-label {
   font-size: 0.75rem;
-  color: #6b7280;
+  color: var(--dash-muted);
 }
 
-/* React Select wrapper */
 .docs-select-wrap {
   min-width: 170px;
 }
@@ -85,13 +86,11 @@
 ========================================================= */
 
 .docs-surface {
-  background: #fff;
-  border: 1px solid rgba(0, 0, 0, 0.08);
+  background: var(--dash-surface);
+  border: 1px solid var(--dash-border);
   border-radius: 12px;
   overflow: hidden;
-  box-shadow:
-    0 4px 10px rgba(0, 0, 0, 0.05),
-    0 18px 40px rgba(0, 0, 0, 0.06);
+  box-shadow: var(--dash-shadow-sm), var(--dash-shadow-md);
 }
 
 .docs-list {
@@ -106,7 +105,7 @@
   gap: 1rem;
 
   padding: 0.9rem 1rem;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  border-bottom: 1px solid var(--dash-border-soft);
 }
 
 .docs-row:last-child {
@@ -115,11 +114,14 @@
 
 @media (hover: hover) {
   .docs-row:hover {
-    background: rgba(0, 0, 0, 0.02);
+    background: rgba(9, 14, 122, 0.05);
   }
 }
 
-/* File meta */
+/* =========================================================
+   FILE META
+========================================================= */
+
 .docs-file {
   display: flex;
   align-items: center;
@@ -141,7 +143,7 @@
   font-size: 0.7rem;
 
   flex-shrink: 0;
-  border: 1px solid rgba(0, 0, 0, 0.08);
+  border: 1px solid var(--dash-border);
 }
 
 .docs-file-meta {
@@ -151,7 +153,7 @@
 .docs-file-name {
   font-weight: 700;
   font-size: 0.9rem;
-  color: #111827;
+  color: var(--dash-primary) !important;
 
   white-space: nowrap;
   overflow: hidden;
@@ -161,17 +163,21 @@
 .docs-file-sub {
   margin-top: 0.15rem;
   font-size: 0.75rem;
-  color: #6b7280;
+  color: var(--dash-muted);
   display: flex;
   flex-wrap: wrap;
   gap: 0.35rem;
   align-items: center;
 }
+
 .docs-dot {
   opacity: 0.7;
 }
 
-/* Actions */
+/* =========================================================
+   ACTIONS
+========================================================= */
+
 .docs-actions {
   display: flex;
   align-items: center;
@@ -183,15 +189,17 @@
   width: 36px;
   height: 36px;
   border-radius: 10px;
-  border: 1px solid rgba(0, 0, 0, 0.08);
-  background: #e0f2fe; /* soft sky blue background */
-  color: #0369a1; /* darker blue icon/text */
+  border: 1px solid var(--dash-border);
+  background: rgba(9, 14, 122, 0.08);
+  color: var(--dash-primary);
+
   cursor: pointer;
-  font-size: 1.3rem; /* slightly bigger for visibility */
-  font-weight: 300; /* bolder */
+  font-size: 1.2rem;
+
   display: flex;
   align-items: center;
   justify-content: center;
+
   transition:
     background 0.2s ease,
     color 0.2s ease,
@@ -200,13 +208,16 @@
 }
 
 .docs-action-btn:hover {
-  background: #0369a1; /* darker blue on hover */
-  color: #ffffff; /* icon turns white */
+  background: var(--dash-primary);
+  color: white;
   transform: translateY(-1px);
-  box-shadow: 0 4px 10px rgba(3, 105, 161, 0.3);
+  box-shadow: 0 4px 10px rgba(9, 14, 122, 0.25);
 }
 
-/* Empty + footer */
+/* =========================================================
+   EMPTY + FOOTER
+========================================================= */
+
 .docs-empty {
   padding: 16px;
   opacity: 0.7;
@@ -219,7 +230,7 @@
   gap: 1rem;
 
   padding: 0.8rem 1rem;
-  border-top: 1px solid rgba(0, 0, 0, 0.08);
+  border-top: 1px solid var(--dash-border);
   flex-wrap: wrap;
 }
 
@@ -232,25 +243,22 @@
 
 .docs-page-meta {
   padding: 0 10px;
+  color: var(--dash-muted);
 }
 
-/* =========================
-   Documents Skeleton Custom
-   (extends global .skeleton)
-========================= */
+/* =========================================================
+   DOCUMENT SKELETON
+========================================================= */
 
-/* Remove default margin stacking */
 .docs-row .skeleton-text,
 .docs-row .skeleton-title {
   margin-bottom: 0;
 }
 
-/* Make row spacing match real layout */
 .docs-row {
   align-items: center;
 }
 
-/* Badge */
 .docs-badge-skeleton {
   width: 44px;
   height: 26px;
@@ -258,7 +266,6 @@
   margin-right: 16px;
 }
 
-/* File name */
 .docs-name-skeleton {
   width: 50%;
   height: 16px;
@@ -266,14 +273,12 @@
   border-radius: 4px;
 }
 
-/* Inline meta container */
 .skeleton-inline {
   display: flex;
   gap: 16px;
   align-items: center;
 }
 
-/* Meta lines */
 .docs-meta-skeleton {
   width: 120px;
   height: 12px;
@@ -288,31 +293,39 @@
   width: 150px;
 }
 
-/* Action buttons */
 .docs-icon-skeleton {
   width: 36px;
   height: 36px;
   border-radius: 8px;
 }
 
-/* Space action buttons */
 .docs-actions {
   display: flex;
   gap: 10px;
 }
 
-/* Subtle row separation like real rows */
 .docs-row + .docs-row {
-  border-top: 1px solid #eee;
+  border-top: 1px solid var(--dash-border-soft);
 }
 
-/* Optional: stagger shimmer for smoother feel */
-.docs-row:nth-child(1) .skeleton::after { animation-delay: 0s; }
-.docs-row:nth-child(2) .skeleton::after { animation-delay: 0.1s; }
-.docs-row:nth-child(3) .skeleton::after { animation-delay: 0.2s; }
-.docs-row:nth-child(4) .skeleton::after { animation-delay: 0.3s; }
-.docs-row:nth-child(5) .skeleton::after { animation-delay: 0.4s; }
-.docs-row:nth-child(6) .skeleton::after { animation-delay: 0.5s; }
+.docs-row:nth-child(1) .skeleton::after {
+  animation-delay: 0s;
+}
+.docs-row:nth-child(2) .skeleton::after {
+  animation-delay: 0.1s;
+}
+.docs-row:nth-child(3) .skeleton::after {
+  animation-delay: 0.2s;
+}
+.docs-row:nth-child(4) .skeleton::after {
+  animation-delay: 0.3s;
+}
+.docs-row:nth-child(5) .skeleton::after {
+  animation-delay: 0.4s;
+}
+.docs-row:nth-child(6) .skeleton::after {
+  animation-delay: 0.5s;
+}
 
 /* =========================================================
    RESPONSIVE
