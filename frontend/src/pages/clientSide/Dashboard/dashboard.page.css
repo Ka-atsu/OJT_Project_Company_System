@@ -94,6 +94,30 @@
   overflow: hidden;
 }
 
+.dashboard .dash-surface {
+  background: var(--dash-surface);
+}
+.dashboard .dash-stat.dash-stat-active {
+  background: linear-gradient(
+    135deg,
+    #1c2bd9 0%,
+    #5b3ed6 100%
+  );
+
+  border: none;
+
+  box-shadow:
+    0 16px 40px rgba(9, 14, 122, 0.22),
+    0 6px 16px rgba(9, 14, 122, 0.14);
+}
+.dashboard .dash-stat.dash-stat-active .dash-stat-label {
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.dashboard .dash-stat.dash-stat-active .dash-stat-value {
+  color: #ffffff;
+}
+
 .dashboard .dash-stat::after {
   content: "";
   position: absolute;
@@ -102,6 +126,13 @@
   width: 100px;
   height: 100px;
   background: radial-gradient(circle, rgba(9, 82, 122, 0.15), transparent 70%);
+}
+.dashboard .dash-stat.dash-stat-active::after {
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.18),
+    transparent 70%
+  );
 }
 
 .dashboard .dash-stat:hover {
@@ -200,6 +231,19 @@
 /* -------------------------
    DOCUMENT PREVIEW
 -------------------------- */
+.docs-badge {
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    display: grid;
+    place-items: center;
+    background: rgba(220, 38, 38, 0.12);
+    color: #b91c1c;
+    font-weight: 800;
+    font-size: 0.7rem;
+    flex-shrink: 0;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+}
 
 .dashboard .dash-doc {
   display: flex;
@@ -232,7 +276,17 @@
   background: rgba(9, 122, 122, 0.15);
   transform: translateY(-2px);
 }
+.dashboard .dash-doc-left {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
 
+/* Optional: Better Name Styling */
+.dashboard .dash-doc-name {
+  font-size: 0.85rem;
+  color: var(--dash-primary);
+}
 /* -------------------------
    TYPOGRAPHY
 -------------------------- */
@@ -276,7 +330,70 @@
   font-weight: 500;
   color: var(--dash-primary);
 }
+.dashboard .dash-project-left {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
 
+.dashboard .dash-project-icon {
+  font-size: 1.5rem;
+  color: var(--dash-primary-soft);
+}
+
+/* -------------------------
+   APPOINTMENT SNAPSHOT
+-------------------------- */
+.dashboard .dash-appointment-left {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
+.dashboard .dash-appointment-icon {
+  font-size: 1.5rem;
+  color: var(--dash-primary-soft);
+  margin-top: 2px;
+}
+
+/* -------------------------
+   ALERT SNAPSHOT
+-------------------------- */
+
+.dashboard .dash-alert-icon {
+  font-size: 1rem;
+  color: var(--dash-primary-soft);
+  margin-right: 10px;
+  margin-bottom: 2px;
+}
+/* -------------------------
+   ALERTS — SOLID STYLE
+-------------------------- */
+
+.dashboard .dash-surface-alerts {
+  background: linear-gradient(
+    135deg,
+    #166534 0%,
+    #22c55e 100%
+  );
+
+  border: 1px solid rgba(255, 255, 255, 0.18);
+
+  box-shadow:
+    0 12px 26px rgba(22, 101, 52, 0.16),
+    0 4px 10px rgba(22, 101, 52, 0.10);
+}
+.dashboard .dash-surface-alerts .dash-surface-header {
+  color: #ffffff;
+}
+
+.dashboard .dash-surface-alerts .dash-item-meta {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.dashboard .dash-surface-alerts .dash-alert-icon {
+  color: rgba(255, 255, 255, 0.95);
+}
 /* -------------------------
    STATUS PILLS
 -------------------------- */
@@ -295,12 +412,75 @@
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
 }
 
+
+.dashboard .dash-status.success {
+  background: rgba(16, 185, 129, 0.12);
+  color: #059669;
+}
+
+.dashboard .dash-status.active {
+  background: rgba(99, 102, 241, 0.12);
+  color: #4f46e5;
+}
+
+.dashboard .dash-status.completed {
+  background: rgba(34, 197, 94, 0.12);
+  color: #15803d;
+}
+
+.dashboard .dash-status.on_hold {
+  background: rgba(239, 68, 68, 0.12);
+  color: #dc2626;
+}
+
+.dashboard .dash-status.draft {
+  background: rgba(100, 116, 139, 0.12);
+  color: #475569;
+}
+
+.dashboard .dash-status.muted {
+  background: rgba(148, 163, 184, 0.12);
+  color: #475569;
+}
+/* =========================================================
+    APPOINTMENT STATUS PILLS
+  ========================================================= */
+
+/* Accepted */
+.dashboard .dash-status.accepted {
+  background: rgba(16, 185, 129, 0.12);
+  color: #059669;
+}
+
+/* Pending */
+.dashboard .dash-status.pending {
+  background: rgba(99, 102, 241, 0.12);
+  color: #4f46e5;
+}
+
+/* Declined */
+.dashboard .dash-status.declined {
+  background: rgba(239, 68, 68, 0.12);
+  color: #dc2626;
+}
+
+
+.dashboard .dash-surface-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.7rem;
+}
+.dashboard .dash-view-all-top {
+  margin: 0;
+}
+
 /* -------------------------
    VIEW ALL LINK
 -------------------------- */
 
 .dashboard .dash-view-all {
-  margin-top: 1.3rem;
+  margin-bottom: 1.2rem;
   font-size: 0.8rem;
   font-weight: 600;
   color: var(--dash-primary-soft);
@@ -308,11 +488,16 @@
   border: none;
   cursor: pointer;
   transition: 0.2s ease;
+  padding: 0.5rem 0.5rem;
+  border-radius: 8px;
 }
 
 .dashboard .dash-view-all:hover {
   color: var(--dash-accent);
   transform: translateX(4px);
+  background-color: rgba(9, 82, 122, 0.08);
+  border-radius: 999px;
+  
 }
 
 /* =========================================================
@@ -323,7 +508,6 @@
   position: relative;
   overflow: hidden;
   background: #e5e7eb;
-  border-radius: 8px;
 }
 
 .dashboard .skeleton::after {

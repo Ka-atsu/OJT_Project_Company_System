@@ -2,7 +2,9 @@ import "./dashboard.page.css";
 import { useNavigate } from "react-router-dom";
 import { useClientDashboard } from "./useClientDashboard";
 import "../globalClient.css";
-
+import { FaRegCalendarAlt } from "react-icons/fa";
+import { LuFolderKanban } from "react-icons/lu";
+import { FiInfo } from "react-icons/fi";
 export default function ClientDashboard() {
   const navigate = useNavigate();
 
@@ -42,7 +44,7 @@ export default function ClientDashboard() {
           ))
         ) : (
           <>
-            <div className="dash-surface dash-stat">
+            <div className="dash-surface dash-stat dash-stat-active">
               <div className="dash-stat-row">
                 <span className="dash-stat-label">Active Projects</span>
                 <strong className="dash-stat-value">
@@ -77,8 +79,15 @@ export default function ClientDashboard() {
         {/* LEFT */}
         <div className="dash-col">
           <div className="dash-surface">
-            <div className="dash-surface-header">Next appointment</div>
-
+            <div className="dash-surface-top">
+              <div className="dash-surface-header">Next appointment</div>
+              <button
+                className="dash-view-all"
+                onClick={() => navigate("/dashboard/appointments")}
+              >
+                View all appointments ▸
+              </button>
+            </div>
             {loadingAppointments ? (
               <div className="dash-list-item">
                 <div>
@@ -92,12 +101,16 @@ export default function ClientDashboard() {
             ) : (
               appointments.slice(0, 3).map((appointment) => (
                 <div key={appointment.id} className="dash-list-item">
-                  <div>
-                    <div className="dash-item-title">
-                      {appointment.date} · {appointment.time}
-                    </div>
-                    <div className="dash-item-meta">
-                      {appointment.project} · {appointment.purpose}
+                  <div className="dash-appointment-left">
+                    <FaRegCalendarAlt className="dash-appointment-icon" />
+
+                    <div>
+                      <div className="dash-item-title">
+                        {appointment.date} · {appointment.time}
+                      </div>
+                      <div className="dash-item-meta">
+                        {appointment.project} · {appointment.purpose}
+                      </div>
                     </div>
                   </div>
 
@@ -109,19 +122,20 @@ export default function ClientDashboard() {
                 </div>
               ))
             )}
-
-            <button
-              className="dash-view-all"
-              onClick={() => navigate("/dashboard/appointments")}
-            >
-              View all appointments →
-            </button>
           </div>
 
           {/* PROJECTS */}
           <div className="dash-surface">
-            <div className="dash-surface-header">Projects overview</div>
-
+             <div className="dash-surface-top">
+              <div className="dash-surface-header">Projects overview</div>
+              <button
+                className="dash-view-all"
+                onClick={() => navigate("/dashboard/projects")}
+              >
+                View all projects ▸
+              </button>
+             </div>
+             
             <div className="dash-projects">
               {loadingProjects
                 ? [...Array(3)].map((_, i) => (
@@ -132,29 +146,53 @@ export default function ClientDashboard() {
                   ))
                 : recentProjects.map((project) => (
                     <div key={project.id} className="dash-project-row">
-                      <span className="dash-project-name">{project.name}</span>
+                      <div className="dash-project-left">
+                        <LuFolderKanban className="dash-project-icon" />
+                        <span className="dash-project-name">
+                          {project.name}
+                        </span>
+                      </div>
+
                       <span className={`dash-status ${project.status}`}>
                         {capitalize(project.status)}
                       </span>
                     </div>
                   ))}
             </div>
-
-            <button
-              className="dash-view-all"
-              onClick={() => navigate("/dashboard/projects")}
-            >
-              View all projects →
-            </button>
           </div>
         </div>
 
         {/* RIGHT */}
         <div className="dash-col">
+          {/* ALERTS */}
+          <div className="dash-surface dash-surface-alerts">
+            <div className="dash-surface-header">Alerts</div>
+
+            <div className="dash-list">
+              {alerts.length === 0 ? (
+                <div className="dash-item-meta">No alerts right now.</div>
+              ) : (
+                alerts.map((msg, i) => (
+                  <div key={i} className="dash-item-meta">
+                    <FiInfo className="dash-alert-icon" />
+                    <span>{msg}</span>
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
+
           {/* DOCUMENTS */}
           <div className="dash-surface">
-            <div className="dash-surface-header">Recent documents</div>
-
+            <div className="dash-surface-top">
+              <div className="dash-surface-header">Recent documents</div>
+              <button
+                className="dash-view-all"
+                onClick={() => navigate("/dashboard/documents")}
+              >
+                View all documents ▸
+              </button>
+            </div>
             <div className="dash-list">
               {loadingDocs
                 ? [...Array(4)].map((_, i) => (
@@ -165,7 +203,11 @@ export default function ClientDashboard() {
                   ))
                 : recentDocs.map((d) => (
                     <div key={d.id} className="dash-doc">
-                      <span>{d.name}</span>
+                      <div className="dash-doc-left">
+                        <div className="docs-badge">PDF</div>
+                        <span className="dash-doc-name">{d.name}</span>
+                      </div>
+
                       <button
                         className="dash-doc-action"
                         onClick={() => window.open(d.fileUrl, "_blank")}
@@ -175,31 +217,8 @@ export default function ClientDashboard() {
                     </div>
                   ))}
             </div>
-
-            <button
-              className="dash-view-all"
-              onClick={() => navigate("/dashboard/documents")}
-            >
-              View all documents →
-            </button>
           </div>
-
-          {/* ALERTS */}
-          <div className="dash-surface">
-            <div className="dash-surface-header">Alerts</div>
-
-            <div className="dash-list">
-              {alerts.length === 0 ? (
-                <div className="dash-item-meta">No alerts right now.</div>
-              ) : (
-                alerts.map((msg, i) => (
-                  <div key={i} className="dash-item-meta">
-                    • {msg}
-                  </div>
-                ))
-              )}
-            </div>
-          </div>
+          
         </div>
       </div>
     </section>
