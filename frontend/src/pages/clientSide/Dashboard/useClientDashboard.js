@@ -75,7 +75,13 @@ export function useClientDashboard() {
 
   /* ---------------- ALERTS ---------------- */
 
-  const alerts = [];
+  const alerts = (() => {
+  // If any required data is still loading, return null
+  if (loadingAppointments || loadingDocs || loadingAllProjects) {
+    return null;
+  }
+
+  const generated = [];
 
   if (appointments.length > 0) {
     const next = appointments[0];
@@ -84,21 +90,25 @@ export function useClientDashboard() {
     tomorrow.setDate(tomorrow.getDate() + 1);
 
     if (next.date === tomorrow.toISOString().split("T")[0]) {
-      alerts.push("Appointment scheduled tomorrow");
+      generated.push("Appointment scheduled tomorrow");
     }
   }
 
   if (recentDocs.length > 0) {
-    alerts.push(`${recentDocs.length} new document(s) available`);
+    generated.push(`${recentDocs.length} new document(s) available`);
   }
 
   const onHoldProject = allProjects.find(
-    (p) => p.status.toLowerCase() === "on_hold",
+    (p) => p.status?.toLowerCase() === "on_hold"
   );
 
   if (onHoldProject) {
-    alerts.push(`Project "${onHoldProject.name}" is on hold`);
+    generated.push(`Project "${onHoldProject.name}" is on hold`);
   }
+
+  return generated;
+})();
+
 
   const greeting = name ? `Welcome back, ${name}` : "Welcome back";
 

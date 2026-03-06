@@ -530,6 +530,19 @@
   }
 }
 
+.dashboard .dash-surface-alerts .skeleton {
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.dashboard .dash-surface-alerts .skeleton::after {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.45),
+    transparent
+  );
+}
+
 /* Skeleton Sizes */
 
 .dash-stat-label-skeleton {
