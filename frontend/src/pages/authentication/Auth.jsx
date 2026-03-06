@@ -6,6 +6,9 @@ import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
 import MouseLook3D from "../../components/three/MouseLook3D";
 import { flushSync } from "react-dom";
+import { RECAPTCHA_SITE_KEY } from "../../api/publicApiKey";
+import ReCAPTCHA from "react-google-recaptcha";
+
 
 const Auth = () => {
   const navigate = useNavigate();
@@ -21,6 +24,8 @@ const Auth = () => {
   const [needs2FA, setNeeds2FA] = useState(false);
   const [otpCode, setOtpCode] = useState("");
 
+  const [captcha, setCaptcha] = useState(null);
+  
   console.log("Auth render", { needs2FA, loading }, performance.now());
 
   const Back_to_Home = ({ className }) => {
@@ -61,6 +66,10 @@ const Auth = () => {
     e.preventDefault();
     setErr("");
 
+    if (!captcha) {
+      return setErr("Please complete the captcha verification.");
+    }
+
     const name = e.target.name.value.trim();
     const email = e.target.email.value.trim();
     const password = e.target.password.value;
@@ -72,6 +81,7 @@ const Auth = () => {
       setLoading(true);
       const user = await register(name, email, password, confirm);
       localStorage.setItem("user", JSON.stringify(user));
+      setCaptcha(null);
       setIsLogin(true);
     } catch (error) {
       setErr(toErrorMessage(error, "Register failed"));
@@ -211,11 +221,18 @@ const Auth = () => {
                   disabled={loading}
                 />
               </label>
+              
+              <div className="auth-captcha">
+                <ReCAPTCHA
+                  sitekey={RECAPTCHA_SITE_KEY}
+                  onChange={(token) => setCaptcha(token)}
+                />
+              </div>
 
               <button
                 className="auth-btnSolid"
                 type="submit"
-                disabled={loading}
+                disabled={loading || !captcha}
               >
                 {loading ? "Creating..." : "Sign Up"}
               </button>
