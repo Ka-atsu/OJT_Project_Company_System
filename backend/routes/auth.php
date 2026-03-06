@@ -16,6 +16,10 @@ Route::post('/login', [AuthenticatedSessionController::class, 'store'])
     ->middleware('guest')
     ->name('login');
 
+Route::post('/login/2fa', [AuthenticatedSessionController::class, 'verifyTwoFactor'])
+    ->middleware('guest')
+    ->name('login.2fa');
+
 Route::post('/forgot-password', [PasswordResetLinkController::class, 'store'])
     ->middleware('guest')
     ->name('password.email');

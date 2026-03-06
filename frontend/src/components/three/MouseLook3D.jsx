@@ -1,27 +1,32 @@
-import { useEffect, useRef } from "react";
+import React, { memo, useEffect, useRef } from "react";
 import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 
-export default function MouseLook3D({ url, className = "" }) {
+function MouseLook3D({ url, className = "", active = true }) {
   const mountRef = useRef(null);
+  const animationRef = useRef(0);
+  const controlsRef = useRef(null);
+  const rendererRef = useRef(null);
+  const sceneRef = useRef(null);
+  const cameraRef = useRef(null);
 
   useEffect(() => {
     const mount = mountRef.current;
     if (!mount || !url) return;
 
     const scene = new THREE.Scene();
+    sceneRef.current = scene;
 
     const camera = new THREE.PerspectiveCamera(40, 1, 0.1, 500);
+    cameraRef.current = camera;
 
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    rendererRef.current = renderer;
+
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.setClearColor(0x000000, 0);
     mount.appendChild(renderer.domElement);
-
-    /* =====================
-       LIGHTING
-    ===================== */
 
     scene.add(new THREE.AmbientLight(0xffffff, 0.9));
 
@@ -33,34 +38,21 @@ export default function MouseLook3D({ url, className = "" }) {
     fill.position.set(-6, 2, 3);
     scene.add(fill);
 
-    /* =====================
-       GROUP
-    ===================== */
-
     const group = new THREE.Group();
     scene.add(group);
 
-    /* =====================
-       CONTROLS
-    ===================== */
-
     const controls = new OrbitControls(camera, renderer.domElement);
+    controlsRef.current = controls;
+
     controls.enableDamping = true;
     controls.dampingFactor = 0.08;
     controls.enablePan = false;
     controls.enableZoom = true;
     controls.rotateSpeed = 0.6;
-
     controls.minPolarAngle = Math.PI * 0.25;
     controls.maxPolarAngle = Math.PI * 0.75;
-
-    // ✅ auto-spin
-    controls.autoRotate = true;
+    controls.autoRotate = active;
     controls.autoRotateSpeed = 1.0;
-
-    /* =====================
-       LOAD MODEL
-    ===================== */
 
     const loader = new GLTFLoader();
     let model = null;
@@ -69,9 +61,11 @@ export default function MouseLook3D({ url, className = "" }) {
       root.traverse((obj) => {
         if (!obj.isMesh) return;
         obj.geometry?.dispose?.();
-        if (Array.isArray(obj.material))
+        if (Array.isArray(obj.material)) {
           obj.material.forEach((m) => m?.dispose?.());
-        else obj.material?.dispose?.();
+        } else {
+          obj.material?.dispose?.();
+        }
       });
     };
 
@@ -88,7 +82,6 @@ export default function MouseLook3D({ url, className = "" }) {
       dist *= padding;
 
       camera.position.set(center.x, center.y + size.y * 0.15, center.z + dist);
-
       camera.near = Math.max(0.01, dist / 100);
       camera.far = dist * 200;
       camera.lookAt(center);
@@ -117,16 +110,13 @@ export default function MouseLook3D({ url, className = "" }) {
 
         group.add(model);
         frameObject(group, 1.3);
-
         group.rotation.set(-0.08, 0.18, 0);
+
+        renderer.render(scene, camera);
       },
       undefined,
       (err) => console.error("GLB load error:", err),
     );
-
-    /* =====================
-       RESIZE
-    ===================== */
 
     const resize = () => {
       const w = Math.max(1, mount.clientWidth);
@@ -134,40 +124,65 @@ export default function MouseLook3D({ url, className = "" }) {
       renderer.setSize(w, h, false);
       camera.aspect = w / h;
       camera.updateProjectionMatrix();
+      renderer.render(scene, camera);
     };
 
     const ro = new ResizeObserver(resize);
     ro.observe(mount);
     resize();
 
-    /* =====================
-       LOOP
-    ===================== */
-
-    let raf = 0;
     const tick = () => {
-      raf = requestAnimationFrame(tick);
+      animationRef.current = requestAnimationFrame(tick);
       controls.update();
       renderer.render(scene, camera);
     };
-    tick();
 
-    /* =====================
-       CLEANUP
-    ===================== */
+    if (active) tick();
 
     return () => {
-      cancelAnimationFrame(raf);
+      cancelAnimationFrame(animationRef.current);
       ro.disconnect();
       controls.dispose();
 
       if (model) disposeModel(model);
       renderer.dispose();
 
-      if (renderer.domElement.parentNode === mount)
+      if (renderer.domElement.parentNode === mount) {
         mount.removeChild(renderer.domElement);
+      }
     };
   }, [url]);
 
+  useEffect(() => {
+    const controls = controlsRef.current;
+    const renderer = rendererRef.current;
+    const scene = sceneRef.current;
+    const camera = cameraRef.current;
+
+    if (!controls || !renderer || !scene || !camera) return;
+
+    controls.autoRotate = active;
+
+    cancelAnimationFrame(animationRef.current);
+
+    if (!active) {
+      controls.update();
+      renderer.render(scene, camera);
+      return;
+    }
+
+    const tick = () => {
+      animationRef.current = requestAnimationFrame(tick);
+      controls.update();
+      renderer.render(scene, camera);
+    };
+
+    tick();
+
+    return () => cancelAnimationFrame(animationRef.current);
+  }, [active]);
+
   return <div ref={mountRef} className={`auth-three ${className}`} />;
 }
+
+export default memo(MouseLook3D);

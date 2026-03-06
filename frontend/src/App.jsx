@@ -90,8 +90,8 @@ export default function App() {
         <Route path="*" element={<NotFound />} />
       </Routes>
 
-      <kentTestingRoutes />
-      <warlyTestingRoutes />
+      {/* <kentTestingRoutes />
+      <warlyTestingRoutes /> */}
     </>
   );
 }
