@@ -1,9 +1,9 @@
 import { ImgPlan } from "../../../assets/images";
 
 const COMPANY_PROFILE_PDF = {
-  view: "https://drive.google.com/file/d/1P6eeeph-igHN2kz22J4ooTfXALkjd454/view?usp=sharing",
+  view: "https://drive.google.com/file/d/1r7yZNV9WsnJBkx__10h0V3B2euI37ezR/view?usp=drive_link",
   download:
-    "https://drive.google.com/uc?export=download&id=1P6eeeph-igHN2kz22J4ooTfXALkjd454",
+    "https://drive.google.com/uc?export=download&id=1r7yZNV9WsnJBkx__10h0V3B2euI37ezR",
 };
 
 const MISSION_TEXT =
