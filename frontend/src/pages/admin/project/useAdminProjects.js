@@ -65,6 +65,21 @@ export default function useAdminProjects() {
 
   /* ---------- Derived ---------- */
 
+  const canCreate = useMemo(() => {
+    if (!isCreating) return true;
+
+    return (
+      draft.name?.trim() &&
+      draft.clientId &&
+      draft.startDate &&
+      draft.dueDate &&
+      draft.status &&
+      draft.budget &&
+      draft.address &&
+      draft.description
+    );
+  }, [draft, isCreating]);
+
   const selected = useMemo(() => {
     if (!items) return null;
     return items.find((x) => x.id === selectedId) ?? null;
@@ -372,5 +387,7 @@ export default function useAdminProjects() {
     addMilestone,
     updateMilestone,
     removeMilestone,
+
+    canCreate,
   };
 }
