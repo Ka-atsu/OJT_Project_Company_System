@@ -78,6 +78,7 @@ export default function ProjectDetails({
   removeMilestone,
   setDraft,
   setItems,
+  canCreate,
 }) {
   const title = isCreating ? "Create New Project" : "Project Details";
   const cardClass = isCreating ? "ap-card floating-card" : "ap-card";
@@ -114,6 +115,7 @@ export default function ProjectDetails({
                   onSave={saveProject}
                   onDelete={deleteProject}
                   setDraft={setDraft}
+                  canCreate={canCreate}
                 />
 
                 <ClientAssign

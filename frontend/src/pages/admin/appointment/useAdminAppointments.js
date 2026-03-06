@@ -8,6 +8,28 @@ import { useSearchParams } from "react-router-dom";
 
 const STATUS_OPTIONS = ["all", "pending", "accepted", "declined"];
 
+/* ---------- TIME HELPERS ---------- */
+
+function parseLocalDateTime(datetime) {
+  if (!datetime) return null;
+
+  const [date, time] = datetime.replace("T", " ").split(" ");
+  const [y, m, d] = date.split("-").map(Number);
+  const [h = 0, min = 0] = time.split(":").map(Number);
+
+  return new Date(y, m - 1, d, h, min);
+}
+
+function formatLocalDateTime(date) {
+  const pad = (n) => String(n).padStart(2, "0");
+
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(
+    date.getDate(),
+  )}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
+}
+
+/* ---------- MAPPER ---------- */
+
 function mapApiItemToUi(a) {
   const statusRaw = a.approvalStatus ?? a.approval_status ?? "pending";
   const status = String(statusRaw).trim().toLowerCase();
@@ -20,18 +42,24 @@ function mapApiItemToUi(a) {
     type: a.purpose,
     status,
     mode: a.mode,
+
     requestedFor: a.scheduled_at
-      ? new Date(a.scheduled_at).toLocaleString()
+      ? a.scheduled_at.replace("T", " ").slice(0, 16)
       : `${a.date ?? ""} ${a.time ?? ""}`.trim(),
+
     scheduledAt: a.scheduled_at ?? null,
+
     meeting: {
       link: a.meetingLink ?? a.meeting_link ?? "",
       location: a.location ?? "",
       notes: a.meeting_notes ?? "",
     },
+
     raw: a,
   };
 }
+
+/* ---------- VALIDATION ---------- */
 
 function isValidUrl(value) {
   try {
@@ -42,9 +70,12 @@ function isValidUrl(value) {
   }
 }
 
+/* ---------- HOOK ---------- */
+
 export function useAdminAppointments() {
   const [searchParams] = useSearchParams();
   const selectParam = searchParams.get("select");
+
   const [status, setStatus] = useState("pending");
   const [q, setQ] = useState("");
   const [sort, setSort] = useState("requestedFor_asc");
@@ -57,11 +88,14 @@ export function useAdminAppointments() {
   const [err, setErr] = useState("");
 
   const [selectedId, setSelectedId] = useState(null);
+
   const [actionNote, setActionNote] = useState("");
   const [meetingLink, setMeetingLink] = useState("");
   const [meetingLocation, setMeetingLocation] = useState("");
   const [meetingNotes, setMeetingNotes] = useState("");
-  const [newDateTime, setNewDateTime] = useState("");
+
+  const [newDateTime, setNewDateTime] = useState(null);
+
   const [successMessage, setSuccessMessage] = useState("");
 
   const requestIdRef = useRef(0);
@@ -73,14 +107,17 @@ export function useAdminAppointments() {
 
   const pageCount = Math.max(1, Math.ceil(total / pageSize));
 
-  // Reset to first page when filters change
+  /* ---------- RESET PAGE ---------- */
+
   useEffect(() => {
     setPage(1);
   }, [status, q, sort, pageSize]);
 
-  // Fetch appointments
+  /* ---------- FETCH APPOINTMENTS ---------- */
+
   useEffect(() => {
     const requestId = ++requestIdRef.current;
+
     setLoading(true);
     setErr("");
 
@@ -102,6 +139,7 @@ export function useAdminAppointments() {
         if (requestId !== requestIdRef.current) return;
 
         const mapped = (data?.data ?? []).map(mapApiItemToUi);
+
         setItems(mapped);
         setTotal(data?.total ?? 0);
 
@@ -110,18 +148,19 @@ export function useAdminAppointments() {
 
           if (queryId) {
             const exists = mapped.find((a) => a.id === queryId);
+
             if (exists) {
               setSelectedId(queryId);
               return;
             }
           }
 
-          // fallback to first item
           if (!selectedId) {
             setSelectedId(mapped[0].id);
           }
         }
-        // Ignore canceled requests
+      })
+      .catch((e) => {
         if (
           axios.isCancel?.(e) ||
           e.code === "ERR_CANCELED" ||
@@ -145,7 +184,8 @@ export function useAdminAppointments() {
       });
   }, [page, pageSize, status, q, sort]);
 
-  // Sync selected details
+  /* ---------- SYNC SELECTED ---------- */
+
   useEffect(() => {
     if (!selected) return;
 
@@ -153,14 +193,17 @@ export function useAdminAppointments() {
     setMeetingLink(selected.meeting?.link ?? "");
     setMeetingLocation(selected.meeting?.location ?? "");
     setMeetingNotes(selected.meeting?.notes ?? "");
-    setNewDateTime(
-      selected.raw?.scheduled_at ? selected.raw.scheduled_at.slice(0, 16) : "",
-    );
+
+    setNewDateTime(parseLocalDateTime(selected.raw?.scheduled_at));
   }, [selected]);
 
+  /* ---------- REFRESH ---------- */
+
   const refresh = useCallback(() => {
-    setPage((prev) => prev); // trigger effect
+    setPage((p) => p);
   }, []);
+
+  /* ---------- UPDATE ---------- */
 
   async function patchSelected(payload) {
     if (!selected) return;
@@ -172,6 +215,7 @@ export function useAdminAppointments() {
     );
 
     setSuccessMessage("Saved successfully.");
+
     setTimeout(() => setSuccessMessage(""), 3000);
   }
 
@@ -182,6 +226,8 @@ export function useAdminAppointments() {
       ? { meeting_link: meetingLink || null, location: null }
       : { meeting_link: null, location: meetingLocation || null };
   }
+
+  /* ---------- ACTIONS ---------- */
 
   async function approve() {
     if (!selected) return;
@@ -220,12 +266,12 @@ export function useAdminAppointments() {
 
     if (!newDateTime) return alert("Select a new date and time.");
 
-    if (new Date(newDateTime) < new Date()) {
+    if (newDateTime < new Date()) {
       return alert("Cannot reschedule to past date.");
     }
 
     await patchSelected({
-      scheduled_at: new Date(newDateTime).toISOString(),
+      scheduled_at: formatLocalDateTime(newDateTime),
       ...buildMeetingPayload(),
       admin_note: actionNote || null,
       meeting_notes: meetingNotes || null,
@@ -234,38 +280,54 @@ export function useAdminAppointments() {
     alert("Appointment rescheduled.");
   }
 
+  /* ---------- RETURN ---------- */
+
   return {
     items,
     loading,
     err,
+
     status,
     setStatus,
+
     q,
     setQ,
+
     sort,
     setSort,
+
     pageSize,
     setPageSize,
+
     page,
     setPage,
+
     pageCount,
     total,
+
     selected,
     selectedId,
     setSelectedId,
+
     meetingLink,
     setMeetingLink,
+
     meetingLocation,
     setMeetingLocation,
+
     meetingNotes,
     setMeetingNotes,
+
     actionNote,
     setActionNote,
+
     newDateTime,
     setNewDateTime,
+
     approve,
     reject,
     reschedule,
+
     refresh,
     successMessage,
   };

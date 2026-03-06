@@ -94,6 +94,20 @@ export default function AppointmentDetails({
             <div className="aa-v">
               {selected.mode === "online" ? "Online" : "Face-to-face"}
             </div>
+
+            <div className="aa-k">Project</div>
+            <div className="aa-v">{selected.raw.project ?? "-"}</div>
+
+            <div className="aa-k">Purpose</div>
+            <div className="aa-v">{selected.type ?? "-"}</div>
+
+            <div className="aa-k">Scheduled date</div>
+            <div className="aa-v">
+              {selected.raw.date} {selected.raw.time}
+            </div>
+
+            <div className="aa-k">Details</div>
+            <div className="aa-v">{selected.raw.details ?? "-"}</div>
           </div>
         </div>
 
@@ -140,10 +154,8 @@ export default function AppointmentDetails({
 
           <Field label="Reschedule date & time">
             <DatePicker
-              selected={newDateTime ? new Date(newDateTime) : null}
-              onChange={(date) =>
-                setNewDateTime(date ? date.toISOString().slice(0, 16) : "")
-              }
+              selected={newDateTime ?? null}
+              onChange={(date) => setNewDateTime(date)}
               showTimeSelect
               timeIntervals={30}
               minDate={new Date()}
@@ -153,6 +165,7 @@ export default function AppointmentDetails({
               popperClassName="appt-dp-popper"
               showPopperArrow={false}
               timeCaption="Time"
+              placeholderText="Select new date and time"
               renderCustomHeader={({
                 date,
                 changeYear,
