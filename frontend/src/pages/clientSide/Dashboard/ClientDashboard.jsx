@@ -21,7 +21,6 @@ export default function ClientDashboard() {
     alerts,
     capitalize,
   } = useClientDashboard();
-
   return (
     <section className="dash-page dashboard">
       {/* HERO */}
@@ -169,11 +168,23 @@ export default function ClientDashboard() {
             <div className="dash-surface-header">Alerts</div>
 
             <div className="dash-list">
-              {alerts.length === 0 ? (
-                <div className="dash-item-meta">No alerts right now.</div>
+              {alerts === null ? (
+                // SKELETON WHILE LOADING
+                [...Array(3)].map((_, i) => (
+                  <div key={i} className="dash-item-meta dash-appointment-left">
+                    <div className="skeleton dash-project-name-skeleton"></div>
+                  </div>
+                ))
+              ) : alerts.length === 0 ? (
+                // EMPTY STATE (ONLY AFTER LOADING)
+                <div className="dash-item-meta dash-appointment-left">
+                  <FiInfo className="dash-alert-icon" />
+                  <span>No alerts right now.</span>
+                </div>
               ) : (
+                // ALERTS
                 alerts.map((msg, i) => (
-                  <div key={i} className="dash-item-meta">
+                  <div key={i} className="dash-item-meta dash-appointment-left">
                     <FiInfo className="dash-alert-icon" />
                     <span>{msg}</span>
                   </div>
