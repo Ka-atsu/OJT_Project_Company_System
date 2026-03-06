@@ -1,14 +1,18 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { updateUserProfile } from "./admin.Settings";
 import Row from "./components/Row";
 
 export default function ProfileTab({ admin, setAdmin }) {
-  const [displayName, setDisplayName] = useState(admin.name);
+  const [name, setName] = useState(admin.name);
   const [editing, setEditing] = useState(false);
+
+  useEffect(() => {
+    setName(admin.name);
+  }, [admin.name]);
 
   async function save() {
     try {
-      const updated = await updateUserProfile({ name: displayName });
+      const updated = await updateUserProfile({ name });
       setAdmin(updated);
       setEditing(false);
     } catch (err) {
@@ -20,23 +24,25 @@ export default function ProfileTab({ admin, setAdmin }) {
     <div className="as-card">
       <Row
         label="Name"
-        right={<span className="as-value">{admin.name}</span>}
-      />
-
-      <Row
-        label="Display Name"
         help="This name is used across the admin portal."
         right={
           editing ? (
             <div className="as-actions">
               <button
                 className="as-btn as-btn--ghost"
-                onClick={() => setEditing(false)}
+                onClick={() => {
+                  setName(admin.name);
+                  setEditing(false);
+                }}
               >
-                Cancel
+                Cancel{" "}
               </button>
 
-              <button className="as-btn" onClick={save}>
+              <button
+                className="as-btn"
+                onClick={save}
+                disabled={name.trim() === admin.name}
+              >
                 Save
               </button>
             </div>
@@ -48,10 +54,7 @@ export default function ProfileTab({ admin, setAdmin }) {
         }
       >
         {editing ? (
-          <input
-            value={displayName}
-            onChange={(e) => setDisplayName(e.target.value)}
-          />
+          <input value={name} onChange={(e) => setName(e.target.value)} />
         ) : (
           <div>{admin.name}</div>
         )}

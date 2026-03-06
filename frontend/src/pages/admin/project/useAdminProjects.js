@@ -347,6 +347,7 @@ export default function useAdminProjects() {
   return {
     clients,
     items,
+    setItems,
     total,
     loading,
     err,
