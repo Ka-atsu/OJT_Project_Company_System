@@ -20,6 +20,10 @@ class User extends Authenticatable
         'is_admin',
         'two_factor_enabled',
         'account_activity_notifications',
+        'otp_code',
+        'otp_purpose',
+        'otp_expires_at',
+        'email_verified_at',
     ];
 
     /**
@@ -28,6 +32,7 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
+        'otp_code',
     ];
 
     /**
@@ -37,6 +42,7 @@ class User extends Authenticatable
     {
         return [
             'email_verified_at' => 'datetime',
+            'otp_expires_at' => 'datetime',
             'password' => 'hashed',
             'is_admin' => 'boolean',
             'two_factor_enabled' => 'boolean',

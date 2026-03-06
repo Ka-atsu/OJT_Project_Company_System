@@ -29,7 +29,23 @@ function enrichUser(user) {
 
 export async function login(email, password, remember = false) {
   await csrf();
-  await api.post("/login", { email, password, remember });
+  const res = await api.post("/login", { email, password, remember });
+
+  if (res.data?.requires_2fa) {
+    return {
+      requires2FA: true,
+      message:
+        res.data.message ?? "Enter the verification code sent to your email.",
+    };
+  }
+
+  const user = await fetchMe();
+  return enrichUser(user);
+}
+
+export async function verifyTwoFactor(code) {
+  await csrf();
+  await api.post("/login/2fa", { code });
 
   const user = await fetchMe();
   return enrichUser(user);

@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import "./authdraft.css";
 import logo from "../../assets/Images/logo.jpg";
-import { login, register } from "./auth.service";
+import { login, register, verifyTwoFactor } from "./auth.service";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
 import MouseLook3D from "../../components/three/MouseLook3D";
+import { flushSync } from "react-dom";
 
 const Auth = () => {
   const navigate = useNavigate();
@@ -17,20 +18,27 @@ const Auth = () => {
   const [loading, setLoading] = useState(false);
   const [err, setErr] = useState("");
 
- const Back_to_Home = ({ className }) => {
-  return (
-    <button
-      className={className}
-      onClick={() => navigate("/")}
-      disabled={loading}
-    >
-      Return to Website
-    </button>
-  );
-};
+  const [needs2FA, setNeeds2FA] = useState(false);
+  const [otpCode, setOtpCode] = useState("");
+
+  console.log("Auth render", { needs2FA, loading }, performance.now());
+
+  const Back_to_Home = ({ className }) => {
+    return (
+      <button
+        className={className}
+        onClick={() => navigate("/")}
+        disabled={loading}
+      >
+        Return to Website
+      </button>
+    );
+  };
 
   const toggleForm = () => {
     setErr("");
+    setNeeds2FA(false);
+    setOtpCode("");
     setIsLogin((v) => !v);
   };
 
@@ -63,14 +71,7 @@ const Auth = () => {
     try {
       setLoading(true);
       const user = await register(name, email, password, confirm);
-
-      // optional: save user
       localStorage.setItem("user", JSON.stringify(user));
-
-      // OPTIONAL: redirect right after register
-      // navigate(user.redirectTo, { replace: true });
-
-      // or keep your old behavior: go back to login form
       setIsLogin(true);
     } catch (error) {
       setErr(toErrorMessage(error, "Register failed"));
@@ -86,21 +87,52 @@ const Auth = () => {
     const email = e.target.email.value.trim();
     const password = e.target.password.value;
 
+    console.time("login request");
     try {
       setLoading(true);
-      const user = await login(email, password, remember);
+      const result = await login(email, password, remember);
+      console.timeEnd("login request");
+      console.log("got login result", result, performance.now());
 
-      // save user
-      localStorage.setItem("user", JSON.stringify(user));
+      if (result?.requires2FA) {
+        console.log("before setNeeds2FA", performance.now());
+        setNeeds2FA(true);
+        setErr("");
+        setLoading(false);
+        console.log("after setNeeds2FA", performance.now());
+        return;
+      }
 
-      // ✅ Redirect depending on admin
-      navigate(user.redirectTo, { replace: true });
-      // or: navigate(user.isAdmin ? "/admin" : "/dashboard", { replace: true });
+      localStorage.setItem("user", JSON.stringify(result));
+      navigate(result.redirectTo, { replace: true });
     } catch (error) {
+      console.timeEnd("login request");
       setErr(toErrorMessage(error, "Login failed"));
+      setLoading(false);
+    }
+  };
+
+  const handleVerify2FA = async (e) => {
+    e.preventDefault();
+    setErr("");
+
+    try {
+      setLoading(true);
+      const user = await verifyTwoFactor(otpCode.trim());
+
+      localStorage.setItem("user", JSON.stringify(user));
+      navigate(user.redirectTo, { replace: true });
+    } catch (error) {
+      setErr(toErrorMessage(error, "2FA verification failed"));
     } finally {
       setLoading(false);
     }
+  };
+
+  const backToLogin = () => {
+    setNeeds2FA(false);
+    setOtpCode("");
+    setErr("");
   };
 
   return (
@@ -190,77 +222,121 @@ const Auth = () => {
             </form>
           </div>
 
-          {/* LOGIN FORM */}
+          {/* LOGIN / 2FA FORM */}
           <div className={`form login-form ${isLogin ? "visible" : "hidden"}`}>
-            <h2 className="auth-formTitle">SIGN IN</h2>
+            <h2 className="auth-formTitle">
+              {needs2FA ? "TWO-FACTOR AUTH" : "SIGN IN"}
+            </h2>
             {err && <div className="auth-error">{err}</div>}
 
-            <form onSubmit={handleLogin}>
-              <label className="auth-field">
-                <span className="auth-label">Email Address</span>
-                <input
-                  name="email"
-                  className="auth-input"
-                  type="email"
-                  placeholder="email@example.com"
-                  required
-                  disabled={loading}
-                />
-              </label>
-
-              <label className="auth-field">
-                <span className="auth-label">Password</span>
-                <div className="auth-pwWrap">
+            {!needs2FA ? (
+              <form onSubmit={handleLogin}>
+                <label className="auth-field">
+                  <span className="auth-label">Email Address</span>
                   <input
-                    name="password"
+                    name="email"
                     className="auth-input"
-                    type={showPwLogin ? "text" : "password"}
-                    placeholder="Enter your password"
+                    type="email"
+                    placeholder="email@example.com"
                     required
                     disabled={loading}
                   />
-                  <button
-                    type="button"
-                    className="auth-eyeBtn"
-                    onClick={() => setShowPwLogin((v) => !v)}
-                    aria-label={showPwLogin ? "Hide password" : "Show password"}
+                </label>
+
+                <label className="auth-field">
+                  <span className="auth-label">Password</span>
+                  <div className="auth-pwWrap">
+                    <input
+                      name="password"
+                      className="auth-input"
+                      type={showPwLogin ? "text" : "password"}
+                      placeholder="Enter your password"
+                      required
+                      disabled={loading}
+                    />
+                    <button
+                      type="button"
+                      className="auth-eyeBtn"
+                      onClick={() => setShowPwLogin((v) => !v)}
+                      aria-label={
+                        showPwLogin ? "Hide password" : "Show password"
+                      }
+                      disabled={loading}
+                    >
+                      {showPwLogin ? (
+                        <AiOutlineEyeInvisible size={20} />
+                      ) : (
+                        <AiOutlineEye size={20} />
+                      )}
+                    </button>
+                  </div>
+                </label>
+
+                <label className="auth-check">
+                  <input
+                    type="checkbox"
+                    checked={remember}
+                    onChange={(e) => setRemember(e.target.checked)}
                     disabled={loading}
-                  >
-                    {showPwLogin ? (
-                      <AiOutlineEyeInvisible size={20} />
-                    ) : (
-                      <AiOutlineEye size={20} />
-                    )}
-                  </button>
-                </div>
-              </label>
+                  />
+                  <span>Remember me</span>
+                </label>
 
-              <label className="auth-check">
-                <input
-                  type="checkbox"
-                  checked={remember}
-                  onChange={(e) => setRemember(e.target.checked)}
+                <button
+                  className="auth-btnSolid"
+                  type="submit"
                   disabled={loading}
-                />
-                <span>Remember me</span>
-              </label>
+                >
+                  {loading ? "Signing in..." : "Sign In"}
+                </button>
 
-              <button
-                className="auth-btnSolid"
-                type="submit"
-                disabled={loading}
-              >
-                {loading ? "Signing in..." : "Sign In"}
-              </button>
+                <p className="auth-credit">
+                  Your information is kept secure and confidential.
+                </p>
+              </form>
+            ) : (
+              <form onSubmit={handleVerify2FA}>
+                <label className="auth-field">
+                  <span className="auth-label">Verification Code</span>
+                  <input
+                    name="otp"
+                    className="auth-input"
+                    type="text"
+                    inputMode="numeric"
+                    maxLength={6}
+                    placeholder="Enter 6-digit code"
+                    value={otpCode}
+                    onChange={(e) => setOtpCode(e.target.value)}
+                    required
+                    disabled={loading}
+                  />
+                </label>
 
-              <p className="auth-credit">
-                Your information is kept secure and confidential.
-              </p>
-            </form>
+                <button
+                  className="auth-btnSolid"
+                  type="submit"
+                  disabled={loading}
+                >
+                  {loading ? "Verifying..." : "Verify Code"}
+                </button>
+
+                <button
+                  type="button"
+                  className="auth-btn auth-btnOutline"
+                  onClick={backToLogin}
+                  disabled={loading}
+                >
+                  Back
+                </button>
+
+                <p className="auth-credit">
+                  Enter the code sent to your email to finish signing in.
+                </p>
+              </form>
+            )}
           </div>
         </div>
 
-        {/* Blue Panels */}
         <div className="panels-container">
           <div className={`panel right-panel ${isLogin ? "moved-left" : ""}`}>
             <div className="panel-content">
@@ -273,32 +349,45 @@ const Auth = () => {
                 </div>
               </div>
 
-               <MouseLook3D url={`${import.meta.env.BASE_URL}models/Backhoe.glb`} />
+              {!needs2FA && (
+                <MouseLook3D
+                  url={`${import.meta.env.BASE_URL}models/Backhoe.glb`}
+                />
+              )}
 
               {isLogin ? (
                 <div className="panel-text">
-                  <h2>Welcome Back!</h2>
-                  <p className="auth-welcomeSub">Don&apos;t have an account?</p>
-                  <button
-                    className="auth-btn auth-btnLogin"
-                    onClick={toggleForm}
-                    disabled={loading}
-                  >
-                    Register
-                  </button>
-                  <Back_to_Home className="auth-btn auth-btnOutline"/>
+                  <h2>{needs2FA ? "Almost There" : "Welcome Back!"}</h2>
+                  <p className="auth-welcomeSub">
+                    {needs2FA
+                      ? "Complete verification to continue."
+                      : "Don&apos;t have an account?"}
+                  </p>
 
-                  <div className="auth-why">
-                    <p className="auth-whyTitle">Why log in?</p>
-                    <ul>
-                      <li>Request project quotations</li>
-                      <li>Schedule site inspections</li>
-                      <li>Track project inquiries</li>
-                      <li>Manage account details securely</li>
-                    </ul>
-                  </div>
+                  {!needs2FA && (
+                    <button
+                      className="auth-btn auth-btnLogin"
+                      onClick={toggleForm}
+                      disabled={loading}
+                    >
+                      Register
+                    </button>
+                  )}
+
+                  <Back_to_Home className="auth-btn auth-btnOutline" />
+
+                  {!needs2FA && (
+                    <div className="auth-why">
+                      <p className="auth-whyTitle">Why log in?</p>
+                      <ul>
+                        <li>Request project quotations</li>
+                        <li>Schedule site inspections</li>
+                        <li>Track project inquiries</li>
+                        <li>Manage account details securely</li>
+                      </ul>
+                    </div>
+                  )}
                 </div>
-
               ) : (
                 <div className="panel-text">
                   <h2>Hello, Welcome!</h2>
@@ -310,8 +399,8 @@ const Auth = () => {
                   >
                     Login
                   </button>
-                  <Back_to_Home className = "auth-btn auth-btnOutline"/>
-                   <div className="auth-why">
+                  <Back_to_Home className="auth-btn auth-btnOutline" />
+                  <div className="auth-why">
                     <p className="auth-whyTitle">Why register?</p>
                     <ul>
                       <li>Submit new project requests</li>
@@ -321,7 +410,6 @@ const Auth = () => {
                     </ul>
                   </div>
                 </div>
-                
               )}
             </div>
           </div>
