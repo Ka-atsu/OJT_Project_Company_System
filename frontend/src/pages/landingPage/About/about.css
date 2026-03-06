@@ -655,6 +655,46 @@
   color: rgba(0, 0, 0, 0.55);
 }
 
+.about-team-pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  margin-top: 40px;
+}
+
+.about-team-pagination button {
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: none;
+  background: #093a82;
+  color: white;
+  cursor: pointer;
+}
+
+.about-team-pagination button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.about-team-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+@media (max-width: 900px) {
+  .about-team-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 500px) {
+  .about-team-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 /* =====================
    9) IMAGE BAND (ImageBandSection.jsx) - if you use it later
 ===================== */
