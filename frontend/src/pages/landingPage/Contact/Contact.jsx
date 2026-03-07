@@ -26,16 +26,13 @@ export default function Contact() {
   } = useContactForm();
 
   return (
-    <div className="contact-page p-0">
-      {/* HERO */}
-      <section className="contact-hero">
-        <div className="contact-hero-inner">
+    <div className="contact-page full-bleed">
+      {/* HERO — same layout pattern as other landing pages */}
+      <section className="contact-hero hero hero--editorial">
+        <div className="contact-hero-inner hero-content">
           <div className="contact-hero-grid">
             <div>
-              <div className="contact-kicker">
-                <span className="dot" />
-                Contact
-              </div>
+              <span className="contact-kicker eyebrow">Contact</span>
 
               <h1 className="contact-title">We’d love to hear from you!</h1>
 
@@ -47,6 +44,7 @@ export default function Contact() {
               <div className="contact-hero-actions">
                 <Button
                   variant="light"
+                  className="contact-hero-btn"
                   onClick={() =>
                     formSectionRef.current?.scrollIntoView({
                       behavior: "smooth",
@@ -61,10 +59,10 @@ export default function Contact() {
         </div>
       </section>
 
-      {/* FORM SECTION */}
+      {/* FORM SECTION — same section padding as About/Projects */}
       <section
         ref={formSectionRef}
-        className="contact-section"
+        className="contact-section section section--after-hero"
         id="contact-form"
       >
         <div className="contact-surface">
@@ -87,7 +85,7 @@ export default function Contact() {
               <Form onSubmit={handleSubmit}>
                 <Row className="g-3">
                   {/* Name */}
-                  <Col xs={12} md={6}>
+                  <Col xs={12}>
                     <Form.Group>
                       <Form.Label>Name</Form.Label>
                       <Form.Control
@@ -103,8 +101,8 @@ export default function Contact() {
                     </Form.Group>
                   </Col>
 
-                  {/* Email */}
-                  <Col xs={12} md={6}>
+                  {/* Email — new line below Name */}
+                  <Col xs={12}>
                     <Form.Group>
                       <Form.Label>Email</Form.Label>
                       <Form.Control

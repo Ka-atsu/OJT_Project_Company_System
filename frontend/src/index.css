@@ -11,6 +11,7 @@
 :root {
   /* Colors */
   --bg: #ffffff;
+  --bg-page: #f8fafc; /* subtle canvas (gradient applied on body) */
   --text: #000000;
   --muted: #b5b5b5;
   --line: rgba(0, 0, 0, 0.25);
@@ -64,9 +65,18 @@ body {
 body {
   font-family: var(--font-sans);
   font-size: var(--fs-body);
-  background: var(--bg);
+  /* Subtle gradient canvas: clean, professional, not plain white */
+  background: linear-gradient(
+    180deg,
+    #f8fafc 0%,
+    #ffffff 28%,
+    #fafbfc 55%,
+    #f1f5f9 100%
+  );
+  background-attachment: fixed;
   color: var(--text);
   -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
 }
 
 /* =========================
