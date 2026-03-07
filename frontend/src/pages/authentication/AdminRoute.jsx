@@ -1,17 +1,12 @@
 import { Navigate, Outlet } from "react-router-dom";
 import useAuthUser from "./useAuthUser";
-import "../global.css";
+import PreloaderVideo from "../animation/PreloaderVideo";
 
 export default function AdminRoute() {
   const { user, loading } = useAuthUser();
 
   if (loading) {
-    return (
-      <div className="spinner-screen">
-        <div className="spinner"></div>
-        <p>Checking permissions...</p>
-      </div>
-    );
+    return <PreloaderVideo durationMs={60000} />;
   }
 
   // Not logged in

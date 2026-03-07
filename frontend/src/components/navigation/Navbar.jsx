@@ -217,18 +217,12 @@ export default function Navbar() {
               />
             </svg>
           </NavLink>
-          {user ? (
-            <NavLink
-              to={user.is_admin ? "/admin/appointments" : "/dashboard/appointments"}
-              className="nav-login"
-            >
-              <span>Book Appointment</span>
-            </NavLink>
-          ) : (
-            <NavLink to="/login" className="nav-login">
-              <span>Book Appointment</span>
-            </NavLink>
-          )}
+          <NavLink
+            to={user && user.is_admin ? "/admin" : "/dashboard"}
+            className="nav-login"
+          >
+            <span>Book Appointment</span>
+          </NavLink>
         </div>
       </div>
     </nav>
