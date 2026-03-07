@@ -382,7 +382,7 @@ const Auth = () => {
                   <p className="auth-welcomeSub">
                     {needs2FA
                       ? "Complete verification to continue."
-                      : "Don&apos;t have an account?"}
+                      : "Don't have an account?"}
                   </p>
 
                   {!needs2FA && (
