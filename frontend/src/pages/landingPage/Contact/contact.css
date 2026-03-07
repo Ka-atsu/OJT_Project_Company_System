@@ -1,37 +1,43 @@
 /* =====================
-   CONTACT PAGE — LIGHT MODE ONLY
+   CONTACT PAGE — consistent with About / Projects / Services
+   Uses :root tokens (--pad-x, --btn-*, --fs-*, --line, --bg)
 ===================== */
 
 .contact-page {
-  background: #ffffff;
+  background: var(--bg);
   margin: 0;
   padding: 0;
 }
 
-/* =====================
-   HERO
-===================== */
+/* Disable global hero zoom on Contact (like About) */
+.contact-hero.hero::before {
+  animation: none;
+  background: none;
+}
 
+/* Hero uses site brand blue (same as About / nav primary) */
 .contact-hero {
   position: relative;
   color: #fff;
-  min-height: clamp(360px, 52vh, 620px);
   display: flex;
   align-items: center;
-  padding: clamp(5.5rem, 12vh, 8rem) var(--pad-x);
+  padding-top: clamp(calc(72px + 2rem), 12vh, 8rem);
+  padding-bottom: clamp(4rem, 8vh, 6rem);
+  padding-left: 0;
+  padding-right: 0;
   overflow: hidden;
   background:
     radial-gradient(
       900px 520px at 15% 5%,
-      rgba(255, 255, 255, 0.14),
+      rgba(255, 255, 255, 0.12),
       transparent 60%
     ),
     radial-gradient(
       800px 520px at 100% 0%,
-      rgba(203, 202, 224, 0.18),
+      rgba(11, 59, 143, 0.25),
       transparent 55%
     ),
-    linear-gradient(180deg, #0b0b0c 0%, #0f0f12 55%, #0b0b0c 100%);
+    linear-gradient(180deg, #062050 0%, var(--brand) 40%, #093a82 70%, #062050 100%);
 }
 
 .contact-hero::after {
@@ -40,10 +46,10 @@
   inset: -1px;
   pointer-events: none;
   background:
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.1), transparent 35%),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.08), transparent 35%),
     radial-gradient(
       900px 420px at 50% 115%,
-      rgba(255, 255, 255, 0.08),
+      rgba(255, 255, 255, 0.06),
       transparent 60%
     );
   opacity: 0.9;
@@ -51,8 +57,6 @@
 
 .contact-hero-inner {
   position: relative;
-  max-width: 1100px;
-  margin: 0 auto;
   width: 100%;
 }
 
@@ -68,23 +72,12 @@
   }
 }
 
-.contact-kicker {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.6rem;
-  font-size: 0.78rem;
-  letter-spacing: 0.18em;
+.contact-hero .contact-kicker.eyebrow {
+  font-size: var(--fs-meta);
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   font-weight: 800;
-  color: rgba(255, 255, 255, 0.75);
-}
-
-.contact-kicker .dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.6);
-  box-shadow: 0 0 0 6px rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.8);
 }
 
 .contact-title {
@@ -110,7 +103,7 @@
 .contact-lede {
   color: rgba(255, 255, 255, 0.72);
   max-width: 62ch;
-  font-size: 1.02rem;
+  font-size: var(--fs-body);
   line-height: 1.6;
   margin: 0;
 }
@@ -122,29 +115,42 @@
   gap: 0.75rem;
 }
 
+/* Hero CTA — same primary color as nav "Contact Us" / About CTAs */
+.contact-hero-btn,
 .contact-hero-actions .btn {
-  border-radius: 999px;
-  padding: 0.85rem 1.15rem;
-  letter-spacing: 0.12em;
+  border-radius: var(--btn-radius);
+  padding: var(--btn-pad-y) var(--btn-pad-x);
+  font-size: var(--btn-fs);
+  font-weight: var(--btn-weight);
+  letter-spacing: var(--btn-letter);
   text-transform: uppercase;
-  font-weight: 800;
+  background: #fff;
+  color: var(--brand);
+  border: 2px solid rgba(255, 255, 255, 0.9);
+}
+
+.contact-hero-btn:hover,
+.contact-hero-actions .btn:hover {
+  background: rgba(255, 255, 255, 0.95);
+  color: var(--brand-hover);
+  border-color: #fff;
 }
 
 /* =====================
-   SURFACE WRAPPERS
+   SECTION — uses .section .section--after-hero from global
 ===================== */
 
 .contact-section {
-  background: #ffffff;
-  padding: 1.5rem 0;
+  background: var(--bg);
+  padding-bottom: clamp(4rem, 8vh, 6rem);
 }
 
 .contact-surface {
   max-width: 1100px;
   margin: 0 auto;
-  border-radius: 24px;
-  padding: clamp(1.4rem, 3vw, 2.25rem);
-  background: #ffffff;
+  border-radius: 16px;
+  padding: clamp(1.5rem, 3vw, 2.5rem);
+  background: var(--bg);
 }
 
 .contact-surface--lift {
@@ -158,15 +164,17 @@
 }
 
 .contact-section-title {
-  font-size: clamp(1.5rem, 2.4vw, 2.1rem);
+  font-size: clamp(var(--fs-h2), 2.4vw, 2.1rem);
   letter-spacing: -0.02em;
   margin: 0;
+  font-weight: 600;
 }
 
 .contact-section-sub {
   margin-top: 0.6rem;
-  color: rgba(0, 0, 0, 0.6);
-  max-width: 70ch;
+  color: var(--muted);
+  max-width: 65ch;
+  line-height: 1.6;
 }
 
 /* =====================
@@ -178,14 +186,14 @@
 }
 
 .contact-way {
-  border-radius: 18px;
-  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 14px;
+  border: 1px solid var(--line);
   overflow: hidden;
   box-shadow: 0 14px 34px rgba(0, 0, 0, 0.08);
   transition:
     transform 180ms ease,
     box-shadow 180ms ease;
-  background: #fff;
+  background: var(--bg);
 }
 
 .contact-way:hover {
@@ -219,16 +227,16 @@
 }
 
 .contact-way-desc {
-  color: rgba(0, 0, 0, 0.62);
+  color: var(--muted);
   margin-top: 0.55rem;
-  font-size: 0.95rem;
+  font-size: var(--fs-body);
 }
 
 .contact-ways-note {
   margin: 1.25rem auto 0;
-  color: rgba(0, 0, 0, 0.58);
-  max-width: 70ch;
-  font-size: 0.95rem;
+  color: var(--muted);
+  max-width: 65ch;
+  font-size: var(--fs-body);
   text-align: center;
 }
 
@@ -243,15 +251,42 @@
 }
 
 .contact-faq {
-  padding: 1.5rem;
-  border-radius: 12px;
+  padding: 1.5rem 0;
+  border-radius: 14px;
+}
+
+.contact-faq .accordion-item {
+  border-radius: 14px;
+  border: 1px solid var(--line);
+  margin-bottom: 0.5rem;
+  overflow: hidden;
+}
+
+.contact-faq .accordion-button {
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.contact-faq .accordion-body {
+  color: var(--text);
+  border-top: 1px solid var(--line);
+}
+
+.contact-faq .accordion-button:not(.collapsed) {
+  color: var(--brand);
+  background-color: rgba(11, 59, 143, 0.06);
+}
+
+.contact-faq .accordion-button:focus {
+  box-shadow: 0 0 0 0.2rem rgba(11, 59, 143, 0.2);
+  border-color: rgba(11, 59, 143, 0.4);
 }
 
 .contact-form-box {
-  background: #fff;
+  background: var(--bg);
   padding: 1.5rem;
-  border-radius: 12px;
-  box-shadow: none; /* Remove box shadow */
+  border-radius: 14px;
+  box-shadow: none;
 }
 
 .contact-form-head {
@@ -260,61 +295,74 @@
 }
 
 .contact-form-head .title {
-  font-weight: 900;
+  font-weight: 600;
   letter-spacing: -0.02em;
-  font-size: 1.2rem;
+  font-size: var(--fs-h3);
   margin: 0;
 }
 
 .contact-form-head .sub {
   margin-top: 0.35rem;
-  color: rgba(0, 0, 0, 0.62);
-  font-size: 0.95rem;
+  color: var(--muted);
+  font-size: var(--fs-body);
 }
 
-/* Remove borders and box shadow */
 .contact-form-box .form-label {
-  font-size: 0.78rem;
+  font-size: var(--fs-meta);
   letter-spacing: 0.14em;
   text-transform: uppercase;
   font-weight: 800;
-  color: rgba(0, 0, 0, 0.62);
+  color: var(--muted);
 }
 
 .contact-form-box .form-control,
 .contact-form-box .form-select {
   border-radius: 14px;
-  border: 1px solid rgba(0, 0, 0, 0.14);
+  border: 1px solid var(--line);
   padding: 0.85rem 0.95rem;
-  background: #fff;
+  background: var(--bg);
 }
 
 .contact-form-box .form-control:focus,
 .contact-form-box .form-select:focus {
-  border-color: rgba(0, 0, 0, 0.55);
-  box-shadow: none; /* Remove focus box shadow */
+  border-color: var(--text);
+  box-shadow: none;
 }
 
 .contact-form-actions {
-  text-align: left;
-  margin-top: 0.25rem;
-  display: flex;
-  align-items: center;
-  gap: 0.9rem;
-  flex-wrap: wrap;
+  margin-top: 0.5rem;
+  width: 100%;
 }
 
-.contact-form-actions .btn {
-  border-radius: 999px;
-  padding: 0.85rem 1.25rem;
-  letter-spacing: 0.12em;
+/* Submit — full width like fields, same corner radius (14px) */
+.contact-form-actions .btn,
+.contact-form-actions .btn-dark {
+  width: 100%;
+  border-radius: 14px;
+  padding: var(--btn-pad-y) var(--btn-pad-x);
+  font-size: var(--btn-fs);
+  font-weight: var(--btn-weight);
+  letter-spacing: var(--btn-letter);
   text-transform: uppercase;
-  font-weight: 800;
+  background-color: var(--brand) !important;
+  border-color: var(--brand) !important;
+  color: #fff !important;
+}
+
+.contact-form-actions .btn:hover:not(:disabled),
+.contact-form-actions .btn-dark:hover:not(:disabled) {
+  background-color: var(--brand-hover) !important;
+  border-color: var(--brand-hover) !important;
+  color: #fff !important;
+}
+
+.contact-form-actions .btn:focus-visible {
+  box-shadow: 0 0 0 3px rgba(11, 59, 143, 0.35);
 }
 
 .contact-form-actions .hint {
-  color: rgba(0, 0, 0, 0.55);
-  font-size: 0.92rem;
+  color: var(--muted);
+  font-size: var(--fs-body);
 }
 
 @media (max-width: 768px) {
