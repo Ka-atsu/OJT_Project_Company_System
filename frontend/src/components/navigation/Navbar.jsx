@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import logo from "../../assets/Images/logo.jpg";
+import useAuthUser from "../../pages/authentication/useAuthUser";
 
 const ABOUT_MENU = [
   { label: "Background", hash: "#about-story" },
@@ -22,6 +23,7 @@ export default function Navbar() {
 
   const navigate = useNavigate();
   const location = useLocation();
+  const { user } = useAuthUser();
 
   useEffect(() => {
     let lastY = window.scrollY;
@@ -215,11 +217,21 @@ export default function Navbar() {
               />
             </svg>
           </NavLink>
-          <NavLink to="/login" className="nav-login">
-            <span>Login</span>
-          </NavLink>
+          {user ? (
+            <NavLink
+              to={user.is_admin ? "/admin/appointments" : "/dashboard/appointments"}
+              className="nav-login"
+            >
+              <span>Book Appointment</span>
+            </NavLink>
+          ) : (
+            <NavLink to="/login" className="nav-login">
+              <span>Book Appointment</span>
+            </NavLink>
+          )}
         </div>
       </div>
     </nav>
   );
 }
+//test

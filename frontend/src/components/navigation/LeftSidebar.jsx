@@ -117,17 +117,21 @@ export default function LeftSidebar() {
           </div>
         )}
 
-        {/* Support (Clients only) */}
-        {!isAdmin && (
-          <div className="dash-card subtle">
-            <span className="dash-card-title">Support</span>
-
-            <div className="dash-support">
-              <div>0900 420 6967</div>
-              <div>support@cliberduche.com</div>
+        {/* Bottom: Support (clients) + Home / Landing page */}
+        <div className="dash-sidebar-footer">
+          {!isAdmin && (
+            <div className="dash-card subtle">
+              <span className="dash-card-title">Support</span>
+              <div className="dash-support">
+                <div>0900 420 6967</div>
+                <div>support@cliberduche.com</div>
+              </div>
             </div>
-          </div>
-        )}
+          )}
+          <NavLink to="/" className="dash-btn ghost dash-btn-footer" end>
+            Return to Website
+          </NavLink>
+        </div>
       </div>
     </aside>
   );

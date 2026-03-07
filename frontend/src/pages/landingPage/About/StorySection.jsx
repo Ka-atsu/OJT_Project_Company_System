@@ -18,7 +18,7 @@ export default function StorySection({ story, images = [], onImgLoad }) {
           {story.label}
         </motion.span>
 
-        {/* Card (collage left, text right) */}
+        {/* Card */}
         <div className="about-story-card">
           {/* LEFT: Collage */}
           <motion.div className="about-story-collage" variants={FADE_UP}>
@@ -61,7 +61,18 @@ export default function StorySection({ story, images = [], onImgLoad }) {
                   }`}
                   variants={FADE_UP}
                 >
-                  {p}
+                  {isStack
+                    ? p.split("\n").map((line, idx) => (
+                        <span key={idx}>
+                          {idx === 0 ? (
+                            line
+                          ) : (
+                            <strong>{line}</strong>
+                          )}
+                          <br />
+                        </span>
+                      ))
+                    : p}
                 </motion.p>
               );
             })}
