@@ -9,12 +9,13 @@ export default function ProjectInfo({
   onSave,
   onDelete,
   setDraft,
+  canCreate,
 }) {
   const isInvalidDate =
     draft.startDate && draft.dueDate && draft.dueDate < draft.startDate;
 
-  const isFormInvalid =
-    !draft.name?.trim() || !draft.startDate || !draft.dueDate || isInvalidDate;
+  // const isFormInvalid =
+  //   !draft.name?.trim() || !draft.startDate || !draft.dueDate || isInvalidDate;
 
   const handleDelete = () => {
     if (!draft?.id) return;
@@ -59,7 +60,7 @@ export default function ProjectInfo({
           <button
             className="ap-btn ap-btn--primary"
             onClick={onSave}
-            disabled={loading || isFormInvalid}
+            disabled={loading || !canCreate}
           >
             {isCreating ? "Create" : "Save"}
           </button>

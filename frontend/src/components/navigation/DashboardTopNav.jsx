@@ -7,19 +7,20 @@ export default function DashboardTopNav() {
   const [loading, setLoading] = useState(false);
 
   const user = useMemo(() => {
-    try {
-      return JSON.parse(localStorage.getItem("user") || "null");
-    } catch {
-      return null;
-    }
-  }, []);
+  try {
+    return JSON.parse(localStorage.getItem("user") || "null");
+  } catch {
+    return null;
+  }
+}, []);
+
+  const isAdmin = user?.redirectTo?.startsWith("/admin");
 
   const handleLogout = async () => {
     setLoading(true);
     try {
       await logoutReq();
     } catch (e) {
-      // even if backend fails, still clear local auth
       console.error(e);
     } finally {
       localStorage.removeItem("user");
@@ -41,9 +42,12 @@ export default function DashboardTopNav() {
 
         {/* Actions */}
         <div className="dash-actions">
-          <NavLink to="/dashboard/profile" className="dash-link">
-            My account
-          </NavLink>
+          {/* Show ONLY if NOT admin */}
+         {!isAdmin && (
+            <NavLink to="/dashboard/profile" className="dash-link">
+              My account
+            </NavLink>
+          )}
 
           <button
             className="dash-logout"

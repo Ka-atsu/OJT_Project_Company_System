@@ -83,7 +83,7 @@ class AdminProjectController extends Controller
             'address' => ['nullable', 'string', 'max:255'],
             'completedDate' => ['nullable', 'date'],
             'photos' => ['nullable', 'array'],
-            'photos.*' => ['image', 'max:5120'],
+            'photos.*' => ['image', 'max:102400'],
             'showcase' => ['nullable', 'boolean'],
         ]);
 
@@ -162,7 +162,7 @@ class AdminProjectController extends Controller
             'address' => ['nullable', 'string', 'max:255'],
             'completedDate' => ['nullable', 'date'],
             'photos' => ['nullable', 'array'],
-            'photos.*' => ['image', 'max:5120'],
+            'photos.*' => ['image', 'max:102400'],
             'showcase' => ['nullable', 'boolean'],
         ]);
 

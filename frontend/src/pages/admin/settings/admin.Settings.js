@@ -8,7 +8,7 @@ export async function getCurrentUser() {
 
 // Update user profile
 export async function updateUserProfile(data) {
-  const res = await api.put("/api/user", data);
+  const res = await api.put("/api/user/profile", data);
   return res.data;
 }
 

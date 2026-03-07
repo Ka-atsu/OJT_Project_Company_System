@@ -428,12 +428,12 @@
 }
 
 /* Media */
-.about-mv-media {
+.about-mv-media img {
   width: 100%;
-  aspect-ratio: 4 / 3;
+  height: 100%;
+  object-fit: cover;
   border-radius: 12px;
-  overflow: hidden;
-  background: #dcdcdc;
+  display: block;
 }
 
 .about-mv-media img {
