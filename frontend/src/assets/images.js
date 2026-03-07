@@ -12,6 +12,8 @@ import ImgPlan from "./Images/plan.jpg";
 import ImgSiteInspection from "./Images/siteInspection.jpg";
 import CompanyProfilePages from "./Images/companyProfilePages.png";
 import CoverPage from "./Images/coverPage.png";
+import SusLandDev from "./Images/SusLandDev.png";
+import WideLandScape from "./Images/WideLandScape.png";
 
 export {
   ImgConstructionSite,
@@ -28,4 +30,6 @@ export {
   ImgSiteInspection,
   CompanyProfilePages,
   CoverPage,
+  SusLandDev,
+  WideLandScape
 };

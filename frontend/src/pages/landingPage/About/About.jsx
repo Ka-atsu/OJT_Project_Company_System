@@ -14,6 +14,8 @@ import {
   ImgExcavationSite,
   CompanyProfilePages,
   CoverPage,
+  SusLandDev,
+  WideLandScape
 } from "../../../assets/images";
 
 import SectionRenderer from "../../../utils/SectionRenderer";
@@ -63,7 +65,7 @@ export default function About() {
       slices?.missionVision ? (
         <AboutSlice
           {...slices.missionVision}
-          mvImages={{ mission: ImgCBDBuilding, vision: ImgBackhoe }}
+          mvImages={{ mission: SusLandDev, vision: WideLandScape }}
         />
       ) : null,
 
