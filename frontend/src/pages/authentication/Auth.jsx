@@ -63,33 +63,37 @@ const Auth = () => {
   }
 
   const handleRegister = async (e) => {
-    e.preventDefault();
-    setErr("");
+  e.preventDefault();
+  setErr("");
 
-    if (!captcha) {
-      return setErr("Please complete the captcha verification.");
-    }
+  if (!captcha) {
+    return setErr("Please complete the captcha verification.");
+  }
 
-    const name = e.target.name.value.trim();
-    const email = e.target.email.value.trim();
-    const password = e.target.password.value;
-    const confirm = e.target.confirm.value;
+  const name = e.target.name.value.trim();
+  const email = e.target.email.value.trim();
+  const password = e.target.password.value;
+  const confirm = e.target.confirm.value;
 
-    if (password !== confirm) return setErr("Passwords do not match!");
+  if (password !== confirm) return setErr("Passwords do not match!");
 
-    try {
-      setLoading(true);
-      const user = await register(name, email, password, confirm);
-      localStorage.setItem("user", JSON.stringify(user));
-      setCaptcha(null);
-      setIsLogin(true);
-    } catch (error) {
-      setErr(toErrorMessage(error, "Register failed"));
-    } finally {
-      setLoading(false);
-    }
-  };
+  try {
+    setLoading(true);
 
+    const user = await register(name, email, password, confirm);
+
+    localStorage.setItem("user", JSON.stringify(user));
+
+    setCaptcha(null);
+
+    navigate("/dashboard");
+
+  } catch (error) {
+    setErr(toErrorMessage(error, "Register failed"));
+  } finally {
+    setLoading(false);
+  }
+};
   const handleLogin = async (e) => {
     e.preventDefault();
     setErr("");
