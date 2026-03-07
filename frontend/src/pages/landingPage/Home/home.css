@@ -69,12 +69,29 @@
 }
 
 .home-hero-stage .light {
-  color: #1F4D3A;
-  text-shadow: 0px 4px 12px rgba(255, 255, 255, 0.25);
+  color: #dbeafe;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
 }
 
 .home-hero .eyebrow {
   color: rgba(255, 255, 255, 0.72);
+}
+
+/* Hero CTA — same color as navbar "Contact Us" */
+.home-hero .hero-actions .btn,
+.home-hero .hero-actions .btn-filled {
+  background-color: #093a82;
+  border-color: #093a82;
+  color: #fff;
+  box-shadow: 0 4px 16px rgba(59, 130, 246, 0.25);
+}
+
+.home-hero .hero-actions .btn:hover,
+.home-hero .hero-actions .btn-filled:hover {
+  background-color: #082f72;
+  border-color: #082f72;
+  color: #fff;
+  box-shadow: 0 8px 24px rgba(59, 130, 246, 0.35);
 }
 
 /* =====================
@@ -411,13 +428,14 @@
   margin-top: 2rem;
 }
 
+/* Section CTAs — same blue as navbar "Contact Us" */
 .home-modules-cta .btn-outline-blue,
 .home-about-cta .btn-outline-blue,
 .home-projects .btn-outline-blue {
-  color: #2563eb;               
-  border: 1px solid #cbd5e1;   
-  background-color: #ffffff;    
-  font-weight: 700;
+  color: #093a82;
+  border: 2px solid #093a82;
+  background-color: #ffffff;
+  font-weight: 600;
   transition: all 0.3s ease;
   text-decoration: none;
 }
@@ -425,9 +443,9 @@
 .home-modules-cta .btn-outline-blue:hover,
 .home-about-cta .btn-outline-blue:hover,
 .home-projects .btn-outline-blue:hover {
-  background-color: #2563eb;   
-  color: #ffffff;              
-  border-color: transparent;    
+  background-color: #093a82;
+  color: #ffffff;
+  border-color: #093a82;
 }
 
 .home-modules-cta {
